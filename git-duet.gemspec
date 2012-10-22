@@ -20,6 +20,8 @@ Gem::Specification.new do |gem|
   gem.version = Git::Duet::VERSION
   gem.required_ruby_version = '>= 1.9.2'
 
-  gem.add_development_dependency 'rspec', '>= 2.0'
-  gem.add_development_dependency 'pry', '>= 0.9'
+  gem.add_development_dependency 'rspec', '>= 2.0.0'
+  gem.add_development_dependency 'simplecov', '>= 0.7.0'
+  gem.add_development_dependency 'pry', '>= 0.9.0'
+  gem.add_development_dependency 'nyan-cat-formatter', '>= 0.2.0'
 end
