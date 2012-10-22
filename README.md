@@ -1,8 +1,9 @@
 # git duet
 
-An opinionated alternative to the Pivotal's `git-pair` executable.
-Working in a pair doesn't mean you've both lost your identity.
-Helps with blaming/praising.
+An opinionated alternative to Pivotal's `git-pair` executable.  Working
+in a pair doesn't mean you've both lost your identity.  `git duet` helps
+with blaming/praising by using stuff that's already in `git` rather than
+littering your repo history with fictitous user identities.
 
 ## Installation
 
