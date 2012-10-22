@@ -23,42 +23,42 @@ Or install it yourself as:
 Set up an authors file with email domain, or just symlink your Pivotal
 `~/.pairs` file over to `~/.git-authors`.
 
-~~~~~yaml
+`````yaml
 authors:
   jd: Jane Doe
   fb: Frances Bar
 email:
   domain: awesometown.me
-~~~~~
+`````
 
 `git duet` will use the Pivotal YAML structure if it has to, e.g.:
 
-~~~~~yaml
+`````yaml
 pairs:
   jd: Jane Doe
   fb: Frances Bar
 email:
   domain: awesometown.me
-~~~~~
+`````
 
 Set the author and committer via `git duet`:
 
-~~~~~bash
+`````bash
 git duet jd fb
-~~~~~
+`````
 
 When you're ready to commit, use `git duet-commit` (or add an alias like
 a normal person.  something like `dci = duet-commit --`)
 
-~~~~~bash
+`````bash
 git duet-commit -- -v [any other git options]
-~~~~~
+`````
 
 When you're done pairing, set the author back to yourself with `git solo`:
 
-~~~~~bash
+`````bash
 git solo jd
-~~~~~
+`````
 
 ## Contributing
 
