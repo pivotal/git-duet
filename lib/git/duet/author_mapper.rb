@@ -3,6 +3,8 @@ require 'yaml'
 module Git
   module Duet
     class AuthorMapper
+      attr_accessor :authors_file
+
       def initialize(authors_file = nil)
         @authors_file = authors_file ||
                         ENV['GIT_DUET_AUTHORS_FILE'] ||
@@ -19,10 +21,12 @@ module Git
 
       private
       def author_info(initials)
-        author = author_map[initials].split(/;/).first
+        author, username = author_map.fetch(initials).split(/;/).map(&:strip)
 
-        if user_email_overrides[initials]
-          author_email = "#{user_email_overrides[initials]}@#{email_domain}"
+        if email_addresses[initials]
+          author_email = email_addresses[initials]
+        elsif username
+          author_email = "#{username}@#{email_domain}"
         else
           author_name_parts = author.split
           author_email = "#{author_name_parts.first[0,1].downcase}." <<
@@ -39,8 +43,8 @@ module Git
         @author_map ||= (cfg['authors'] || cfg['pairs'])
       end
 
-      def user_email_overrides
-        @user_email_overrides ||= (cfg['user_email_overrides'] || {})
+      def email_addresses
+        @email_addresses ||= (cfg['email_addresses'] || {})
       end
 
       def email_domain

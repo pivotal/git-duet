@@ -1,2 +1,3 @@
+--color
 --format NyanCatMusicFormatter
 --require spec_helper
