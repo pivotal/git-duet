@@ -1,6 +1,8 @@
 # Git::Duet
 
-TODO: Write a gem description
+An opinionated alternative to the Pivotal's `git-pair` executable.
+Working in a pair doesn't mean you've both lost your identity.
+Helps with blaming/praising.
 
 ## Installation
 
