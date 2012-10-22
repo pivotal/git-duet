@@ -39,9 +39,13 @@ class Git::Duet::Cli
     end
 
     def parse_commit_options(argv)
-      options = {}
+      options = {verify_duet: false}
       leftover_argv = OptionParser.new do |opts|
         opts.banner = "Usage: #{opts.program_name} -- [git passthrough options]"
+        opts.on('--verify-duet',
+                'Check the duet (or solo) members before committing') do |v|
+          options[:verify_duet] = true
+        end
       end.parse!(argv)
       options[:passthrough_argv] = leftover_argv
       options
@@ -54,12 +58,16 @@ class Git::Duet::Cli
 
     def duet(options)
       require_relative 'duet_command'
-      Git::Duet::DuetCommand.new(options.fetch(:alpha), options.fetch(:omega)).execute!
+      Git::Duet::DuetCommand.new(
+        options.fetch(:alpha), options.fetch(:omega)
+      ).execute!
     end
 
     def commit(options)
       require_relative 'commit_command'
-      Git::Duet::CommitCommand.new(options.fetch(:passthrough_argv)).execute!
+      Git::Duet::CommitCommand.new(
+        options.fetch(:passthrough_argv), options.fetch(:verify_duet)
+      ).execute!
     end
   end
 end

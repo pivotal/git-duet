@@ -31,4 +31,19 @@ describe Git::Duet::CommitCommand do
     subject.should_receive(:exec).with(/^git commit --signoff.*-v/)
     subject.execute!
   end
+
+  it 'should not prompt for verified duet by default' do
+    subject.should_not_receive(:prompt_for_verified_duet)
+  end
+
+  context 'when verify_duet is true' do
+    subject do
+      described_class.new(%w(-v), true)
+    end
+
+    it 'should prompt for duet initials' do
+      subject.should_receive(:prompt_for_verified_duet)
+      subject.execute!
+    end
+  end
 end
