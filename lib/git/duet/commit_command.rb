@@ -41,7 +41,7 @@ class Git::Duet::CommitCommand
     loop do
       initials_list = []
       STDOUT.puts "---> Who's in this duet (or solo)?  Please provide initials."
-      STDOUT.puts '> '
+      STDOUT.print '> '
       STDIN.gets.chomp.split.each do |initials|
         initials_list << initials
       end
