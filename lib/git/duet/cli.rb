@@ -11,8 +11,6 @@ class Git::Duet::Cli
       when /duet$/
         duet(parse_duet_options(argv.clone))
         return 0
-      when /commit$/
-        return commit(parse_commit_options(argv.clone))
       else
         raise ScriptError.new('How did you get here???')
       end
@@ -38,19 +36,6 @@ class Git::Duet::Cli
       options
     end
 
-    def parse_commit_options(argv)
-      options = {verify_duet: false}
-      leftover_argv = OptionParser.new do |opts|
-        opts.banner = "Usage: #{opts.program_name} -- [git passthrough options]"
-        opts.on('--verify-duet',
-                'Check the duet (or solo) members before committing') do |v|
-          options[:verify_duet] = true
-        end
-      end.parse!(argv)
-      options[:passthrough_argv] = leftover_argv
-      options
-    end
-
     def solo(options)
       require_relative 'solo_command'
       Git::Duet::SoloCommand.new(options.fetch(:soloist)).execute!
@@ -60,13 +45,6 @@ class Git::Duet::Cli
       require_relative 'duet_command'
       Git::Duet::DuetCommand.new(
         options.fetch(:alpha), options.fetch(:omega)
-      ).execute!
-    end
-
-    def commit(options)
-      require_relative 'commit_command'
-      Git::Duet::CommitCommand.new(
-        options.fetch(:passthrough_argv), options.fetch(:verify_duet)
       ).execute!
     end
   end

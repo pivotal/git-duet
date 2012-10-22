@@ -1,1 +1,4 @@
-git-duet
+#!/bin/bash
+cd $(git rev-parse --show-toplevel)
+eval $(cat .git/hooks/git-duet-env-cache.txt | sed 's/^/export /')
+git commit --signoff "$@"

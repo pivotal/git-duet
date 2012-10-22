@@ -24,9 +24,4 @@ describe Git::Duet::Cli do
     subject.should_receive(:duet)
     subject.run('git-duet', %w(jd fb))
   end
-
-  it 'should run `commit` when progname matches /commit$/' do
-    subject.should_receive(:commit)
-    subject.run('git-duet-commit', [])
-  end
 end
