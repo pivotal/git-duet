@@ -71,20 +71,24 @@ class Git::Duet::Cli
     end
 
     def duet(options)
-      alpha, omega = options.fetch(:alpha), options.fetch(:omega)
-      authors_info = Git::Duet::AuthorMapper.new.map(alpha, omega)
-      author = authors_info[alpha]
-      committer = authors_info[omega]
-      exec_check("git config user.name '#{author[:name]}'")
-      exec_check("git config user.email '#{author[:email]}'")
-      env_vars = %W(
-          GIT_AUTHOR_NAME=#{author[:name]}
-          GIT_AUTHOR_EMAIL=#{author[:email]}
-          GIT_COMMITTER_NAME=#{committer[:name]}
-          GIT_COMMITTER_EMAIL=#{committer[:email]}
-      ).join("\n")
-      STDOUT.puts env_vars
-      write_pre_commit_author_set(env_vars)
+      require_relative 'duet_command'
+      Git::Duet::DuetCommand.new(
+        options.fetch(:alpha),
+        options.fetch(:omega)
+      ).execute!
+      #authors_info = Git::Duet::AuthorMapper.new.map(alpha, omega)
+      #author = authors_info[alpha]
+      #committer = authors_info[omega]
+      #exec_check("git config user.name '#{author[:name]}'")
+      #exec_check("git config user.email '#{author[:email]}'")
+      #env_vars = %W(
+          #GIT_AUTHOR_NAME=#{author[:name]}
+          #GIT_AUTHOR_EMAIL=#{author[:email]}
+          #GIT_COMMITTER_NAME=#{committer[:name]}
+          #GIT_COMMITTER_EMAIL=#{committer[:email]}
+      #).join("\n")
+      #STDOUT.puts env_vars
+      #write_pre_commit_author_set(env_vars)
     end
 
     def write_pre_commit_author_set(body)

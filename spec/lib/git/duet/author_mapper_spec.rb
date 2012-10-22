@@ -17,6 +17,7 @@ describe Git::Duet::AuthorMapper do
       }
     })
   end
+
   after :each do
     ENV.delete('GIT_DUET_AUTHORS_FILE')
   end
