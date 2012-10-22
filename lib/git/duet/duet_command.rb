@@ -1,4 +1,3 @@
-require 'git/duet'
 require_relative 'author_mapper'
 require_relative 'command_methods'
 
@@ -22,8 +21,8 @@ module Git
       attr_accessor :alpha, :omega, :author_mapper
 
       def set_alpha_as_git_config_user
-        `git config user.name '#{alpha_info[:name]}'`
-        `git config user.email '#{alpha_info[:email]}'`
+        exec_check("git config user.name '#{alpha_info[:name]}'")
+        exec_check("git config user.email '#{alpha_info[:email]}'")
       end
 
       def var_map

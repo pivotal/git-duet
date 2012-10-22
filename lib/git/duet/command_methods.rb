@@ -31,6 +31,16 @@ module Git
           yield
         end
       end
+
+      def exec_check(command)
+        output = `#{command}`
+        if $?.exitstatus != 0
+          raise StandardError.new(
+            "Command #{command.inspect} exited with #{$?.to_i}"
+          )
+        end
+        output
+      end
     end
   end
 end

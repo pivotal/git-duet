@@ -16,14 +16,17 @@ describe Git::Duet::Cli do
   end
 
   it 'should run `solo` when the progname matches /solo$/' do
-    subject.should_receive(:parse_solo_options).and_return({})
     subject.should_receive(:solo)
     subject.run('git-solo', %w(jd))
   end
 
   it 'should run `duet` when progname matches /duet$/' do
-    subject.should_receive(:parse_duet_options).and_return({})
     subject.should_receive(:duet)
     subject.run('git-duet', %w(jd fb))
+  end
+
+  it 'should run `commit` when progname matches /commit$/' do
+    subject.should_receive(:commit)
+    subject.run('git-duet-commit', [])
   end
 end

@@ -1,30 +1,8 @@
 require 'git/duet/solo_command'
+require 'support/author_mapper_helper'
 
 describe Git::Duet::SoloCommand do
-  def random_author
-    %w(jd fb qx hb).sample
-  end
-
-  let :author_mapping do
-    {
-      'jd' => {
-        name: 'Jane Doe',
-        email: 'jane@awesome.biz'
-      },
-      'fb' => {
-        name: 'Frances Bar',
-        email: 'frances@awesometown.me'
-      },
-      'qx' => {
-        name: 'Quincy Xavier',
-        email: 'qx@awesometown.me'
-      },
-      'hb' => {
-        name: 'Hampton Bones',
-        email: 'h.bones@awesometown.me'
-      }
-    }
-  end
+  include SpecSupport::AuthorMapperHelper
 
   let :soloist do
     random_author
@@ -66,42 +44,21 @@ describe Git::Duet::SoloCommand do
     subject.execute!
   end
 
-  xit 'should set the alpha email as git config user.email' do
+  it 'should set the soloist email as git config user.email' do
     subject.stub(:`).with(/git config user\.name/)
-    subject.should_receive(:`).with("git config user.email '#{author_mapping[alpha][:email]}'")
+    subject.should_receive(:`).with("git config user.email '#{author_mapping[soloist][:email]}'")
     subject.execute!
   end
 
-  xit 'should report env vars to STDOUT' do
+  it 'should report env vars to STDOUT' do
     subject.unstub(:report_env_vars)
-    STDOUT.should_receive(:puts).with(/^GIT_AUTHOR_NAME='#{author_mapping[alpha][:name]}'/)
-    STDOUT.should_receive(:puts).with(/^GIT_AUTHOR_EMAIL='#{author_mapping[alpha][:email]}'/)
-    STDOUT.should_receive(:puts).with(/^GIT_COMMITTER_NAME='#{author_mapping[omega][:name]}'/)
-    STDOUT.should_receive(:puts).with(/^GIT_COMMITTER_EMAIL='#{author_mapping[omega][:email]}'/)
+    STDOUT.should_receive(:puts).with(/^GIT_AUTHOR_NAME='#{author_mapping[soloist][:name]}'/)
+    STDOUT.should_receive(:puts).with(/^GIT_AUTHOR_EMAIL='#{author_mapping[soloist][:email]}'/)
     subject.execute!
   end
 
-  xit 'should set the alpha as author and omega as committer in env var cache' do
+  it 'should set the soloist as author in env var cache' do
     subject.should_receive(:write_env_vars)
     subject.execute!
-  end
-
-  xit 'should write env vars to the local repo hooks directory' do
-    written = []
-    File.should_receive(:open) do |filename,mode,&block|
-      filename.should =~ %r{\.git/hooks/git-duet-env-cache\.txt}
-      block.call(double('outfile').tap do |f|
-        f.stub(:puts) do |string|
-          written += string.split($/)
-        end
-      end)
-      written.should include("FIZZLE_BAZ='awesome'")
-    end
-
-    subject.stub(var_map: {
-      'FIZZLE_BAZ' => 'awesome',
-      'OH_SNARF' => 'mumra'
-    })
-    subject.send(:write_env_vars)
   end
 end

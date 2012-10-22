@@ -1,30 +1,8 @@
 require 'git/duet/duet_command'
+require 'support/author_mapper_helper'
 
 describe Git::Duet::DuetCommand do
-  def random_author
-    %w(jd fb qx hb).sample
-  end
-
-  let :author_mapping do
-    {
-      'jd' => {
-        name: 'Jane Doe',
-        email: 'jane@awesome.biz'
-      },
-      'fb' => {
-        name: 'Frances Bar',
-        email: 'frances@awesometown.me'
-      },
-      'qx' => {
-        name: 'Quincy Xavier',
-        email: 'qx@awesometown.me'
-      },
-      'hb' => {
-        name: 'Hampton Bones',
-        email: 'h.bones@awesometown.me'
-      }
-    }
-  end
+  include SpecSupport::AuthorMapperHelper
 
   let :alpha do
     random_author
@@ -88,24 +66,5 @@ describe Git::Duet::DuetCommand do
   it 'should set the alpha as author and omega as committer in env var cache' do
     subject.should_receive(:write_env_vars)
     subject.execute!
-  end
-
-  it 'should write env vars to the local repo hooks directory' do
-    written = []
-    File.should_receive(:open) do |filename,mode,&block|
-      filename.should =~ %r{\.git/hooks/git-duet-env-cache\.txt}
-      block.call(double('outfile').tap do |f|
-        f.stub(:puts) do |string|
-          written += string.split($/)
-        end
-      end)
-      written.should include("FIZZLE_BAZ='awesome'")
-    end
-
-    subject.stub(var_map: {
-      'FIZZLE_BAZ' => 'awesome',
-      'OH_SNARF' => 'mumra'
-    })
-    subject.send(:write_env_vars)
   end
 end
