@@ -18,6 +18,8 @@ module Git
       end
 
       private
+      attr_accessor :soloist, :author_mapper
+
       def set_soloist_as_git_config_user
         exec_check("git config user.name '#{soloist_info[:name]}'")
         exec_check("git config user.email '#{soloist_info[:email]}'")
