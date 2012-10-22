@@ -1,4 +1,8 @@
-#!/bin/bash
-cd $(git rev-parse --show-toplevel)
-eval $(cat .git/hooks/git-duet-env-cache.txt | sed 's/^/export /')
-git commit --signoff "$@"
+#!/usr/bin/env ruby
+Dir.chdir(`git rev-parse --show-toplevel`.chomp) do
+  File.readlines('.git/hooks/git-duet-env-cache.txt').each do |l|
+    key, value = l.split(/=/).map(&:strip)
+    ENV[key] = value.gsub(/^(['"])(.*)\1/, '\2')
+  end
+  exec 'git commit --signoff ' << ARGV.join(' ')
+end
