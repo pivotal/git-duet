@@ -17,7 +17,6 @@ class Git::Duet::PreCommitCommand
   end
 
   private
-  attr_accessor :author_mapper
 
   def explode!
     STDERR.puts "Standard input is not a tty, human!"
@@ -42,7 +41,6 @@ class Git::Duet::PreCommitCommand
 
   def set_duet!
     require_relative 'author_mapper'
-    @author_mapper = Git::Duet::AuthorMapper.new
     initials = get_initials
     if initials.length == 1
       require_relative 'solo_command'
@@ -50,12 +48,11 @@ class Git::Duet::PreCommitCommand
     elsif initials.length == 2
       require_relative 'duet_command'
       Git::Duet::DuetCommand.new(initials.first, initials.last, @quiet).execute!
-    else
-      raise ScriptError.new(
-        "Oh human, I don't know what to do with #{initials.length} " <<
-        "sets of initials."
-      )
     end
+  end
+
+  def author_mapper
+    @author_mapper ||= Git::Duet::AuthorMapper.new
   end
 
   def get_initials
@@ -63,12 +60,12 @@ class Git::Duet::PreCommitCommand
       STDOUT.puts "---> Who's in this duet (or solo)?"
       STDOUT.print '> '
       initials = STDIN.gets.chomp.split
-      return initials if validate_initials!(initials)
+      return initials if initials_valid?(initials)
     end
   end
 
-  def validate_initials!(initials)
-    if [1, 2].include?(initials.length) && @author_mapper.map(*initials)
+  def initials_valid?(initials)
+    if [1, 2].include?(initials.length) && author_mapper.map(*initials)
       return true
     end
     if initials.length > 2

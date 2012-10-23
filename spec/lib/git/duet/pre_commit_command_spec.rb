@@ -1,6 +1,10 @@
 require 'git/duet/pre_commit_command'
 
 describe Git::Duet::PreCommitCommand do
+  subject do
+    described_class.new(true)
+  end
+
   before :each do
     subject.stub(:in_repo_root) do |&block|
       block.call
@@ -39,10 +43,40 @@ describe Git::Duet::PreCommitCommand do
   context 'when setting the duet (or solo)' do
     it 'should run the solo command if one set of initials is provided' do
       subject.stub(get_initials: ['zx'])
-      subject.instance_variable_set(:@quiet, true)
       Git::Duet::SoloCommand.should_receive(:new).with('zx', true)
         .and_return(double('solo').tap { |solo| solo.should_receive(:execute!) })
       subject.send(:set_duet!)
+    end
+
+    it 'should run the duet command if two sets of initials are provided' do
+      subject.stub(get_initials: ['zx', 'aq'])
+      Git::Duet::DuetCommand.should_receive(:new).with('zx', 'aq', true)
+        .and_return(double('duet').tap { |duet| duet.should_receive(:execute!) })
+      subject.send(:set_duet!)
+    end
+  end
+
+  context 'when validating initials' do
+    before :each do
+      STDERR.stub(:puts)
+    end
+
+    it 'should return false if no initials are provided' do
+      subject.send(:initials_valid?, []).should == false
+    end
+
+    it 'should return false if more than two sets of initials are provided' do
+      subject.send(:initials_valid?, ['zx', 'aq', 'mp']).should == false
+    end
+
+    it 'should return false if author mapping fails' do
+      subject.send(:author_mapper).stub(:map).and_raise(KeyError)
+      subject.send(:initials_valid?, ['zx', 'aq']).should == false
+    end
+
+    it 'should return true if one or two sets of initials are provided and authors exist' do
+      subject.send(:author_mapper).stub(:map).and_return({})
+      subject.send(:initials_valid?, ['zx', 'aq']).should be_true
     end
   end
 end
