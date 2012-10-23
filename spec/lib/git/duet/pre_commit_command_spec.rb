@@ -41,6 +41,11 @@ describe Git::Duet::PreCommitCommand do
   end
 
   context 'when setting the duet (or solo)' do
+    before :each do
+      STDOUT.stub(:puts)
+      STDERR.stub(:puts)
+    end
+
     it 'should run the solo command if one set of initials is provided' do
       subject.stub(get_initials: ['zx'])
       Git::Duet::SoloCommand.should_receive(:new).with('zx', true)
@@ -53,6 +58,18 @@ describe Git::Duet::PreCommitCommand do
       Git::Duet::DuetCommand.should_receive(:new).with('zx', 'aq', true)
         .and_return(double('duet').tap { |duet| duet.should_receive(:execute!) })
       subject.send(:set_duet!)
+    end
+
+    it 'should keep prompting for initials on standard input until valid ones are provided' do
+      STDIN.should_receive(:gets).and_return("\n")
+      STDIN.should_receive(:gets).and_return("az zq xq\n")
+      STDIN.should_receive(:gets).and_return("nm\n")
+      STDIN.should_receive(:gets).and_return("jd\n")
+      subject.should_receive(:initials_valid?).with([]).and_return(false)
+      subject.should_receive(:initials_valid?).with(['az', 'zq', 'xq']).and_return(false)
+      subject.should_receive(:initials_valid?).with(['nm']).and_return(false)
+      subject.should_receive(:initials_valid?).with(['jd']).and_return(true)
+      subject.send(:get_initials).should == ['jd']
     end
   end
 
