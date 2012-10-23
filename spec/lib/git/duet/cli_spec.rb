@@ -1,6 +1,7 @@
 require 'git/duet/cli'
 require 'git/duet/solo_command'
 require 'git/duet/duet_command'
+require 'git/duet/pre_commit_command'
 
 describe Git::Duet::Cli do
   subject { described_class }
@@ -29,5 +30,12 @@ describe Git::Duet::Cli do
       duet.should_receive(:execute!)
     end)
     subject.run('git-duet', %w(jd fb))
+  end
+
+  it 'should run `pre_commit` when progname matches /pre-commit$/' do
+    Git::Duet::PreCommitCommand.stub(new: double('pre-commit').tap do |pc|
+      pc.should_receive(:execute!)
+    end)
+    subject.run('git-duet-pre-commit', [])
   end
 end

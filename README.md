@@ -36,6 +36,16 @@ email:
   domain: awesometown.me
 ~~~~~
 
+If you want your authors file to live somwhere else, just tell
+`git-duet` about it via the `GIT_DUET_AUTHORS_FILE` environmental
+variable, e.g.:
+
+~~~~~ bash
+export GIT_DUET_AUTHORS_FILE=$HOME/.secret-squirrel/git-authors
+# ...
+git duet jd am
+~~~~~
+
 Explicitly setting email addresses by initials is supported, too:
 
 ~~~~~ yaml
@@ -65,6 +75,27 @@ When you're done pairing, set the author back to yourself with `git solo`:
 
 ~~~~~ bash
 git solo jd
+~~~~~
+
+If you'd like to regularly remind yourself to set the solo or duet
+initials, use `git duet-pre-commit` in your pre-commit hook:
+
+*(in .git/hooks/pre-commit)*
+~~~~~ bash
+#!/bin/bash
+exec git duet-pre-commit
+~~~~~
+
+This pre-commit hook will prompt for duet/solo initials if the env cache
+file is either missing or stale.  The default staleness cutoff is 5
+minutes, but may be configured via the `GIT_DUET_SECONDS_AGO_STALE`
+environmental variable, which should be an integer of seconds, e.g.:
+
+~~~~~ bash
+export GIT_DUET_SECONDS_AGO_STALE=60
+# ... do work for more than a minute
+git commit -v
+# ... pre-commit hook fires
 ~~~~~
 
 ## Contributing

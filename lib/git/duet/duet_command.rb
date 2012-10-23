@@ -5,8 +5,9 @@ require_relative 'command_methods'
 class Git::Duet::DuetCommand
   include Git::Duet::CommandMethods
 
-  def initialize(alpha, omega)
+  def initialize(alpha, omega, quiet = false)
     @alpha, @omega = alpha, omega
+    @quiet = !!quiet
     @author_mapper = Git::Duet::AuthorMapper.new
   end
 

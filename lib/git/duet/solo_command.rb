@@ -5,8 +5,9 @@ require_relative 'command_methods'
 class Git::Duet::SoloCommand
   include Git::Duet::CommandMethods
 
-  def initialize(soloist)
+  def initialize(soloist, quiet = false)
     @soloist = soloist
+    @quiet = !!quiet
     @author_mapper = Git::Duet::AuthorMapper.new
   end
 

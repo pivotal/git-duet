@@ -2,3 +2,4 @@
 /.env
 Gemfile.lock
 /coverage/
+/tags

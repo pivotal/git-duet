@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+require 'fileutils'
+
+prog = File.basename($0)
+Dir.chdir(`git rev-parse --show-toplevel`.chomp) do
+  dest = File.join(Dir.pwd, '.git', 'hooks', 'pre-commit')
+  if File.exist?(dest)
+    STDERR.puts "#{prog}: A pre-commit hook already exists at #{dest}!"
+    STDERR.puts "#{prog}: Move it out of the way first, mkay?"
+    exit 1
+  end
+  File.open(dest, 'w') do |f|
+    f.puts '#!/bin/bash'
+    f.puts 'exec git duet-pre-commit'
+  end
+  FileUtils.chmod(0755, dest)
+  STDOUT.puts "#{prog}: Installed hook to #{dest}"
+end
+exit 0

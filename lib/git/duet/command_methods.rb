@@ -3,6 +3,7 @@ require 'git/duet'
 module Git::Duet::CommandMethods
   private
   def report_env_vars
+    return if @quiet
     var_map.each do |key,value|
       STDOUT.puts "#{key}='#{value}'"
     end
