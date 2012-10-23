@@ -1,1 +1,5 @@
-SimpleCov.start if ENV['COVERAGE']
+if ENV['COVERAGE']
+  SimpleCov.start do
+    add_filter '/spec/'
+  end
+end
