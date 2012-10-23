@@ -36,6 +36,18 @@ email:
   domain: awesometown.me
 ~~~~~
 
+Explicitly setting email addresses by initials is supported, too:
+
+~~~~~ yaml
+pairs:
+  jd: Jane Doe
+  fb: Frances Bar
+email:
+  domain: awesometown.me
+email_addresses:
+  jd: jane@awesome.biz
+~~~~~
+
 Set the author and committer via `git duet`:
 
 ~~~~~ bash
