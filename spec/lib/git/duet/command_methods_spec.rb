@@ -21,9 +21,9 @@ describe Git::Duet::CommandMethods do
   end
 
   it 'should write env vars to a custom git config tree' do
-    subject.should_receive(:`).with("git config duet.env.FIZZLE_BAZ 'awesome'")
-    subject.should_receive(:`).with("git config duet.env.OH_SNARF 'mumra'")
-    subject.should_receive(:`).with(/^git config duet.env.touch \d+/)
+    subject.should_receive(:`).with("git config duet.env.fizzle-baz 'awesome'")
+    subject.should_receive(:`).with("git config duet.env.oh-snarf 'mumra'")
+    subject.should_receive(:`).with(/^git config duet\.env\.touch \d+/)
     subject.send(:write_env_vars)
   end
 end

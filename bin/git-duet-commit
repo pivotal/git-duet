@@ -6,7 +6,7 @@ Dir.chdir(`git rev-parse --show-toplevel`.chomp) do
     GIT_COMMITTER_NAME
     GIT_COMMITTER_EMAIL
   ).each do |env_var|
-    value = `git config duet.env.#{env_var}`.chomp
+    value = `git config duet.env.#{env_var.downcase.gsub(/_/, '-')}`.chomp
     if !value.empty?
       ENV[env_var] = value
     end
