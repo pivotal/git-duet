@@ -2,7 +2,7 @@ require 'git/duet/author_mapper'
 
 describe Git::Duet::AuthorMapper do
   before :each do
-    subject.stub(cfg: {
+    subject.instance_variable_set(:@cfg, {
       'authors' => {
         'jd' => 'Jane Doe; jdoe',
         'fb' => 'Frances Bar; frances',
