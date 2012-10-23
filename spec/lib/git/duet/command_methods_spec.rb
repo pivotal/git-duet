@@ -26,4 +26,10 @@ describe Git::Duet::CommandMethods do
     subject.should_receive(:`).with(/^git config duet\.env\.touch \d+/)
     subject.send(:write_env_vars)
   end
+
+  it 'should explode if a subshell returns non-zero' do
+    subject.stub(:`)
+    $?.should_receive(:exitstatus).and_return(1)
+    expect { subject.send(:exec_check, 'ls hamsters') }.to raise_error(StandardError)
+  end
 end
