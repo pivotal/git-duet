@@ -80,9 +80,10 @@ git solo jd
 If you'd like to regularly remind yourself to set the solo or duet
 initials, use `git duet-pre-commit` in your pre-commit hook:
 
-*(in .git/hooks/pre-commit)*
+*(in $REPO_ROOT/.git/hooks/pre-commit)*
 ~~~~~ bash
 #!/bin/bash
+exec < /dev/tty
 exec git duet-pre-commit
 ~~~~~
 
