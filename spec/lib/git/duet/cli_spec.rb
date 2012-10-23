@@ -1,4 +1,6 @@
 require 'git/duet/cli'
+require 'git/duet/solo_command'
+require 'git/duet/duet_command'
 
 describe Git::Duet::Cli do
   subject { described_class }
@@ -16,12 +18,16 @@ describe Git::Duet::Cli do
   end
 
   it 'should run `solo` when the progname matches /solo$/' do
-    subject.should_receive(:solo)
+    Git::Duet::SoloCommand.stub(new: double('solo').tap do |solo|
+      solo.should_receive(:execute!)
+    end)
     subject.run('git-solo', %w(jd))
   end
 
   it 'should run `duet` when progname matches /duet$/' do
-    subject.should_receive(:duet)
+    Git::Duet::DuetCommand.stub(new: double('duet').tap do |duet|
+      duet.should_receive(:execute!)
+    end)
     subject.run('git-duet', %w(jd fb))
   end
 end
