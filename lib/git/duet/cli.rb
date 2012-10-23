@@ -1,5 +1,6 @@
 require 'optparse'
 require 'git/duet'
+require 'git/duet/script_die_error'
 
 class Git::Duet::Cli
   class << self
@@ -17,6 +18,8 @@ class Git::Duet::Cli
       else
         raise ScriptError.new('How did you get here???')
       end
+    rescue Git::Duet::ScriptDieError => e
+      return e.message
     end
 
     private

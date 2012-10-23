@@ -1,5 +1,6 @@
 require 'git/duet'
 require_relative 'command_methods'
+require_relative 'script_die_error'
 
 class Git::Duet::PreCommitCommand
   include Git::Duet::CommandMethods
@@ -9,6 +10,7 @@ class Git::Duet::PreCommitCommand
   end
 
   def execute!
+    return explode! if !STDIN.tty?
     in_repo_root do
       set_duet! if !env_cache_exists? || env_cache_stale?
     end
@@ -16,6 +18,12 @@ class Git::Duet::PreCommitCommand
 
   private
   attr_accessor :author_mapper
+
+  def explode!
+    STDERR.puts "Standard input is not a tty, human!"
+    STDERR.puts "I'm going home."
+    raise Git::Duet::ScriptDieError.new(1)
+  end
 
   def env_cache_exists?
     exec_check('git config duet.env.touch')
