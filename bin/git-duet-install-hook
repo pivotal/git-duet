@@ -11,6 +11,7 @@ Dir.chdir(`git rev-parse --show-toplevel`.chomp) do
   end
   File.open(dest, 'w') do |f|
     f.puts '#!/bin/bash'
+    f.puts 'exec < /dev/tty'
     f.puts 'exec git duet-pre-commit'
   end
   FileUtils.chmod(0755, dest)
