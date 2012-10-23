@@ -7,19 +7,7 @@ littering your repo history with fictitous user identities.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-~~~~~ ruby
-gem 'git-duet'
-~~~~~
-
-And then execute:
-
-~~~~~ bash
-bundle
-~~~~~
-
-Or install it yourself as:
+Install it with `gem`:
 
 ~~~~~ bash
 gem install git-duet
@@ -55,10 +43,10 @@ git duet jd fb
 ~~~~~
 
 When you're ready to commit, use `git duet-commit` (or add an alias like
-a normal person.  something like `dci = duet-commit --`)
+a normal person.  Something like `dci = duet-commit` should work.)
 
 ~~~~~ bash
-git duet-commit -- -v [any other git options]
+git duet-commit -v [any other git options]
 ~~~~~
 
 When you're done pairing, set the author back to yourself with `git solo`:
