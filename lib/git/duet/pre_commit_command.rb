@@ -25,14 +25,14 @@ class Git::Duet::PreCommitCommand
   end
 
   def env_cache_exists?
-    exec_check('git config duet.env.touch')
+    exec_check('git config duet.env.mtime')
     true
   rescue
     false
   end
 
   def env_cache_stale?
-    Integer(exec_check('git config duet.env.touch')) < stale_cutoff
+    Integer(exec_check('git config duet.env.mtime')) < stale_cutoff
   end
 
   def stale_cutoff

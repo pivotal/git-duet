@@ -14,7 +14,7 @@ module Git::Duet::CommandMethods
       var_map.each do |key,value|
         exec_check("git config duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'")
       end
-      exec_check("git config duet.env.touch #{Time.now.to_i}")
+      exec_check("git config duet.env.mtime #{Time.now.to_i}")
     end
   end
 
