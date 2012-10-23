@@ -20,18 +20,10 @@ describe Git::Duet::CommandMethods do
     end
   end
 
-  it 'should write env vars to the local repo hooks directory' do
-    written = []
-    File.should_receive(:open) do |filename,mode,&block|
-      filename.should =~ %r{\.git/hooks/git-duet-env-cache\.txt}
-      block.call(double('outfile').tap do |f|
-        f.stub(:puts) do |string|
-          written += string.split($/)
-        end
-      end)
-      written.should include("FIZZLE_BAZ='awesome'")
-    end
-
+  it 'should write env vars to a custom git config tree' do
+    subject.should_receive(:`).with("git config duet.env.FIZZLE_BAZ 'awesome'")
+    subject.should_receive(:`).with("git config duet.env.OH_SNARF 'mumra'")
+    subject.should_receive(:`).with(/^git config duet.env.touch \d+/)
     subject.send(:write_env_vars)
   end
 end

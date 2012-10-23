@@ -18,15 +18,18 @@ class Git::Duet::PreCommitCommand
   attr_accessor :author_mapper
 
   def env_cache_exists?
-    File.exist?(env_cache_path)
+    exec_check('git config duet.env.touch')
+    true
+  rescue
+    false
   end
 
   def env_cache_stale?
-    File.mtime(env_cache_path) < stale_cutoff
+    Integer(exec_check('git config duet.env.touch')) < stale_cutoff
   end
 
   def stale_cutoff
-    Time.now - Integer(ENV.fetch('GIT_DUET_SECONDS_AGO_STALE', '300'))
+    Integer(Time.now - Integer(ENV.fetch('GIT_DUET_SECONDS_AGO_STALE', '300')))
   end
 
   def set_duet!

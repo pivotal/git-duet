@@ -57,7 +57,7 @@ describe Git::Duet::SoloCommand do
     subject.execute!
   end
 
-  it 'should set the soloist as author in env var cache' do
+  it 'should set the soloist as author in custom git config' do
     subject.should_receive(:write_env_vars)
     subject.execute!
   end

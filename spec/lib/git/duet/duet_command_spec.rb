@@ -63,7 +63,7 @@ describe Git::Duet::DuetCommand do
     subject.execute!
   end
 
-  it 'should set the alpha as author and omega as committer in env var cache' do
+  it 'should set the alpha as author and omega as committer in custom git config' do
     subject.should_receive(:write_env_vars)
     subject.execute!
   end

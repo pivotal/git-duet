@@ -10,23 +10,16 @@ module Git::Duet::CommandMethods
   end
 
   def write_env_vars
-    out = []
-    var_map.each do |key,value|
-      out << "#{key}='#{value}'"
-    end
     in_repo_root do
-      File.open(env_cache_path, 'w') do |f|
-        f.puts out.join($/)
+      var_map.each do |key,value|
+        exec_check("git config duet.env.#{key} '#{value}'")
       end
+      exec_check("git config duet.env.touch #{Time.now.to_i}")
     end
-  end
-
-  def env_cache_path
-    '.git/hooks/git-duet-env-cache.txt'
   end
 
   def in_repo_root
-    Dir.chdir(`git rev-parse --show-toplevel`.chomp) do
+    Dir.chdir(exec_check('git rev-parse --show-toplevel').chomp) do
       yield
     end
   end

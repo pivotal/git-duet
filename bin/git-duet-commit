@@ -1,8 +1,15 @@
 #!/usr/bin/env ruby
 Dir.chdir(`git rev-parse --show-toplevel`.chomp) do
-  File.readlines('.git/hooks/git-duet-env-cache.txt').each do |l|
-    key, value = l.split(/=/).map(&:strip)
-    ENV[key] = value.gsub(/^(['"])(.*)\1/, '\2')
+  %w(
+    GIT_AUTHOR_NAME
+    GIT_AUTHOR_EMAIL
+    GIT_COMMITTER_NAME
+    GIT_COMMITTER_EMAIL
+  ).each do |env_var|
+    value = `git config duet.env.#{env_var}`.chomp
+    if !value.empty?
+      ENV[env_var] = value
+    end
   end
   exec 'git commit --signoff ' << ARGV.join(' ')
 end
