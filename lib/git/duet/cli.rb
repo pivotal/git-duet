@@ -13,7 +13,13 @@ class Git::Duet::Cli
         duet(parse_duet_options(argv.clone))
         return 0
       when /pre-commit$/
-        pre_commit(parse_pre_commit_options(argv.clone))
+        pre_commit(parse_generic_options(argv.clone))
+        return 0
+      when /install-hook$/
+        install_hook(parse_generic_options(argv.clone))
+        return 0
+      when /commit$/
+        commit(parse_generic_options(argv.clone))
         return 0
       else
         raise ScriptError.new('How did you get here???')
@@ -23,40 +29,36 @@ class Git::Duet::Cli
     end
 
     private
-    def parse_solo_options(argv)
+    def with_common_opts(argv, banner)
       options = {}
       leftover_argv = OptionParser.new do |opts|
-        opts.banner = "Usage: #{opts.program_name} [options] <soloist-initials>"
+        opts.banner = banner.gsub(/__PROG__/, opts.program_name)
         opts.on('-q', 'Silence output') do |q|
           options[:quiet] = true
         end
+        yield opts if block_given?
       end.parse!(argv)
+      return leftover_argv, options
+    end
+
+    def parse_solo_options(argv)
+      leftover_argv, options = with_common_opts(
+        argv, "Usage: __PROG__ [options] <soloist-initials>"
+      )
       options[:soloist] = leftover_argv.first
       options
     end
 
     def parse_duet_options(argv)
-      options = {}
-      leftover_argv = OptionParser.new do |opts|
-        opts.banner = "Usage: #{opts.program_name} [options] " <<
-                      "<alpha-initials> <omega-initials>"
-        opts.on('-q', 'Silence output') do |q|
-          options[:quiet] = true
-        end
-      end.parse!(argv)
+      leftover_argv, options = with_common_opts(
+        argv, "Usage: __PROG__ [options] <alpha-initials> <omega-initials>"
+      )
       options[:alpha], options[:omega] = leftover_argv[0..1]
       options
     end
 
-    def parse_pre_commit_options(argv)
-      options = {}
-      OptionParser.new do |opts|
-        opts.banner = "Usage: #{opts.program_name}"
-        opts.on('-q', 'Silence output') do |q|
-          options[:quiet] = true
-        end
-      end.parse!(argv)
-      options
+    def parse_generic_options(argv)
+      with_common_opts(argv, "Usage: __PROG__").last
     end
 
     def solo(options)
@@ -76,6 +78,16 @@ class Git::Duet::Cli
     def pre_commit(options)
       require_relative 'pre_commit_command'
       Git::Duet::PreCommitCommand.new(options[:quiet]).execute!
+    end
+
+    def install_hook(options)
+      require_relative 'install_hook_command'
+      Git::Duet::InstallHookCommand.new(options[:quiet]).execute!
+    end
+
+    def commit(options)
+      require_relative 'commit_command'
+      Git::Duet::CommitCommand.new(options[:quiet]).execute!
     end
   end
 end

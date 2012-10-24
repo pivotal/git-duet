@@ -40,8 +40,7 @@ describe 'git-duet end to end', integration: true do
     before :each do
       Dir.chdir(@repo_dir)
       FileUtils.rm_f('.git/hooks/pre-commit')
-      load File.expand_path('../../../bin/git-duet-install-hook', __FILE__)
-      git_duet_install_hook_main
+      Git::Duet::Cli.run('git-duet-install-hook', [])
     end
 
     it 'should write the hook to the `pre-commit` hook file' do
