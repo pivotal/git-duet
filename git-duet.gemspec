@@ -4,8 +4,8 @@ require File.expand_path('../lib/git/duet/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors = ['Dan Buch', 'Jesse Szwedko']
   gem.email = %w(d.buch@modcloth.com j.szwedko@modcloth.com)
-  gem.description = %q{Opinionated alternative to Pivotal's `git-pair`}
-  gem.summary = "Pair with someone.  Decide who's driving.  " <<
+  gem.description = %q{Pair programming git identity thingy}
+  gem.summary = "Pair harmoniously!  Decide who's driving.  " <<
                 "Commit along the way.  Don't make a mess of " <<
                 "the repository history."
   gem.homepage = ''

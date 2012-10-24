@@ -65,7 +65,7 @@ describe Git::Duet::AuthorMapper do
     }
   end
 
-  context 'when using a Pivotal `~/.pairs` config' do
+  context 'when using a `~/.pairs` config' do
     before :each do
       subject.stub(cfg: {
         'pairs' => {

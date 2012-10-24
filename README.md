@@ -1,9 +1,9 @@
 # git duet
 
-An opinionated alternative to Pivotal's `git-pair` executable.  Working
-in a pair doesn't mean you've both lost your identity.  `git duet` helps
-with blaming/praising by using stuff that's already in `git` rather than
-littering your repo history with fictitous user identities.
+Pair harmoniously!  Working in a pair doesn't mean you've both lost your
+identity.  `git duet` helps with blaming/praising by using stuff that's
+already in `git` without littering your repo history with fictitous user
+identities.
 
 ## Installation
 
@@ -15,7 +15,10 @@ gem install git-duet
 
 ## Usage
 
-Set up an authors file with email domain, or just symlink your Pivotal
+### Setup
+
+Make an authors file with email domain, or if you're already using
+[git pair](https://github.com/pivotal/git_scripts), just symlink your
 `~/.pairs` file over to `~/.git-authors`.
 
 ~~~~~ yaml
@@ -26,7 +29,7 @@ email:
   domain: awesometown.me
 ~~~~~
 
-`git duet` will use the Pivotal YAML structure if it has to, e.g.:
+`git duet` will use the `git pair` YAML structure if it has to, e.g.:
 
 ~~~~~ yaml
 pairs:
@@ -46,17 +49,7 @@ export GIT_DUET_AUTHORS_FILE=$HOME/.secret-squirrel/git-authors
 git duet jd am
 ~~~~~
 
-Explicitly setting email addresses by initials is supported, too:
-
-~~~~~ yaml
-pairs:
-  jd: Jane Doe
-  fb: Frances Bar
-email:
-  domain: awesometown.me
-email_addresses:
-  jd: jane@awesome.biz
-~~~~~
+### Workflow stuff
 
 Set the author and committer via `git duet`:
 
@@ -77,6 +70,51 @@ When you're done pairing, set the author back to yourself with `git solo`:
 git solo jd
 ~~~~~
 
+### Email Configuration
+
+Email addresses are constructed from the first initial and last name
+plus email domain, e.g. with the following authors file:
+
+~~~~~ yaml
+pairs:
+  jd: Jane Doe
+  fb: Frances Bar
+email:
+  domain: eternalstench.bog
+~~~~~
+
+After invoking:
+
+~~~~~ bash
+git duet jd fb
+~~~~~
+
+Then the configured email addresses will be:
+
+~~~~~ bash
+git config duet.env.git-author-email
+# -> j.doe@eternalstench.bog
+git config duet.env.git-committer-email
+# -> f.bar@eternalstench.bog
+~~~~~
+
+If the default email address format doesn't work for you, explicitly
+setting email addresses by initials is supported, too:
+
+~~~~~ yaml
+pairs:
+  jd: Jane Doe
+  fb: Frances Bar
+email:
+  domain: awesometown.me
+email_addresses:
+  jd: jane@awesome.biz
+~~~~~
+
+Which will result in Jane Doe having an email set of `jane@awesome.biz`.
+
+### Git hook integration
+
 If you'd like to regularly remind yourself to set the solo or duet
 initials, use `git duet-pre-commit` in your pre-commit hook:
 
@@ -87,10 +125,11 @@ exec < /dev/tty
 exec git duet-pre-commit
 ~~~~~
 
-This pre-commit hook will prompt for duet/solo initials if the env cache
-file is either missing or stale.  The default staleness cutoff is 5
-minutes, but may be configured via the `GIT_DUET_SECONDS_AGO_STALE`
-environmental variable, which should be an integer of seconds, e.g.:
+The `duet-pre-commit` command will prompt for duet/solo initials if the
+cached author and committer settings are missing or stale.  The default
+staleness cutoff is 5 minutes, but may be configured via the
+`GIT_DUET_SECONDS_AGO_STALE` environmental variable, which should be an
+integer of seconds, e.g.:
 
 ~~~~~ bash
 export GIT_DUET_SECONDS_AGO_STALE=60
