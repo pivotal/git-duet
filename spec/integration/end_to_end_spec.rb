@@ -2,10 +2,20 @@ require 'git/duet/cli'
 require 'tmpdir'
 
 describe 'git-duet end to end', integration: true do
+  EMAIL_LOOKUP_SCRIPT = <<-EOF.gsub(/^  /, '')
+  #!/usr/bin/env ruby
+  addr = {
+    'jd' => 'jane_doe@lookie.me',
+    'fb' => 'fb9000@dalek.info'
+  }[ARGV.first]
+  puts addr
+  EOF
+
   before :all do
     @startdir = Dir.pwd
     @tmpdir = Dir.mktmpdir('git-duet-specs')
     @git_authors = File.join(@tmpdir, '.git-authors')
+    @email_lookup_path = File.join(@tmpdir, 'email-lookup')
     File.open(@git_authors, 'w') do |f|
       f.puts YAML.dump(
         'pairs' => {
@@ -21,6 +31,8 @@ describe 'git-duet end to end', integration: true do
       )
     end
     ENV['GIT_DUET_AUTHORS_FILE'] = @git_authors
+    File.open(@email_lookup_path, 'w') { |f| f.puts EMAIL_LOOKUP_SCRIPT }
+    FileUtils.chmod(0755, @email_lookup_path)
     @repo_dir = File.join(@tmpdir, 'foo')
     Dir.chdir(@tmpdir)
     `git init #{@repo_dir}`
@@ -76,6 +88,44 @@ describe 'git-duet end to end', integration: true do
 
     it 'should cache the git user email as author email' do
       `git config duet.env.git-author-email`.chomp.should == 'jane@hamsters.biz'
+    end
+  end
+
+
+  context 'when an external email lookup is provided' do
+    before :each do
+      @old_email_lookup = ENV.delete('GIT_DUET_EMAIL_LOOKUP_COMMAND')
+      ENV['GIT_DUET_EMAIL_LOOKUP_COMMAND'] = @email_lookup_path
+    end
+
+    after :each do
+      ENV['GIT_DUET_EMAIL_LOOKUP_COMMAND'] = @old_email_lookup
+    end
+
+    context 'when setting the author via solo' do
+      before :each do
+        Dir.chdir(@repo_dir)
+        Git::Duet::Cli.run('git-solo', %W(jd))
+      end
+
+      it 'should set the author email address given by the external email lookup' do
+        `git config duet.env.git-author-email`.chomp.should == 'jane_doe@lookie.me'
+      end
+    end
+
+    context 'when setting author and committer via duet' do
+      before :each do
+        Dir.chdir(@repo_dir)
+        Git::Duet::Cli.run('git-duet', %w(jd fb))
+      end
+
+      it 'should set the author email address given by the external email lookup' do
+        `git config duet.env.git-author-email`.chomp.should == 'jane_doe@lookie.me'
+      end
+
+      it 'should set the committer email address given by the external email lookup' do
+        `git config duet.env.git-committer-email`.chomp.should == 'fb9000@dalek.info'
+      end
     end
   end
 
