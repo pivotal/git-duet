@@ -28,7 +28,11 @@ describe 'git-duet end to end', integration: true do
 
   after :all do
     Dir.chdir(@startdir)
-    FileUtils.rm_rf(@tmpdir)
+    if ENV['RSPEC_NO_CLEANUP']
+      File.open('integration-end-to-end-test-dir.txt', 'w') { |f| f.puts @tmpdir }
+    else
+      FileUtils.rm_rf(@tmpdir)
+    end
   end
 
   before :each do
@@ -102,14 +106,16 @@ describe 'git-duet end to end', integration: true do
     before :each do
       Dir.chdir(@repo_dir)
       Git::Duet::Cli.run('git-duet', %w(jd fb))
+      File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
+      `git add file.txt`
       Git::Duet::Cli.run('git-duet-commit', ['-m', 'Just testing here'])
     end
 
-    xit 'should list the alpha of the duet as author in the log' do
+    it 'should list the alpha of the duet as author in the log' do
       `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
     end
 
-    xit 'should list the omega of the duet as committer in the log' do
+    it 'should list the omega of the duet as committer in the log' do
       `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
     end
   end
