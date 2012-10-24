@@ -19,8 +19,8 @@ class Git::Duet::PreCommitCommand
   private
 
   def explode!
-    STDERR.puts "Standard input is not a tty, human!"
-    STDERR.puts "I'm going home."
+    error("Standard input is not a tty, human!")
+    error("I'm going home.")
     raise Git::Duet::ScriptDieError.new(1)
   end
 
@@ -57,8 +57,8 @@ class Git::Duet::PreCommitCommand
 
   def get_initials
     loop do
-      STDOUT.puts "---> Who's in this duet (or solo)?"
-      STDOUT.print '> '
+      info("---> Who's in this duet (or solo)?")
+      prompt
       initials = STDIN.gets.chomp.split
       return initials if initials_valid?(initials)
     end
@@ -69,13 +69,13 @@ class Git::Duet::PreCommitCommand
       return true
     end
     if initials.length > 2
-      STDERR.puts "---> Too many initials!"
+      error('---> Too many initials!')
     else
-      STDERR.puts "---> Seriously..."
+      error('---> Seriously...')
     end
     false
   rescue KeyError => e
-    STDERR.puts "---> #{e.message}"
+    error("---> #{e.message}")
     false
   end
 end

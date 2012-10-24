@@ -21,13 +21,9 @@ class Git::Duet::CommitCommand
     env_vars.each do |env_var,config_key|
       begin
         value = exec_check("git config duet.env.#{config_key}").chomp
-        if !value.empty?
-          ENV[env_var] = value
-        end
+        ENV[env_var] = value if !value.empty?
       rescue StandardError => e
-        unless @quiet
-          STDERR.puts "#{e.message}"
-        end
+        error("#{e.message}")
       end
     end
   end

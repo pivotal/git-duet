@@ -4,9 +4,8 @@ require_relative 'script_die_error'
 module Git::Duet::CommandMethods
   private
   def report_env_vars
-    return if @quiet
     var_map.each do |key,value|
-      STDOUT.puts "#{key}='#{value}'"
+      info("#{key}='#{value}'")
     end
   end
 
@@ -28,10 +27,21 @@ module Git::Duet::CommandMethods
   def exec_check(command, okay_statuses = [0].freeze)
     output = `#{command}`
     if !okay_statuses.include?($?.exitstatus)
-      raise Git::Duet::ScriptDieError.new(
-        "Command #{command.inspect} exited with #{$?.to_i}"
-      )
+      error("Command #{command.inspect} exited with #{$?.to_i}")
+      raise Git::Duet::ScriptDieError.new(1)
     end
     output
+  end
+
+  def info(msg)
+    STDOUT.puts(msg) unless @quiet
+  end
+
+  def error(msg)
+    STDERR.puts(msg) unless @quiet
+  end
+
+  def prompt
+    STDOUT.print '> '
   end
 end
