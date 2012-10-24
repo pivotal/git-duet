@@ -54,6 +54,7 @@ describe 'git-duet end to end', integration: true do
 
   context 'when setting the author via solo' do
     before :each do
+      Dir.chdir(@repo_dir)
       Git::Duet::Cli.run('git-solo', %w(jd))
     end
 
@@ -63,6 +64,53 @@ describe 'git-duet end to end', integration: true do
 
     it 'should set the git user email' do
       `git config user.email`.chomp.should == 'jane@hamsters.biz'
+    end
+
+    it 'should cache the git user name as author name' do
+      `git config duet.env.git-author-name`.chomp.should == 'Jane Doe'
+    end
+
+    it 'should cache the git user email as author email' do
+      `git config duet.env.git-author-email`.chomp.should == 'jane@hamsters.biz'
+    end
+  end
+
+  context 'when setting author and committer via duet' do
+    before :each do
+      Dir.chdir(@repo_dir)
+      Git::Duet::Cli.run('git-duet', %w(jd fb))
+    end
+
+    it 'should set the git user name' do
+      `git config user.name`.chomp.should == 'Jane Doe'
+    end
+
+    it 'should set the git user email' do
+      `git config user.email`.chomp.should == 'jane@hamsters.biz'
+    end
+
+    it 'should cache the git committer name' do
+      `git config duet.env.git-committer-name`.chomp.should == 'Frances Bar'
+    end
+
+    it 'should cache the git committer email' do
+      `git config duet.env.git-committer-email`.chomp.should == 'f.bar@hamster.info'
+    end
+  end
+
+  context 'when committing via git-duet-commit' do
+    before :each do
+      Dir.chdir(@repo_dir)
+      Git::Duet::Cli.run('git-duet', %w(jd fb))
+      Git::Duet::Cli.run('git-duet-commit', ['-m', 'Just testing here'])
+    end
+
+    xit 'should list the alpha of the duet as author in the log' do
+      `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+    end
+
+    xit 'should list the omega of the duet as committer in the log' do
+      `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
     end
   end
 end

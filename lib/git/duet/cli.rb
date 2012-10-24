@@ -19,7 +19,7 @@ class Git::Duet::Cli
         install_hook(parse_generic_options(argv.clone))
         return 0
       when /commit$/
-        commit(parse_generic_options(argv.clone))
+        commit(parse_commit_options(argv.clone))
         return 0
       else
         raise ScriptError.new('How did you get here???')
@@ -36,14 +36,16 @@ class Git::Duet::Cli
         opts.on('-q', 'Silence output') do |q|
           options[:quiet] = true
         end
-        yield opts if block_given?
+        if block_given?
+          yield opts, options
+        end
       end.parse!(argv)
       return leftover_argv, options
     end
 
     def parse_solo_options(argv)
       leftover_argv, options = with_common_opts(
-        argv, "Usage: __PROG__ [options] <soloist-initials>"
+        argv, 'Usage: __PROG__ [options] <soloist-initials>'
       )
       options[:soloist] = leftover_argv.first
       options
@@ -51,14 +53,22 @@ class Git::Duet::Cli
 
     def parse_duet_options(argv)
       leftover_argv, options = with_common_opts(
-        argv, "Usage: __PROG__ [options] <alpha-initials> <omega-initials>"
+        argv, 'Usage: __PROG__ [options] <alpha-initials> <omega-initials>'
       )
       options[:alpha], options[:omega] = leftover_argv[0..1]
       options
     end
 
     def parse_generic_options(argv)
-      with_common_opts(argv, "Usage: __PROG__").last
+      with_common_opts(argv, 'Usage: __PROG__').last
+    end
+
+    def parse_commit_options(argv)
+      opts_argv = []
+      opts_argv << '-q' if argv.delete('-q')
+      options = with_common_opts(opts_argv, 'Usage: __PROG__').last
+      options[:passthrough_args] = argv
+      options
     end
 
     def solo(options)
@@ -87,7 +97,9 @@ class Git::Duet::Cli
 
     def commit(options)
       require_relative 'commit_command'
-      Git::Duet::CommitCommand.new(options[:quiet]).execute!
+      Git::Duet::CommitCommand.new(
+        options[:passthrough_args], options[:quiet]
+      ).execute!
     end
   end
 end

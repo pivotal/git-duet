@@ -4,7 +4,8 @@ require_relative 'command_methods'
 class Git::Duet::CommitCommand
   include Git::Duet::CommandMethods
 
-  def initialize(quiet = false)
+  def initialize(passthrough_argv, quiet = false)
+    @passthrough_argv = passthrough_argv
     @quiet = quiet
   end
 
@@ -32,7 +33,7 @@ class Git::Duet::CommitCommand
   end
 
   def exec_git_commit
-    exec 'git commit --signoff ' << ARGV.join(' ')
+    exec_check('git commit --signoff ' << quoted_passthrough_args)
   end
 
   def env_vars
@@ -48,5 +49,11 @@ class Git::Duet::CommitCommand
     ).map do |env_var|
       [env_var, env_var.downcase.gsub(/_/, '-')]
     end
+  end
+
+  def quoted_passthrough_args
+    @passthrough_argv.map do |arg|
+      "'#{arg}'"
+    end.join(' ')
   end
 end
