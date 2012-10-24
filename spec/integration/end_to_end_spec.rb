@@ -1,4 +1,9 @@
 require 'git/duet/cli'
+require 'git/duet/commit_command'
+require 'git/duet/duet_command'
+require 'git/duet/install_hook_command'
+require 'git/duet/pre_commit_command'
+require 'git/duet/solo_command'
 require 'tmpdir'
 
 describe 'git-duet end to end', integration: true do
@@ -48,8 +53,17 @@ describe 'git-duet end to end', integration: true do
   end
 
   before :each do
-    STDOUT.stub(:puts)
-    STDERR.stub(:puts)
+    [
+      Git::Duet::SoloCommand,
+      Git::Duet::DuetCommand,
+      Git::Duet::InstallHookCommand,
+      Git::Duet::PreCommitCommand,
+      Git::Duet::CommitCommand
+    ].each do |c|
+      [:info, :error, :prompt].each do |m|
+        c.any_instance.stub(m)
+      end
+    end
   end
 
   context 'when installing the pre-commit hook' do
@@ -153,20 +167,40 @@ describe 'git-duet end to end', integration: true do
   end
 
   context 'when committing via git-duet-commit' do
-    before :each do
-      Dir.chdir(@repo_dir)
-      Git::Duet::Cli.run('git-duet', %w(jd fb))
-      File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
-      `git add file.txt`
-      Git::Duet::Cli.run('git-duet-commit', ['-m', 'Just testing here'])
+    context 'after running git-duet' do
+      before :each do
+        Dir.chdir(@repo_dir)
+        Git::Duet::Cli.run('git-duet', %w(jd fb))
+        File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
+        `git add file.txt`
+        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Just testing here'])
+      end
+
+      it 'should list the alpha of the duet as author in the log' do
+        `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+      end
+
+      it 'should list the omega of the duet as committer in the log' do
+        `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
+      end
     end
 
-    it 'should list the alpha of the duet as author in the log' do
-      `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
-    end
+    context 'after running git-solo' do
+      before :each do
+        Dir.chdir(@repo_dir)
+        Git::Duet::Cli.run('git-solo', %w(jd))
+        File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
+        `git add file.txt`
+        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Just testing here'])
+      end
 
-    it 'should list the omega of the duet as committer in the log' do
-      `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
+      it 'should list the soloist as author in the log' do
+        `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+      end
+
+      xit 'should list the soloist as committer in the log' do
+        `git log -1 --format='%cn <%ce>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+      end
     end
   end
 end
