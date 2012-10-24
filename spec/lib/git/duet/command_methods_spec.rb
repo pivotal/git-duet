@@ -15,6 +15,9 @@ describe Git::Duet::CommandMethods do
   end
 
   before :each do
+    [:info, :error].each do |m|
+      subject.stub(m)
+    end
     subject.stub(:in_repo_root) do |&block|
       block.call
     end

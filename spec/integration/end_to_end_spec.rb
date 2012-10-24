@@ -64,13 +64,24 @@ describe 'git-duet end to end', integration: true do
         c.any_instance.stub(m)
       end
     end
+    %w(
+      GIT_AUTHOR_NAME
+      GIT_AUTHOR_EMAIL
+      GIT_COMMITTER_NAME
+      GIT_COMMITTER_EMAIL
+    ).each do |env_var|
+      ENV.delete(env_var)
+    end
   end
 
   context 'when installing the pre-commit hook' do
     before :each do
       Dir.chdir(@repo_dir)
-      FileUtils.rm_f('.git/hooks/pre-commit')
       Git::Duet::Cli.run('git-duet-install-hook', [])
+    end
+
+    after :each do
+      FileUtils.rm_f('.git/hooks/pre-commit')
     end
 
     it 'should write the hook to the `pre-commit` hook file' do
@@ -173,14 +184,15 @@ describe 'git-duet end to end', integration: true do
         Git::Duet::Cli.run('git-duet', %w(jd fb))
         File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
         `git add file.txt`
-        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Just testing here'])
       end
 
       it 'should list the alpha of the duet as author in the log' do
+        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Testing set of alpha as author'])
         `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
       end
 
       it 'should list the omega of the duet as committer in the log' do
+        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Testing set of omega as committer'])
         `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
       end
     end
@@ -191,14 +203,15 @@ describe 'git-duet end to end', integration: true do
         Git::Duet::Cli.run('git-solo', %w(jd))
         File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
         `git add file.txt`
-        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Just testing here'])
       end
 
       it 'should list the soloist as author in the log' do
+        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Testing set of soloist as author'])
         `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
       end
 
-      xit 'should list the soloist as committer in the log' do
+      it 'should list the soloist as committer in the log' do
+        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Testing set of soloist as committer'])
         `git log -1 --format='%cn <%ce>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
       end
     end
