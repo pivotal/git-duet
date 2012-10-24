@@ -43,6 +43,7 @@ describe Git::Duet::PreCommitCommand do
   context 'when setting the duet (or solo)' do
     before :each do
       STDOUT.stub(:puts)
+      STDOUT.stub(:print)
       STDERR.stub(:puts)
     end
 

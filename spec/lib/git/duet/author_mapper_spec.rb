@@ -44,6 +44,33 @@ describe Git::Duet::AuthorMapper do
     }
   end
 
+  it 'should construct default email addresses from first initial and last name plus domain' do
+    subject.map('hb').should == {
+      'hb' => {
+        name: 'Hampton Bones',
+        email: 'h.bones@awesometown.me'
+      }
+    }
+  end
+
+  it 'should construct email addresses from optional username (if given) plus domain' do
+    subject.map('fb').should == {
+      'fb' => {
+        name: 'Frances Bar',
+        email: 'frances@awesometown.me'
+      }
+    }
+  end
+
+  it 'should use an explicitly-configured email address if given' do
+    subject.map('jd').should == {
+      'jd' => {
+        name: 'Jane Doe',
+        email: 'jane@awesome.biz'
+      }
+    }
+  end
+
   it 'should map any number of initials to name -> email pairs' do
     subject.map('jd', 'fb', 'qx', 'hb').should == {
       'jd' => {
