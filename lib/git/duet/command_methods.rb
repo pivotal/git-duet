@@ -1,4 +1,5 @@
 require 'git/duet'
+require_relative 'script_die_error'
 
 module Git::Duet::CommandMethods
   private
@@ -24,10 +25,10 @@ module Git::Duet::CommandMethods
     end
   end
 
-  def exec_check(command)
+  def exec_check(command, okay_statuses = [0].freeze)
     output = `#{command}`
-    if $?.exitstatus != 0
-      raise StandardError.new(
+    if !okay_statuses.include?($?.exitstatus)
+      raise Git::Duet::ScriptDieError.new(
         "Command #{command.inspect} exited with #{$?.to_i}"
       )
     end

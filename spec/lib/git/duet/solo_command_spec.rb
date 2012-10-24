@@ -18,11 +18,8 @@ describe Git::Duet::SoloCommand do
     end)
     subject.stub(:` => '')
     subject.stub(:report_env_vars)
-    Dir.stub(:chdir) do |&block|
+    subject.stub(:in_repo_root) do |&block|
       block.call
-    end
-    File.stub(:open) do |filename,mode,&block|
-      block.call(double('outfile').as_null_object)
     end
   end
 
@@ -40,13 +37,31 @@ describe Git::Duet::SoloCommand do
 
   it 'should set the soloist name as git config user.name' do
     subject.stub(:`).with(/git config user\.email/)
+    subject.stub(:`).with(/git config --unset-all duet\.env/)
     subject.should_receive(:`).with("git config user.name '#{author_mapping[soloist][:name]}'")
     subject.execute!
   end
 
   it 'should set the soloist email as git config user.email' do
     subject.stub(:`).with(/git config user\.name/)
+    subject.stub(:`).with(/git config --unset-all duet\.env/)
     subject.should_receive(:`).with("git config user.email '#{author_mapping[soloist][:email]}'")
+    subject.execute!
+  end
+
+  it 'should unset the committer name' do
+    subject.stub(:`).with(/git config user\.name/)
+    subject.stub(:`).with(/git config user\.email/)
+    subject.stub(:`).with(/git config --unset-all duet\.env\.git-committer-email/)
+    subject.should_receive(:`).with('git config --unset-all duet.env.git-committer-name')
+    subject.execute!
+  end
+
+  it 'should unset the committer email' do
+    subject.stub(:`).with(/git config user\.name/)
+    subject.stub(:`).with(/git config user\.email/)
+    subject.stub(:`).with(/git config --unset-all duet\.env\.git-committer-name/)
+    subject.should_receive(:`).with('git config --unset-all duet.env.git-committer-email')
     subject.execute!
   end
 
