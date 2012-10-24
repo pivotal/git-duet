@@ -29,7 +29,8 @@ email:
   domain: awesometown.me
 ~~~~~
 
-`git duet` will use the `git pair` YAML structure if it has to, e.g.:
+`git duet` will use the `git pair` YAML structure if it has to (the
+difference is the top-level key being `pairs` instead of `authors`,) e.g.:
 
 ~~~~~ yaml
 pairs:
@@ -73,7 +74,7 @@ git solo jd
 ### Email Configuration
 
 Email addresses are constructed from the first initial and last name
-(*or* optional username after a `;`) plus email domain, e.g. with the
+( *or* optional username after a `;`) plus email domain, e.g. with the
 following authors file:
 
 ~~~~~ yaml
@@ -90,9 +91,11 @@ After invoking:
 git duet jd fb
 ~~~~~
 
-Then the configured email addresses will be:
+Then the configured email addresses will show up like this:
 
 ~~~~~ bash
+git config user.email
+# -> jane@eternalstench.bog
 git config duet.env.git-author-email
 # -> jane@eternalstench.bog
 git config duet.env.git-committer-email
@@ -113,7 +116,14 @@ email_addresses:
   jd: jane@awesome.biz
 ~~~~~
 
-Which will result in Jane Doe having an email set of `jane@awesome.biz`.
+Then Jane Doe's email will show up like this:
+
+~~~~~ bash
+git solo jd
+# ...
+git config user.email
+# -> jane@awesome.biz
+~~~~~
 
 Alternatively, if you have some other preferred way to look up email
 addresses by initials, name or username, just use that instead:
