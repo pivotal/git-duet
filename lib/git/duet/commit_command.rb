@@ -29,7 +29,7 @@ class Git::Duet::CommitCommand
   end
 
   def exec_git_commit
-    exec_check('git commit --signoff ' << quoted_passthrough_args)
+    exec 'git commit --signoff ' << quoted_passthrough_args
   end
 
   def env_vars

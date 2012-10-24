@@ -1,9 +1,3 @@
-require 'git/duet/cli'
-require 'git/duet/commit_command'
-require 'git/duet/duet_command'
-require 'git/duet/install_hook_command'
-require 'git/duet/pre_commit_command'
-require 'git/duet/solo_command'
 require 'tmpdir'
 
 describe 'git-duet end to end', integration: true do
@@ -36,6 +30,7 @@ describe 'git-duet end to end', integration: true do
       )
     end
     ENV['GIT_DUET_AUTHORS_FILE'] = @git_authors
+    ENV['PATH'] = "#{File.expand_path('../../../bin', __FILE__)}#{ENV['PATH']}"
     File.open(@email_lookup_path, 'w') { |f| f.puts EMAIL_LOOKUP_SCRIPT }
     FileUtils.chmod(0755, @email_lookup_path)
     @repo_dir = File.join(@tmpdir, 'foo')
@@ -52,32 +47,10 @@ describe 'git-duet end to end', integration: true do
     end
   end
 
-  before :each do
-    [
-      Git::Duet::SoloCommand,
-      Git::Duet::DuetCommand,
-      Git::Duet::InstallHookCommand,
-      Git::Duet::PreCommitCommand,
-      Git::Duet::CommitCommand
-    ].each do |c|
-      [:info, :error, :prompt].each do |m|
-        c.any_instance.stub(m)
-      end
-    end
-    %w(
-      GIT_AUTHOR_NAME
-      GIT_AUTHOR_EMAIL
-      GIT_COMMITTER_NAME
-      GIT_COMMITTER_EMAIL
-    ).each do |env_var|
-      ENV.delete(env_var)
-    end
-  end
-
   context 'when installing the pre-commit hook' do
     before :each do
       Dir.chdir(@repo_dir)
-      Git::Duet::Cli.run('git-duet-install-hook', [])
+      `git duet-install-hook -q`
     end
 
     after :each do
@@ -96,7 +69,7 @@ describe 'git-duet end to end', integration: true do
   context 'when setting the author via solo' do
     before :each do
       Dir.chdir(@repo_dir)
-      Git::Duet::Cli.run('git-solo', %w(jd))
+      `git solo jd -q`
     end
 
     it 'should set the git user name' do
@@ -130,7 +103,7 @@ describe 'git-duet end to end', integration: true do
     context 'when setting the author via solo' do
       before :each do
         Dir.chdir(@repo_dir)
-        Git::Duet::Cli.run('git-solo', %W(jd))
+        `git solo jd -q`
       end
 
       it 'should set the author email address given by the external email lookup' do
@@ -141,7 +114,7 @@ describe 'git-duet end to end', integration: true do
     context 'when setting author and committer via duet' do
       before :each do
         Dir.chdir(@repo_dir)
-        Git::Duet::Cli.run('git-duet', %w(jd fb))
+        `git duet jd fb -q`
       end
 
       it 'should set the author email address given by the external email lookup' do
@@ -157,7 +130,7 @@ describe 'git-duet end to end', integration: true do
   context 'when setting author and committer via duet' do
     before :each do
       Dir.chdir(@repo_dir)
-      Git::Duet::Cli.run('git-duet', %w(jd fb))
+      `git duet jd fb -q`
     end
 
     it 'should set the git user name' do
@@ -181,18 +154,18 @@ describe 'git-duet end to end', integration: true do
     context 'after running git-duet' do
       before :each do
         Dir.chdir(@repo_dir)
-        Git::Duet::Cli.run('git-duet', %w(jd fb))
+        `git duet jd fb -q`
         File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
         `git add file.txt`
       end
 
       it 'should list the alpha of the duet as author in the log' do
-        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Testing set of alpha as author'])
+        `git duet-commit -q -m 'Testing set of alpha as author'`
         `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
       end
 
       it 'should list the omega of the duet as committer in the log' do
-        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Testing set of omega as committer'])
+        `git duet-commit -q -m 'Testing set of omega as committer'`
         `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
       end
     end
@@ -200,18 +173,18 @@ describe 'git-duet end to end', integration: true do
     context 'after running git-solo' do
       before :each do
         Dir.chdir(@repo_dir)
-        Git::Duet::Cli.run('git-solo', %w(jd))
+        `git solo jd -q`
         File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
         `git add file.txt`
       end
 
       it 'should list the soloist as author in the log' do
-        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Testing set of soloist as author'])
+        `git duet-commit -m 'Testing set of soloist as author' 2>/dev/null`
         `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
       end
 
       it 'should list the soloist as committer in the log' do
-        Git::Duet::Cli.run('git-duet-commit', ['-m', 'Testing set of soloist as committer'])
+        `git duet-commit -m 'Testing set of soloist as committer' 2>/dev/null`
         `git log -1 --format='%cn <%ce>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
       end
     end
