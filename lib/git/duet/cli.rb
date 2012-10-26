@@ -15,9 +15,6 @@ class Git::Duet::Cli
       when /pre-commit$/
         pre_commit(parse_generic_options(argv.clone))
         return 0
-      when /pre-commit-tk$/
-        pre_commit_tk(parse_generic_options(argv.clone))
-        return 0
       when /install-hook$/
         install_hook(parse_generic_options(argv.clone))
         return 0
@@ -91,11 +88,6 @@ class Git::Duet::Cli
     def pre_commit(options)
       require_relative 'pre_commit_command'
       Git::Duet::PreCommitCommand.new(options[:quiet]).execute!
-    end
-
-    def pre_commit_tk(options)
-      require_relative 'pre_commit_tk_command'
-      Git::Duet::PreCommitTkCommand.new(options[:quiet]).execute!
     end
 
     def install_hook(options)
