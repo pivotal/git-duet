@@ -1,5 +1,5 @@
 require 'git/duet'
-require_relative 'command_methods'
+require 'git/duet/command_methods'
 
 class Git::Duet::CommitCommand
   include Git::Duet::CommandMethods

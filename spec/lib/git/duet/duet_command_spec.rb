@@ -17,8 +17,8 @@ describe Git::Duet::DuetCommand do
   end
 
   before :each do
-    subject.stub(author_mapper: double('author mapper').tap do |am|
-      am.stub(map: author_mapping)
+    subject.stub(:author_mapper => double('author mapper').tap do |am|
+      am.stub(:map => author_mapping)
     end)
     subject.stub(:` => '')
     subject.stub(:report_env_vars)
@@ -39,7 +39,7 @@ describe Git::Duet::DuetCommand do
   end
 
   it 'should (privately) respond to `write_env_vars`' do
-    subject.private_methods.should include(:write_env_vars)
+    subject.private_methods.map(&:to_sym).should include(:write_env_vars)
   end
 
   it 'should set the alpha name as git config user.name' do

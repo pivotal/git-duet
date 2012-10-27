@@ -24,21 +24,21 @@ describe Git::Duet::Cli do
   end
 
   it 'should run `solo` when the progname matches /solo$/' do
-    Git::Duet::SoloCommand.stub(new: double('solo').tap do |solo|
+    Git::Duet::SoloCommand.stub(:new => double('solo').tap do |solo|
       solo.should_receive(:execute!)
     end)
     subject.run('git-solo', %w(jd -q))
   end
 
   it 'should run `duet` when progname matches /duet$/' do
-    Git::Duet::DuetCommand.stub(new: double('duet').tap do |duet|
+    Git::Duet::DuetCommand.stub(:new => double('duet').tap do |duet|
       duet.should_receive(:execute!)
     end)
     subject.run('git-duet', %w(jd fb -q))
   end
 
   it 'should run `pre_commit` when progname matches /pre-commit$/' do
-    Git::Duet::PreCommitCommand.stub(new: double('pre-commit').tap do |pc|
+    Git::Duet::PreCommitCommand.stub(:new => double('pre-commit').tap do |pc|
       pc.should_receive(:execute!)
     end)
     subject.run('git-duet-pre-commit', %w(-q))

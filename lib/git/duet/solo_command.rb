@@ -1,6 +1,6 @@
 require 'git/duet'
-require_relative 'author_mapper'
-require_relative 'command_methods'
+require 'git/duet/author_mapper'
+require 'git/duet/command_methods'
 
 class Git::Duet::SoloCommand
   include Git::Duet::CommandMethods

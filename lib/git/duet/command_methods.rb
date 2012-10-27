@@ -1,5 +1,5 @@
 require 'git/duet'
-require_relative 'script_die_error'
+require 'git/duet/script_die_error'
 
 module Git::Duet::CommandMethods
   private

@@ -1,1 +1,1 @@
-require_relative 'git/duet'
+require 'git/duet'

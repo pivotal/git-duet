@@ -39,16 +39,16 @@ describe Git::Duet::AuthorMapper do
 
   it 'should map initials to name -> email pairs' do
     subject.map('jd').fetch('jd').should == {
-      name: 'Jane Doe',
-      email: 'jane@awesome.biz'
+      :name => 'Jane Doe',
+      :email => 'jane@awesome.biz'
     }
   end
 
   it 'should construct default email addresses from first initial and last name plus domain' do
     subject.map('hb').should == {
       'hb' => {
-        name: 'Hampton Bones',
-        email: 'h.bones@awesometown.me'
+        :name => 'Hampton Bones',
+        :email => 'h.bones@awesometown.me'
       }
     }
   end
@@ -56,8 +56,8 @@ describe Git::Duet::AuthorMapper do
   it 'should construct email addresses from optional username (if given) plus domain' do
     subject.map('fb').should == {
       'fb' => {
-        name: 'Frances Bar',
-        email: 'frances@awesometown.me'
+        :name => 'Frances Bar',
+        :email => 'frances@awesometown.me'
       }
     }
   end
@@ -65,8 +65,8 @@ describe Git::Duet::AuthorMapper do
   it 'should use an explicitly-configured email address if given' do
     subject.map('jd').should == {
       'jd' => {
-        name: 'Jane Doe',
-        email: 'jane@awesome.biz'
+        :name => 'Jane Doe',
+        :email => 'jane@awesome.biz'
       }
     }
   end
@@ -74,27 +74,27 @@ describe Git::Duet::AuthorMapper do
   it 'should map any number of initials to name -> email pairs' do
     subject.map('jd', 'fb', 'qx', 'hb').should == {
       'jd' => {
-        name: 'Jane Doe',
-        email: 'jane@awesome.biz'
+        :name => 'Jane Doe',
+        :email => 'jane@awesome.biz'
       },
       'fb' => {
-        name: 'Frances Bar',
-        email: 'frances@awesometown.me'
+        :name => 'Frances Bar',
+        :email => 'frances@awesometown.me'
       },
       'qx' => {
-        name: 'Quincy Xavier',
-        email: 'qx@awesometown.me'
+        :name => 'Quincy Xavier',
+        :email => 'qx@awesometown.me'
       },
       'hb' => {
-        name: 'Hampton Bones',
-        email: 'h.bones@awesometown.me'
+        :name => 'Hampton Bones',
+        :email => 'h.bones@awesometown.me'
       }
     }
   end
 
   context 'when using a `~/.pairs` config' do
     before :each do
-      subject.stub(cfg: {
+      subject.stub(:cfg => {
         'pairs' => {
           'jd' => 'Jane Doe; jdoe',
           'fb' => 'Frances Bar; frances',
@@ -112,28 +112,28 @@ describe Git::Duet::AuthorMapper do
 
     it 'should map initials to name -> email pairs' do
       subject.map('jd').fetch('jd').should == {
-        name: 'Jane Doe',
-        email: 'jane@awesome.biz'
+        :name => 'Jane Doe',
+        :email => 'jane@awesome.biz'
       }
     end
 
     it 'should map any number of initials to name -> email pairs' do
       subject.map('jd', 'fb', 'qx', 'hb').should == {
         'jd' => {
-          name: 'Jane Doe',
-          email: 'jane@awesome.biz'
+          :name => 'Jane Doe',
+          :email => 'jane@awesome.biz'
         },
         'fb' => {
-          name: 'Frances Bar',
-          email: 'frances@awesometown.me'
+          :name => 'Frances Bar',
+          :email => 'frances@awesometown.me'
         },
         'qx' => {
-          name: 'Quincy Xavier',
-          email: 'qx@awesometown.me'
+          :name => 'Quincy Xavier',
+          :email => 'qx@awesometown.me'
         },
         'hb' => {
-          name: 'Hampton Bones',
-          email: 'h.bones@awesometown.me'
+          :name => 'Hampton Bones',
+          :email => 'h.bones@awesometown.me'
         }
       }
     end

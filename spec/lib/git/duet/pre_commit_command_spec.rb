@@ -22,7 +22,7 @@ describe Git::Duet::PreCommitCommand do
   end
 
   it 'should yell and leave if STDIN is not a tty' do
-    STDIN.stub(tty?: false)
+    STDIN.stub(:tty? => false)
     subject.stub(:error)
     subject.should_not_receive(:in_repo_root)
     expect { subject.execute! }.to raise_error(Git::Duet::ScriptDieError)
@@ -48,15 +48,15 @@ describe Git::Duet::PreCommitCommand do
     end
 
     it 'should run the solo command if one set of initials is provided' do
-      subject.stub(get_initials: ['zx'])
-      Git::Duet::SoloCommand.should_receive(:new).with('zx', true)
+      subject.stub(:get_initials => ['zx'])
+      Git::Duet::SoloCommand.should_receive(:new).with('zx', true)\
         .and_return(double('solo').tap { |solo| solo.should_receive(:execute!) })
       subject.send(:set_duet!)
     end
 
     it 'should run the duet command if two sets of initials are provided' do
-      subject.stub(get_initials: ['zx', 'aq'])
-      Git::Duet::DuetCommand.should_receive(:new).with('zx', 'aq', true)
+      subject.stub(:get_initials => ['zx', 'aq'])
+      Git::Duet::DuetCommand.should_receive(:new).with('zx', 'aq', true)\
         .and_return(double('duet').tap { |duet| duet.should_receive(:execute!) })
       subject.send(:set_duet!)
     end

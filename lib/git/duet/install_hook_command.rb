@@ -1,6 +1,6 @@
 require 'git/duet'
 require 'fileutils'
-require_relative 'command_methods'
+require 'git/duet/command_methods'
 
 class Git::Duet::InstallHookCommand
   include Git::Duet::CommandMethods

@@ -72,31 +72,31 @@ class Git::Duet::Cli
     end
 
     def solo(options)
-      require_relative 'solo_command'
+      require 'git/duet/solo_command'
       Git::Duet::SoloCommand.new(
         options.fetch(:soloist), options[:quiet]
       ).execute!
     end
 
     def duet(options)
-      require_relative 'duet_command'
+      require 'git/duet/duet_command'
       Git::Duet::DuetCommand.new(
         options.fetch(:alpha), options.fetch(:omega), options[:quiet]
       ).execute!
     end
 
     def pre_commit(options)
-      require_relative 'pre_commit_command'
+      require 'git/duet/pre_commit_command'
       Git::Duet::PreCommitCommand.new(options[:quiet]).execute!
     end
 
     def install_hook(options)
-      require_relative 'install_hook_command'
+      require 'git/duet/install_hook_command'
       Git::Duet::InstallHookCommand.new(options[:quiet]).execute!
     end
 
     def commit(options)
-      require_relative 'commit_command'
+      require 'git/duet/commit_command'
       Git::Duet::CommitCommand.new(
         options[:passthrough_args], options[:quiet]
       ).execute!

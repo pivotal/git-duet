@@ -24,8 +24,8 @@ class Git::Duet::AuthorMapper
   def author_info(initials)
     author, username = author_map.fetch(initials).split(/;/).map(&:strip)
     {
-      name: author,
-      email: lookup_author_email(initials, author, username)
+      :name => author,
+      :email => lookup_author_email(initials, author, username)
     }
   end
 

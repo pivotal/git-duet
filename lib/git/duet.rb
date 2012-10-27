@@ -3,5 +3,6 @@ module Git
   end
 end
 
-require_relative 'duet/version'
-require_relative 'duet/cli'
+require 'git/duet/version'
+require 'git/duet/cli'
+require 'git/duet/key_error'

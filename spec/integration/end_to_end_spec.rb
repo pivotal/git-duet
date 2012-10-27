@@ -1,6 +1,6 @@
 require 'tmpdir'
 
-describe 'git-duet end to end', integration: true do
+describe 'git-duet end to end', :integration => true do
   EMAIL_LOOKUP_SCRIPT = <<-EOF.gsub(/^  /, '')
   #!/usr/bin/env ruby
   addr = {

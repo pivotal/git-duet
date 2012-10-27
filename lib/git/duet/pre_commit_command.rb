@@ -1,6 +1,6 @@
 require 'git/duet'
-require_relative 'command_methods'
-require_relative 'script_die_error'
+require 'git/duet/command_methods'
+require 'git/duet/script_die_error'
 
 class Git::Duet::PreCommitCommand
   include Git::Duet::CommandMethods
@@ -40,13 +40,13 @@ class Git::Duet::PreCommitCommand
   end
 
   def set_duet!
-    require_relative 'author_mapper'
+    require 'git/duet/author_mapper'
     initials = get_initials
     if initials.length == 1
-      require_relative 'solo_command'
+      require 'git/duet/solo_command'
       Git::Duet::SoloCommand.new(initials.first, @quiet).execute!
     elsif initials.length == 2
-      require_relative 'duet_command'
+      require 'git/duet/duet_command'
       Git::Duet::DuetCommand.new(initials.first, initials.last, @quiet).execute!
     end
   end
@@ -74,7 +74,7 @@ class Git::Duet::PreCommitCommand
       error('---> Seriously...')
     end
     false
-  rescue KeyError => e
+  rescue IndexError, KeyError => e
     error("---> #{e.message}")
     false
   end
