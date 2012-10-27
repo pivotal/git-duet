@@ -5,9 +5,10 @@ require 'git/duet/command_methods'
 class Git::Duet::SoloCommand
   include Git::Duet::CommandMethods
 
-  def initialize(soloist, quiet = false)
+  def initialize(soloist, quiet = false, global = false)
     @soloist = soloist
     @quiet = !!quiet
+    @global = !!global
     @author_mapper = Git::Duet::AuthorMapper.new
   end
 
@@ -22,13 +23,13 @@ class Git::Duet::SoloCommand
   attr_accessor :soloist, :author_mapper
 
   def set_soloist_as_git_config_user
-    exec_check("git config user.name '#{soloist_info[:name]}'")
-    exec_check("git config user.email '#{soloist_info[:email]}'")
+    exec_check("git config #{@global ? '--global ' : ''}user.name '#{soloist_info[:name]}'")
+    exec_check("git config #{@global ? '--global ' : ''}user.email '#{soloist_info[:email]}'")
   end
 
   def unset_committer_vars
-    exec_check("git config --unset-all duet.env.git-committer-name", [0, 5])
-    exec_check("git config --unset-all duet.env.git-committer-email", [0, 5])
+    exec_check("git config #{@global ? '--global ' : ''}--unset-all duet.env.git-committer-name", [0, 5])
+    exec_check("git config #{@global ? '--global ' : ''}--unset-all duet.env.git-committer-email", [0, 5])
   end
 
   def var_map

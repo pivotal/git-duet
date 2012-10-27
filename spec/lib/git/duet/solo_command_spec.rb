@@ -76,4 +76,40 @@ describe Git::Duet::SoloCommand do
     subject.should_receive(:write_env_vars)
     subject.execute!
   end
+
+  context 'when configured to operate on the global config' do
+    subject do
+      described_class.new(soloist, false, true)
+    end
+
+    it 'should set the soloist name as global git config user.name' do
+      subject.stub(:`).with(/git config --global user\.email/)
+      subject.stub(:`).with(/git config --global --unset-all duet\.env/)
+      subject.should_receive(:`).with("git config --global user.name '#{author_mapping[soloist][:name]}'")
+      subject.execute!
+    end
+
+    it 'should set the soloist email as global git config user.email' do
+      subject.stub(:`).with(/git config --global user\.name/)
+      subject.stub(:`).with(/git config --global --unset-all duet\.env/)
+      subject.should_receive(:`).with("git config --global user.email '#{author_mapping[soloist][:email]}'")
+      subject.execute!
+    end
+
+    it 'should unset the global committer name' do
+      subject.stub(:`).with(/git config --global user\.name/)
+      subject.stub(:`).with(/git config --global user\.email/)
+      subject.stub(:`).with(/git config --global --unset-all duet\.env\.git-committer-email/)
+      subject.should_receive(:`).with('git config --global --unset-all duet.env.git-committer-name')
+      subject.execute!
+    end
+
+    it 'should unset the global committer email' do
+      subject.stub(:`).with(/git config --global user\.name/)
+      subject.stub(:`).with(/git config --global user\.email/)
+      subject.stub(:`).with(/git config --global --unset-all duet\.env\.git-committer-name/)
+      subject.should_receive(:`).with('git config --global --unset-all duet.env.git-committer-email')
+      subject.execute!
+    end
+  end
 end

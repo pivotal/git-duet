@@ -46,7 +46,11 @@ class Git::Duet::Cli
     def parse_solo_options(argv)
       leftover_argv, options = with_common_opts(
         argv, 'Usage: __PROG__ [options] <soloist-initials>'
-      )
+      ) do |opts,options_hash|
+        opts.on('-g', '--global', 'Change global git config') do |g|
+          options_hash[:global] = true
+        end
+      end
       options[:soloist] = leftover_argv.first
       options
     end
@@ -54,7 +58,11 @@ class Git::Duet::Cli
     def parse_duet_options(argv)
       leftover_argv, options = with_common_opts(
         argv, 'Usage: __PROG__ [options] <alpha-initials> <omega-initials>'
-      )
+      ) do |opts,options_hash|
+        opts.on('-g', '--global', 'Change global git config') do |g|
+          options_hash[:global] = true
+        end
+      end
       options[:alpha], options[:omega] = leftover_argv[0..1]
       options
     end
@@ -74,14 +82,19 @@ class Git::Duet::Cli
     def solo(options)
       require 'git/duet/solo_command'
       Git::Duet::SoloCommand.new(
-        options.fetch(:soloist), options[:quiet]
+        options.fetch(:soloist),
+        options[:quiet],
+        options[:global]
       ).execute!
     end
 
     def duet(options)
       require 'git/duet/duet_command'
       Git::Duet::DuetCommand.new(
-        options.fetch(:alpha), options.fetch(:omega), options[:quiet]
+        options.fetch(:alpha),
+        options.fetch(:omega),
+        options[:quiet],
+        options[:global]
       ).execute!
     end
 
@@ -98,7 +111,8 @@ class Git::Duet::Cli
     def commit(options)
       require 'git/duet/commit_command'
       Git::Duet::CommitCommand.new(
-        options[:passthrough_args], options[:quiet]
+        options[:passthrough_args],
+        options[:quiet]
       ).execute!
     end
   end

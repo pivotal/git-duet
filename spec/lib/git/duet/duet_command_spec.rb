@@ -67,4 +67,22 @@ describe Git::Duet::DuetCommand do
     subject.should_receive(:write_env_vars)
     subject.execute!
   end
+
+  context 'when configured to operate on the global config' do
+    subject do
+      described_class.new(alpha, omega, false, true)
+    end
+
+    it 'should set the alpha name as global git config user.name' do
+      subject.stub(:`).with(/git config --global user\.email/)
+      subject.should_receive(:`).with("git config --global user.name '#{author_mapping[alpha][:name]}'")
+      subject.execute!
+    end
+
+    it 'should set the alpha email as global git config user.email' do
+      subject.stub(:`).with(/git config --global user\.name/)
+      subject.should_receive(:`).with("git config --global user.email '#{author_mapping[alpha][:email]}'")
+      subject.execute!
+    end
+  end
 end

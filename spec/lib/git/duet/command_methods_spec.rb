@@ -35,4 +35,17 @@ describe Git::Duet::CommandMethods do
     $?.should_receive(:exitstatus).and_return(1)
     expect { subject.send(:exec_check, 'ls hamsters') }.to raise_error(StandardError)
   end
+
+  context 'when configured to operate on the global config' do
+    before :each do
+      subject.instance_variable_set(:@global, true)
+    end
+
+    it 'should write env vars to a custom global git config tree' do
+      subject.should_receive(:`).with("git config --global duet.env.fizzle-baz 'awesome'")
+      subject.should_receive(:`).with("git config --global duet.env.oh-snarf 'mumra'")
+      subject.should_receive(:`).with(/^git config --global duet\.env\.mtime \d+/)
+      subject.send(:write_env_vars)
+    end
+  end
 end

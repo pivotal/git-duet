@@ -12,9 +12,9 @@ module Git::Duet::CommandMethods
   def write_env_vars
     in_repo_root do
       var_map.each do |key,value|
-        exec_check("git config duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'")
+        exec_check("git config #{@global ? '--global ' : ''}duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'")
       end
-      exec_check("git config duet.env.mtime #{Time.now.to_i}")
+      exec_check("git config #{@global ? '--global ' : ''}duet.env.mtime #{Time.now.to_i}")
     end
   end
 

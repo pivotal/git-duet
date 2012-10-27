@@ -71,6 +71,20 @@ When you're done pairing, set the author back to yourself with `git solo`:
 git solo jd
 ~~~~~
 
+### Global Config Support
+
+If you're jumping between projects and don't want to think about
+managing them all individually, you can operate on the global git
+config:
+
+~~~~~ bash
+git solo -g jd
+~~~~~
+
+~~~~~ bash
+git duet --global jd fb
+~~~~~
+
 ### Email Configuration
 
 Email addresses are constructed from the first initial and last name
