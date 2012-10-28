@@ -30,7 +30,7 @@ describe 'git-duet end to end', :integration => true do
       )
     end
     ENV['GIT_DUET_AUTHORS_FILE'] = @git_authors
-    ENV['PATH'] = "#{File.expand_path('../../../bin', __FILE__)}#{ENV['PATH']}"
+    ENV['PATH'] = "#{File.expand_path('../../../bin', __FILE__)}:#{ENV['PATH']}"
     File.open(@email_lookup_path, 'w') { |f| f.puts EMAIL_LOOKUP_SCRIPT }
     FileUtils.chmod(0755, @email_lookup_path)
     @repo_dir = File.join(@tmpdir, 'foo')
