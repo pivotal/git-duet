@@ -186,6 +186,16 @@ git commit -v
 # ... pre-commit hook fires
 ~~~~~
 
+If you want to use the default hook (as shown above), install it while
+in your repo like so:
+
+~~~~~ bash
+git duet-install-hook
+~~~~~
+
+Don't worry if you forgot you already had a `pre-commit` hook installed.
+The `git duet-install-hook` command will refuse to overwrite it.
+
 ## Contributing
 
 1. Fork it
