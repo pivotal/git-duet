@@ -138,4 +138,33 @@ describe Git::Duet::AuthorMapper do
       }
     end
   end
+
+  context 'when the authors file does not exist' do
+    let :bad_path do
+      "/its/#{rand(999)}/hosed/#{rand(999)}/captain/#{rand(999)}/.git-authors"
+    end
+
+    subject do
+      described_class.new(bad_path)
+    end
+
+    before :each do
+      subject.instance_variable_set(:@cfg, nil)
+      IO.stub(:read).with(bad_path).and_raise(
+        Errno::ENOENT.new("No such file or directory - #{bad_path}")
+      )
+    end
+
+    it 'should warn about missing authors file' do
+      STDERR.should_receive(:puts).with(
+        /Missing or corrupt authors file.*#{bad_path}/i
+      )
+      expect { subject.map('zzz') }.to raise_error
+    end
+
+    it 'should raise a ScriptDieError' do
+      STDERR.stub(:puts)
+      expect { subject.map('zzz') }.to raise_error(Git::Duet::ScriptDieError)
+    end
+  end
 end

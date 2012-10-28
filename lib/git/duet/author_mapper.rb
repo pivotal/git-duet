@@ -60,5 +60,8 @@ class Git::Duet::AuthorMapper
 
   def cfg
     @cfg ||= YAML.load(IO.read(@authors_file))
+  rescue StandardError => e
+    STDERR.puts("git-duet: Missing or corrupt authors file: #{e.message}")
+    raise Git::Duet::ScriptDieError.new(3)
   end
 end

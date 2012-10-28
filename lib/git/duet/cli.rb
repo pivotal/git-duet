@@ -25,7 +25,7 @@ class Git::Duet::Cli
         raise ScriptError.new('How did you get here???')
       end
     rescue Git::Duet::ScriptDieError => e
-      return Integer(e.message)
+      return e.exit_code
     end
 
     private
