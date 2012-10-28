@@ -1,7 +1,7 @@
-# git duet
+# Git Duet
 
 Pair harmoniously!  Working in a pair doesn't mean you've both lost your
-identity.  `git duet` helps with blaming/praising by using stuff that's
+identity.  Git Duet helps with blaming/praising by using stuff that's
 already in `git` without littering your repo history with fictitous user
 identities.
 
@@ -41,7 +41,7 @@ email:
 ~~~~~
 
 If you want your authors file to live somwhere else, just tell
-`git-duet` about it via the `GIT_DUET_AUTHORS_FILE` environmental
+Git Duet about it via the `GIT_DUET_AUTHORS_FILE` environmental
 variable, e.g.:
 
 ~~~~~ bash
@@ -198,15 +198,27 @@ The `git duet-install-hook` command will refuse to overwrite it.
 
 ## Compatibility
 
-`git-duet` has been tested on the following platforms:
+Git Duet has been tested on the following platforms:
 
  * Mac OSX 10.7
- * Ubuntu 12.10 (Xubuntu, really)
+ * <span title="Xubuntu, really">Ubuntu</span> 12.10
 
 With the following rubies:
 
  * MRI 1.8.7-p358
+ * MRI 1.9.2-p320
  * MRI 1.9.3-p194
+ * REE 1.8.7-2011.12
+ * REE 1.8.7-2012.02
+ * JRuby 1.6.3
+ * JRuby 1.6.4
+ * JRuby 1.6.5.1
+ * JRuby 1.6.6
+ * JRuby 1.6.7.2
+
+Please note that JRuby is not recommended as the VM startup time is
+considerably longer than the total lifetime of most (all?) Git Duet
+commands.
 
 If you experience badness, please [let us know via
 email](mailto:github@modcloth.com) or pretty please [create an issue on
