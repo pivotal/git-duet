@@ -196,6 +196,22 @@ git duet-install-hook
 Don't worry if you forgot you already had a `pre-commit` hook installed.
 The `git duet-install-hook` command will refuse to overwrite it.
 
+## Compatibility
+
+`git-duet` has been tested on the following platforms:
+
+ * Mac OSX 10.7
+ * Ubuntu 12.10 (Xubuntu, really)
+
+With the following rubies:
+
+ * MRI 1.8.7-p358
+ * MRI 1.9.3-p194
+
+If you experience badness, please [let us know via
+email](mailto:github@modcloth.com) or pretty please [create an issue on
+github](https://github.com/modcloth/git-duet/issues/new).
+
 ## Contributing
 
 1. Fork it
