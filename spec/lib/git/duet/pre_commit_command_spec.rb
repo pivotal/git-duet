@@ -29,12 +29,14 @@ describe Git::Duet::PreCommitCommand do
   end
 
   it 'should do nothing if the env cache is not stale' do
+    subject.stub(:exec_check).with(/git config duet\.env\.git/)
     subject.stub(:exec_check).with('git config duet.env.mtime').and_return(Time.now.to_i)
     subject.should_not_receive(:set_duet!)
     subject.execute!
   end
 
   it 'should set the duet if the env cache does not exist' do
+    subject.stub(:exec_check).with(/git config duet\.env\.git/)
     subject.stub(:exec_check).with('git config duet.env.mtime').and_raise(StandardError)
     subject.should_receive(:set_duet!)
     subject.execute!

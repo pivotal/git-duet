@@ -12,12 +12,15 @@ class Git::Duet::PreCommitCommand
   def execute!
     return explode! if !STDIN.tty?
     in_repo_root do
-      set_duet! if !env_cache_exists? || env_cache_stale?
+      if !env_cache_exists? || env_cache_stale?
+        set_duet!
+      else
+        dump_env_vars
+      end
     end
   end
 
   private
-
   def explode!
     error("Standard input is not a tty, human!")
     error("I'm going home.")

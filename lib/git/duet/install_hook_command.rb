@@ -8,7 +8,7 @@ class Git::Duet::InstallHookCommand
   HOOK = <<-EOF.gsub(/^  /, '')
   #!/bin/bash
   exec < /dev/tty
-  exec git duet-pre-commit
+  exec git duet-pre-commit "$@"
   EOF
 
   def initialize(quiet = false)

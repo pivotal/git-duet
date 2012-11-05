@@ -18,13 +18,8 @@ class Git::Duet::CommitCommand
 
   private
   def add_env_vars_to_env
-    env_vars.each do |env_var,config_key|
-      begin
-        value = exec_check("git config duet.env.#{config_key}").chomp
-        ENV[env_var] = value if !value.empty?
-      rescue StandardError => e
-        error("#{e.message}")
-      end
+    extract_env_vars_from_git_config.each do |k,v|
+      ENV[k] = v
     end
   end
 
