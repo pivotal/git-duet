@@ -71,15 +71,39 @@ module Git::Duet::CommandMethods
     output
   end
 
+  def with_output_unquieted(&block)
+    @old_quiet = @quiet
+    @quiet = false
+    block.call
+    @quiet = @old_quiet
+  rescue StandardError => e
+    @quiet = @old_quiet
+    raise e
+  end
+
+  def with_output_quieted(&block)
+    @old_quiet = @quiet
+    @quiet = true
+    block.call
+    @quiet = @old_quiet
+  rescue StandardError => e
+    @quiet = @old_quiet
+    raise e
+  end
+
   def info(msg)
-    STDOUT.puts(msg) unless @quiet
+    STDOUT.puts(msg) unless quiet?
   end
 
   def error(msg)
-    STDERR.puts(msg) unless @quiet
+    STDERR.puts(msg) unless quiet?
   end
 
   def prompt
     STDOUT.print '> '
+  end
+
+  def quiet?
+    ENV['GIT_DUET_QUIET'] == '1' || @quiet
   end
 end

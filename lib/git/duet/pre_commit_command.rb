@@ -28,7 +28,9 @@ class Git::Duet::PreCommitCommand
   end
 
   def env_cache_exists?
-    exec_check('git config duet.env.mtime')
+    with_output_quieted do
+      exec_check('git config duet.env.mtime')
+    end
     true
   rescue
     false
@@ -59,9 +61,21 @@ class Git::Duet::PreCommitCommand
   end
 
   def get_initials
+    if ENV['GIT_DUET_PRE_COMMIT_INITIALS']
+      env_initials = ENV['GIT_DUET_PRE_COMMIT_INITIALS'].chomp.split
+      if initials_valid?(env_initials)
+        return env_initials
+      else
+        error("Initials provided in GIT_DUET_PRE_COMMIT_INITIALS are invalid, human.")
+        raise Git::Duet::ScriptDieError.new(11)
+      end
+    end
+
     loop do
-      info("---> Who's in this duet (or solo)?")
-      prompt
+      with_output_unquieted do
+        info("---> Who's in this duet (or solo)?")
+        prompt
+      end
       initials = STDIN.gets.chomp.split
       return initials if initials_valid?(initials)
     end
@@ -71,14 +85,18 @@ class Git::Duet::PreCommitCommand
     if [1, 2].include?(initials.length) && author_mapper.map(*initials)
       return true
     end
-    if initials.length > 2
-      error('---> Too many initials!')
-    else
-      error('---> Seriously...')
+    with_output_unquieted do
+      if initials.length > 2
+        error('---> Too many initials!')
+      else
+        error('---> Seriously...')
+      end
     end
     false
   rescue IndexError, KeyError => e
-    error("---> #{e.message}")
+    with_output_unquieted do
+      error("---> #{e.message}")
+    end
     false
   end
 end
