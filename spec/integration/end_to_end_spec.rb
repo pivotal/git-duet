@@ -195,6 +195,23 @@ describe 'git-duet end to end', :integration => true do
           `git duet-commit -q -m 'Testing hook firing with committer set'`
           `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
         end
+
+        context 'when new initials are provided at hook time' do
+          before :each do
+            `git duet fb jd`
+            `git config --unset-all duet.env.mtime`
+          end
+
+          xit 'should use the latest provided author' do
+            `git duet-commit -q -m 'Testing use of author initials provided during hook'`
+            `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+          end
+
+          xit 'should use the latest provided committer' do
+            `git duet-commit -q -m 'Testing use of committer initials provided during hook'`
+            `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
+          end
+        end
       end
     end
 
@@ -238,6 +255,23 @@ describe 'git-duet end to end', :integration => true do
         it 'should fire the hook and set author as committer before allowing commit' do
           `git duet-commit -q -m 'Testing hook firing with author set as committer'`
           `git log -1 --format='%cn <%ce>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+        end
+
+        context 'when new initials are provided at hook time' do
+          before :each do
+            `git duet fb`
+            `git config --unset-all duet.env.mtime`
+          end
+
+          xit 'should use the latest provided author' do
+            `git duet-commit -q -m 'Testing use of author initials provided during hook'`
+            `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+          end
+
+          xit 'should use the latest provided author as committer' do
+            `git duet-commit -q -m 'Testing use of author initials provided during hook as committer'`
+            `git log -1 --format='%cn <%ce>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+          end
         end
       end
     end
