@@ -6,10 +6,12 @@ require 'simplecov'
 require 'pry'
 
 RSpec.configure do |c|
-  # No music allowed for neckbeards or polo shirts.
-  if RbConfig::CONFIG['host_os'] =~ /darwin/i
-    c.formatter = 'NyanCatMusicFormatter'
-  else
-    c.formatter = 'NyanCatFormatter'
+  if !ENV['TRAVIS']
+    if RbConfig::CONFIG['host_os'] =~ /darwin/i
+      c.formatter = 'NyanCatMusicFormatter'
+    else
+      # No music allowed for neckbeards or polo shirts.
+      c.formatter = 'NyanCatFormatter'
+    end
   end
 end
