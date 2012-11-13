@@ -1,5 +1,8 @@
 # Git Duet
 
+<img src="https://api.travis-ci.org/modcloth/git-duet.png"
+  title="Build Status" />
+
 Pair harmoniously!  Working in a pair doesn't mean you've both lost your
 identity.  Git Duet helps with blaming/praising by using stuff that's
 already in `git` without littering your repo history with fictitous user
