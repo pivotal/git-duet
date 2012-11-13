@@ -169,11 +169,10 @@ initials, use `git duet-pre-commit` in your pre-commit hook:
 *(in $REPO_ROOT/.git/hooks/pre-commit)*
 ~~~~~ bash
 #!/bin/bash
-exec < /dev/tty
 exec git duet-pre-commit
 ~~~~~
 
-The `duet-pre-commit` command will prompt for duet/solo initials if the
+The `duet-pre-commit` command will exit with a non-zero status if the
 cached author and committer settings are missing or stale.  The default
 staleness cutoff is 5 minutes, but may be configured via the
 `GIT_DUET_SECONDS_AGO_STALE` environmental variable, which should be an
@@ -198,23 +197,8 @@ The `git duet-install-hook` command will refuse to overwrite it.
 
 ## Compatibility
 
-Git Duet has been tested on the following platforms:
-
- * Mac OSX 10.7
- * <span title="Xubuntu, really">Ubuntu</span> 12.10
-
-With the following rubies:
-
- * MRI 1.8.7-p358
- * MRI 1.9.2-p320
- * MRI 1.9.3-p194
- * REE 1.8.7-2011.12
- * REE 1.8.7-2012.02
- * JRuby 1.6.3
- * JRuby 1.6.4
- * JRuby 1.6.5.1
- * JRuby 1.6.6
- * JRuby 1.6.7.2
+Git Duet has been tested on a bunch of platform/interpreter combinations
+provided by Travis CI.
 
 Please note that JRuby is not recommended as the VM startup time is
 considerably longer than the total lifetime of most (all?) Git Duet
