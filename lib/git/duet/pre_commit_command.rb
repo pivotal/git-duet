@@ -38,6 +38,6 @@ class Git::Duet::PreCommitCommand
   end
 
   def stale_cutoff
-    Integer(Time.now - Integer(ENV.fetch('GIT_DUET_SECONDS_AGO_STALE', '300')))
+    Integer(Time.now - Integer(ENV.fetch('GIT_DUET_SECONDS_AGO_STALE', '1200')))
   end
 end

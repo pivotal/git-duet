@@ -179,9 +179,9 @@ exec git duet-pre-commit
 
 The `duet-pre-commit` command will exit with a non-zero status if the
 cached author and committer settings are missing or stale.  The default
-staleness cutoff is 5 minutes, but may be configured via the
-`GIT_DUET_SECONDS_AGO_STALE` environmental variable, which should be an
-integer of seconds, e.g.:
+staleness cutoff is [20 minutes](http://en.wikipedia.org/wiki/Pomodoro_Technique),
+but may be configured via the `GIT_DUET_SECONDS_AGO_STALE` environmental variable,
+which should be an integer of seconds, e.g.:
 
 ~~~~~ bash
 export GIT_DUET_SECONDS_AGO_STALE=60
