@@ -203,7 +203,10 @@ The `git duet-install-hook` command will refuse to overwrite it.
 ## Compatibility
 
 Git Duet has been tested on a bunch of platform/interpreter combinations
-provided by Travis CI *not including* JRuby and Rubinius.
+provided by Travis CI *not including* Rubinius.
+
+While JRuby works it is not recommended as the VM startup time is
+usually longer than it takes most Git Duet commands to execute.
 
 If you experience badness, please [let us know via
 email](mailto:github@modcloth.com) or pretty please [create an issue on

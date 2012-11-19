@@ -3,7 +3,6 @@ require 'bundler/setup'
 
 require 'rbconfig'
 require 'simplecov'
-require 'pry'
 
 RSpec.configure do |c|
   if !ENV['TRAVIS']
