@@ -158,6 +158,21 @@ describe 'git-duet end to end', :integration => true do
     end
 
     context 'after running git-solo' do
+      before :each do
+        Dir.chdir(@repo_dir)
+        `git solo zp -q`
+        make_an_edit
+      end
+
+      it 'should use the email template to construct the author email' do
+        `git duet-commit -q -m 'Testing custom email template for author'`
+        `git log -1 --format='%an <%ae>'`.chomp.should == "Zubaz Pants <zubazp#{@name_suffix}@mompopshop.local>"
+      end
+
+      it 'should use the email template to construct the committer email' do
+        `git duet-commit -q -m 'Testing custom email template for committer'`
+        `git log -1 --format='%cn <%ce>'`.chomp.should == "Zubaz Pants <zubazp#{@name_suffix}@mompopshop.local>"
+      end
     end
 
     context 'after running git-duet' do
