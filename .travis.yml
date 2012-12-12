@@ -5,4 +5,3 @@ rvm:
   - 1.9.3
   - jruby-head
   - ree
-env: JAVA_OPTS='-Xms64m -Xmx64m -Xmn16m -XX:+UseCodeCacheFlushing'
