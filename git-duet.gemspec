@@ -2,8 +2,18 @@
 require File.expand_path('../lib/git/duet/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.authors = ['Dan Buch', 'Jesse Szwedko']
-  gem.email = %w(d.buch@modcloth.com j.szwedko@modcloth.com)
+  gem.authors = [
+    'Dan Buch',
+    'Jesse Szwedko',
+    'Rafe Colton',
+    'Sheena McCoy',
+  ]
+  gem.email = %w(
+    d.buch@modcloth.com
+    j.szwedko@modcloth.com
+    r.colton@modcloth.com
+    sp.mccoy@modcloth.com
+  )
   gem.description = %q{Pair programming git identity thingy}
   gem.summary = "Pair harmoniously!  Decide who's driving.  " <<
                 "Commit along the way.  Don't make a mess of " <<
