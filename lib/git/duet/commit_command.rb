@@ -24,7 +24,7 @@ class Git::Duet::CommitCommand
   end
 
   def exec_git_commit
-    exec 'git commit --signoff ' << quoted_passthrough_args
+    exec 'git commit ' << signoff_arg << quoted_passthrough_args
   end
 
   def env_vars
@@ -32,12 +32,7 @@ class Git::Duet::CommitCommand
   end
 
   def env_var_pairs
-    %w(
-      GIT_AUTHOR_NAME
-      GIT_AUTHOR_EMAIL
-      GIT_COMMITTER_NAME
-      GIT_COMMITTER_EMAIL
-    ).map do |env_var|
+    env_var_names.map do |env_var|
       [env_var, env_var.downcase.gsub(/_/, '-')]
     end
   end
@@ -46,5 +41,36 @@ class Git::Duet::CommitCommand
     @passthrough_argv.map do |arg|
       "'#{arg}'"
     end.join(' ')
+  end
+
+  def signoff_arg
+    soloing? ? '' : '--signoff '
+  end
+
+  def env_var_names
+    if soloing?
+      %w(
+        GIT_AUTHOR_NAME
+        GIT_AUTHOR_EMAIL
+      )
+    else
+      %w(
+        GIT_AUTHOR_NAME
+        GIT_AUTHOR_EMAIL
+        GIT_COMMITTER_NAME
+        GIT_COMMITTER_EMAIL
+      )
+    end
+  end
+
+  def soloing?
+    @soloing ||= begin
+      with_output_quieted do
+        exec_check('git config duet.env.git-committer-name').chomp
+      end
+      false
+    rescue StandardError
+      true
+    end
   end
 end

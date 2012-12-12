@@ -216,6 +216,11 @@ describe 'git-duet end to end', :integration => true do
         `git log -1 --format='%cn <%ce>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
       end
 
+      it 'should not include "Signed-off-by" in the commit message' do
+        `git duet-commit -m 'Testing ommitting signoff when only one author' 2>/dev/null`
+        `grep 'Signed-off-by' .git/COMMIT_EDITMSG`.chomp.should == ''
+      end
+
       context 'with the pre-commit hook in place' do
         before :each do
           `git commit -m 'Committing before installing the hook'`

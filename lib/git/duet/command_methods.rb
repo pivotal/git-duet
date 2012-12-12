@@ -85,10 +85,10 @@ module Git::Duet::CommandMethods
     @old_quiet = @quiet
     @quiet = true
     block.call
-    @quiet = @old_quiet
   rescue StandardError => e
-    @quiet = @old_quiet
     raise e
+  ensure
+    @quiet = @old_quiet
   end
 
   def info(msg)
