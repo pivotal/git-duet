@@ -4,8 +4,8 @@ describe 'git-duet end to end', :integration => true do
   EMAIL_LOOKUP_SCRIPT = <<-EOF.gsub(/^  /, '')
   #!/usr/bin/env ruby
   addr = {
-    'jd' => 'jane_doe@lookie.me',
-    'fb' => 'fb9000@dalek.info'
+    'jd' => 'jane_doe@lookie.me.local',
+    'fb' => 'fb9000@dalek.info.local'
   }[ARGV.first]
   puts addr
   EOF
@@ -34,13 +34,14 @@ describe 'git-duet end to end', :integration => true do
       f.puts YAML.dump(
         'pairs' => {
           'jd' => 'Jane Doe',
-          'fb' => 'Frances Bar'
+          'fb' => 'Frances Bar',
+          'zp' => 'Zubaz Pants'
         },
         'email' => {
-          'domain' => 'hamster.info'
+          'domain' => 'hamster.info.local'
         },
         'email_addresses' => {
-          'jd' => 'jane@hamsters.biz'
+          'jd' => 'jane@hamsters.biz.local'
         }
       )
     end
@@ -86,7 +87,7 @@ describe 'git-duet end to end', :integration => true do
     end
 
     it 'should set the git user email' do
-      `git config user.email`.chomp.should == 'jane@hamsters.biz'
+      `git config user.email`.chomp.should == 'jane@hamsters.biz.local'
     end
 
     it 'should cache the git user name as author name' do
@@ -94,7 +95,7 @@ describe 'git-duet end to end', :integration => true do
     end
 
     it 'should cache the git user email as author email' do
-      `git config duet.env.git-author-email`.chomp.should == 'jane@hamsters.biz'
+      `git config duet.env.git-author-email`.chomp.should == 'jane@hamsters.biz.local'
     end
   end
 
@@ -116,7 +117,7 @@ describe 'git-duet end to end', :integration => true do
       end
 
       it 'should set the author email address given by the external email lookup' do
-        `git config duet.env.git-author-email`.chomp.should == 'jane_doe@lookie.me'
+        `git config duet.env.git-author-email`.chomp.should == 'jane_doe@lookie.me.local'
       end
     end
 
@@ -127,11 +128,53 @@ describe 'git-duet end to end', :integration => true do
       end
 
       it 'should set the author email address given by the external email lookup' do
-        `git config duet.env.git-author-email`.chomp.should == 'jane_doe@lookie.me'
+        `git config duet.env.git-author-email`.chomp.should == 'jane_doe@lookie.me.local'
       end
 
       it 'should set the committer email address given by the external email lookup' do
-        `git config duet.env.git-committer-email`.chomp.should == 'fb9000@dalek.info'
+        `git config duet.env.git-committer-email`.chomp.should == 'fb9000@dalek.info.local'
+      end
+    end
+  end
+
+  context 'when a custom email template is provided' do
+    before :each do
+      authors_cfg = YAML.load_file(@git_authors)
+      @name_suffix = rand(1000..9999)
+      authors_cfg['email_template'] =
+        %Q^<%= '' << author.split.first.downcase << ^ <<
+          %Q^author.split.last[0].chr.downcase << '#{@name_suffix}@mompopshop.local' %>^
+      File.open(@git_authors, 'w') do |f|
+        f.puts YAML.dump(authors_cfg)
+      end
+    end
+
+    after :each do
+      authors_cfg = YAML.load_file(@git_authors)
+      authors_cfg.delete('email_template')
+      File.open(@git_authors, 'w') do |f|
+        f.puts YAML.dump(authors_cfg)
+      end
+    end
+
+    context 'after running git-solo' do
+    end
+
+    context 'after running git-duet' do
+      before :each do
+        Dir.chdir(@repo_dir)
+        `git duet zp fb -q`
+        make_an_edit
+      end
+
+      it 'should use the email template to construct the author email' do
+        `git duet-commit -q -m 'Testing custom email template for author'`
+        `git log -1 --format='%an <%ae>'`.chomp.should == "Zubaz Pants <zubazp#{@name_suffix}@mompopshop.local>"
+      end
+
+      it 'should use the email template to construct the committer email' do
+        `git duet-commit -q -m 'Testing custom email template for committer'`
+        `git log -1 --format='%cn <%ce>'`.chomp.should == "Frances Bar <francesb#{@name_suffix}@mompopshop.local>"
       end
     end
   end
@@ -147,7 +190,7 @@ describe 'git-duet end to end', :integration => true do
     end
 
     it 'should set the git user email' do
-      `git config user.email`.chomp.should == 'jane@hamsters.biz'
+      `git config user.email`.chomp.should == 'jane@hamsters.biz.local'
     end
 
     it 'should cache the git committer name' do
@@ -155,7 +198,7 @@ describe 'git-duet end to end', :integration => true do
     end
 
     it 'should cache the git committer email' do
-      `git config duet.env.git-committer-email`.chomp.should == 'f.bar@hamster.info'
+      `git config duet.env.git-committer-email`.chomp.should == 'f.bar@hamster.info.local'
     end
   end
 
@@ -169,12 +212,12 @@ describe 'git-duet end to end', :integration => true do
 
       it 'should list the alpha of the duet as author in the log' do
         `git duet-commit -q -m 'Testing set of alpha as author'`
-        `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+        `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz.local>'
       end
 
       it 'should list the omega of the duet as committer in the log' do
         `git duet-commit -q -m 'Testing set of omega as committer'`
-        `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info>'
+        `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info.local>'
       end
 
       context 'with the pre-commit hook in place' do
@@ -208,12 +251,12 @@ describe 'git-duet end to end', :integration => true do
 
       it 'should list the soloist as author in the log' do
         `git duet-commit -m 'Testing set of soloist as author' 2>/dev/null`
-        `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+        `git log -1 --format='%an <%ae>'`.chomp.should == 'Jane Doe <jane@hamsters.biz.local>'
       end
 
       it 'should list the soloist as committer in the log' do
         `git duet-commit -m 'Testing set of soloist as committer' 2>/dev/null`
-        `git log -1 --format='%cn <%ce>'`.chomp.should == 'Jane Doe <jane@hamsters.biz>'
+        `git log -1 --format='%cn <%ce>'`.chomp.should == 'Jane Doe <jane@hamsters.biz.local>'
       end
 
       it 'should not include "Signed-off-by" in the commit message' do

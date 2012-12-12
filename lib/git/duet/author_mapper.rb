@@ -1,4 +1,5 @@
 require 'yaml'
+require 'erb'
 require 'git/duet'
 
 class Git::Duet::AuthorMapper
@@ -35,15 +36,20 @@ class Git::Duet::AuthorMapper
       return author_email if !author_email.empty?
     end
 
-    if email_addresses[initials]
-      return email_addresses[initials]
-    elsif username
-      return "#{username}@#{email_domain}"
-    else
-      author_name_parts = author.split
-      return "#{author_name_parts.first[0,1].downcase}." <<
-             "#{author_name_parts.last.downcase}@#{email_domain}"
-    end
+    return email_addresses[initials] if email_addresses[initials]
+    return email_from_template(initials, author, username) if email_template
+    return "#{username}@#{email_domain}" if username
+
+    author_name_parts = author.split
+    return "#{author_name_parts.first[0,1].downcase}." <<
+           "#{author_name_parts.last.downcase}@#{email_domain}"
+  end
+
+  def email_from_template(initials, author, username)
+    return ERB.new(email_template).result(binding)
+  rescue StandardError => e
+    STDERR.puts("git-duet: email template rendering error: #{e.message}")
+    raise Git::Duet::ScriptDieError.new(8)
   end
 
   def author_map
@@ -56,6 +62,10 @@ class Git::Duet::AuthorMapper
 
   def email_domain
     @email_domain ||= cfg.fetch('email').fetch('domain')
+  end
+
+  def email_template
+    @email_template || cfg['email_template']
   end
 
   def cfg
