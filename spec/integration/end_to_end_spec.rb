@@ -140,7 +140,7 @@ describe 'git-duet end to end', :integration => true do
   context 'when a custom email template is provided' do
     before :each do
       authors_cfg = YAML.load_file(@git_authors)
-      @name_suffix = rand(1000..9999)
+      @name_suffix = rand(9999)
       authors_cfg['email_template'] =
         %Q^<%= '' << author.split.first.downcase << ^ <<
           %Q^author.split.last[0].chr.downcase << '#{@name_suffix}@mompopshop.local' %>^
