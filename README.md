@@ -92,9 +92,9 @@ git duet --global jd fb
 
 ### Email Configuration
 
-Email addresses are constructed from the first initial and last name
-( *or* optional username after a `;`) plus email domain, e.g. with the
-following authors file:
+By default, email addresses are constructed from the first initial and
+last name ( *or* optional username after a `;`) plus email domain, e.g.
+with the following authors file:
 
 ~~~~~ yaml
 pairs:
@@ -121,9 +121,39 @@ git config duet.env.git-committer-email
 # -> f.bar@eternalstench.bog
 ~~~~~
 
-If the default email address format doesn't work for you, explicitly
-setting email addresses by initials is supported, too, and takes
-precedence over the optional username (after `;`):
+A custom email template may be provided via the `email_template` config
+variable.  The template should be a valid ERB string and the variables
+available are `author` which is the full first and last name value
+associated with each set of initials, `initials` which are the initials
+key, and `username` which is the part following `;` in the author value.
+
+~~~~~ yaml
+pairs:
+  jd: Jane Doe
+  fb: Frances Bar
+email_template: '<%= "#{author.gsub(/ /, '-').downcase}@hamster.local" =%>'
+~~~~~
+
+After invoking:
+
+~~~~~ bash
+git duet jd fb
+~~~~~
+
+Then the configured email addresses will show up like this:
+
+~~~~~ bash
+git config user.email
+# -> jane-doe@hamster.local
+git config duet.env.git-author-email
+# -> jane-doe@hamster.local
+git config duet.env.git-committer-email
+# -> frances-bar@hamster.local
+~~~~~
+
+If there are any exceptions to either the default format or a provided
+`email_template` config var, explicitly setting email addresses by
+initials is supported.
 
 ~~~~~ yaml
 pairs:
