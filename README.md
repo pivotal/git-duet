@@ -196,6 +196,23 @@ $HOME/bin/custom-ldap-thingy 'jd' 'Jane Doe' 'jane'
 If nothing is returned on standard output, email construction falls back
 to the decisions described above.
 
+#### Order of Precedence
+
+Since there are multiple ways to determine an author or committer's
+email, it is important to note the order of precedence used by Git Duet:
+
+1. Email lookup executable configured via the
+   `GIT_DUET_EMAIL_LOOKUP_COMMAND` environmental variable
+2. Email lookup from `email_addresses` in your configuration file
+3. Custom email address from ERB template defined in `email_template` in
+   your configuration file
+4. The username after the `;`, followed by `@` and the configured email
+   domain
+5. The lower-cased first letter of the author or committer's first name,
+   followed by `.` followed by the lower-cased last name of the author
+or committer, followed by `@` and the configured email domain (e.g.
+`f.bar@baz.local`)
+
 ### Git hook integration
 
 If you'd like to regularly remind yourself to set the solo or duet
