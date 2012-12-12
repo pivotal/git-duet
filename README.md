@@ -31,7 +31,7 @@ authors:
   jd: Jane Doe; jane
   fb: Frances Bar
 email:
-  domain: awesometown.me
+  domain: awesometown.local
 ~~~~~
 
 `git duet` will use the `git pair` YAML structure if it has to (the
@@ -42,7 +42,7 @@ pairs:
   jd: Jane Doe; jane
   fb: Frances Bar
 email:
-  domain: awesometown.me
+  domain: awesometown.local
 ~~~~~
 
 If you want your authors file to live somwhere else, just tell
@@ -101,7 +101,7 @@ pairs:
   jd: Jane Doe; jane
   fb: Frances Bar
 email:
-  domain: eternalstench.bog
+  domain: eternalstench.bog.local
 ~~~~~
 
 After invoking:
@@ -114,11 +114,11 @@ Then the configured email addresses will show up like this:
 
 ~~~~~ bash
 git config user.email
-# -> jane@eternalstench.bog
+# -> jane@eternalstench.bog.local
 git config duet.env.git-author-email
-# -> jane@eternalstench.bog
+# -> jane@eternalstench.bog.local
 git config duet.env.git-committer-email
-# -> f.bar@eternalstench.bog
+# -> f.bar@eternalstench.bog.local
 ~~~~~
 
 A custom email template may be provided via the `email_template` config
@@ -160,9 +160,9 @@ pairs:
   jd: Jane Doe; jane
   fb: Frances Bar
 email:
-  domain: awesometown.me
+  domain: awesometown.local
 email_addresses:
-  jd: jane@awesome.biz
+  jd: jane@awesome.local
 ~~~~~
 
 Then Jane Doe's email will show up like this:
@@ -171,7 +171,7 @@ Then Jane Doe's email will show up like this:
 git solo jd
 # ...
 git config user.email
-# -> jane@awesome.biz
+# -> jane@awesome.local
 ~~~~~
 
 Alternatively, if you have some other preferred way to look up email
@@ -190,7 +190,7 @@ the email address:
 
 ~~~~~ bash
 $HOME/bin/custom-ldap-thingy 'jd' 'Jane Doe' 'jane'
-# -> doej@behemoth.org
+# -> doej@behemoth.company.local
 ~~~~~
 
 If nothing is returned on standard output, email construction falls back
