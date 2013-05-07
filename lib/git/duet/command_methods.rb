@@ -38,22 +38,7 @@ module Git::Duet::CommandMethods
   end
 
   def exec_git_commit
-    exec 'git commit --signoff ' << quoted_passthrough_args
-  end
-
-  def env_vars
-    @env_vars ||= Hash[env_var_pairs]
-  end
-
-  def env_var_pairs
-    %w(
-      GIT_AUTHOR_NAME
-      GIT_AUTHOR_EMAIL
-      GIT_COMMITTER_NAME
-      GIT_COMMITTER_EMAIL
-    ).map do |env_var|
-      [env_var, env_var.downcase.gsub(/_/, '-')]
-    end
+    exec 'git commit ' << signoff_arg << quoted_passthrough_args
   end
 
   def in_repo_root

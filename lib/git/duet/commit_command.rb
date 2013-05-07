@@ -23,10 +23,6 @@ class Git::Duet::CommitCommand
     end
   end
 
-  def exec_git_commit
-    exec 'git commit ' << signoff_arg << quoted_passthrough_args
-  end
-
   def env_vars
     @env_vars ||= Hash[env_var_pairs]
   end
