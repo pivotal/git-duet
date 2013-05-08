@@ -235,6 +235,26 @@ describe 'git-duet end to end', :integration => true do
         `git log -1 --format='%cn <%ce>'`.chomp.should == 'Frances Bar <f.bar@hamster.info.local>'
       end
 
+      context 'when no author has been set' do
+        before do
+          Dir.chdir(@repo_dir)
+          %w(git-author-email git-author-name).each do |config|
+            `git config --unset duet.env.#{config}`
+          end
+          make_an_edit
+        end
+
+        it 'should raise an error if committed without the -q option' do
+          `git duet-commit -q -m 'Testing commit with no author'`
+          $?.to_i.should_not == 0
+        end
+
+        it 'should fail to add a commit' do
+          expect{ `git duet-commit -q -m 'testing commit with no author'` }.
+            to_not change{ `git log -1 --format=%H`.chomp }
+        end
+      end
+
       context 'with the pre-commit hook in place' do
         before :each do
           `git commit -m 'Committing before installing the hook'`

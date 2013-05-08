@@ -18,6 +18,11 @@ module Git::Duet::CommandMethods
     end
   end
 
+  def author_env_vars_set?
+    `git config --get duet.env.git-author-name && git config --get duet.env.git-author-email`
+    $? == 0
+  end
+
   def dump_env_vars
     extract_env_vars_from_git_config.each do |k,v|
       puts "#{k}='#{v}'"
@@ -38,21 +43,10 @@ module Git::Duet::CommandMethods
   end
 
   def exec_git_commit
-    exec 'git commit --signoff ' << quoted_passthrough_args
-  end
-
-  def env_vars
-    @env_vars ||= Hash[env_var_pairs]
-  end
-
-  def env_var_pairs
-    %w(
-      GIT_AUTHOR_NAME
-      GIT_AUTHOR_EMAIL
-      GIT_COMMITTER_NAME
-      GIT_COMMITTER_EMAIL
-    ).map do |env_var|
-      [env_var, env_var.downcase.gsub(/_/, '-')]
+    if author_env_vars_set?
+      exec 'git commit ' << signoff_arg << quoted_passthrough_args
+    else
+      raise Git::Duet::ScriptDieError.new(17)
     end
   end
 
