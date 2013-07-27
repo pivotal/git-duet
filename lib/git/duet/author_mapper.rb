@@ -48,7 +48,7 @@ class Git::Duet::AuthorMapper
   def email_from_template(initials, author, username)
     return ERB.new(email_template).result(binding)
   rescue StandardError => e
-    STDERR.puts("git-duet: email template rendering error: #{e.message}")
+    $stderr.puts("git-duet: email template rendering error: #{e.message}")
     raise Git::Duet::ScriptDieError.new(8)
   end
 
@@ -71,7 +71,7 @@ class Git::Duet::AuthorMapper
   def cfg
     @cfg ||= YAML.load(IO.read(@authors_file))
   rescue StandardError => e
-    STDERR.puts("git-duet: Missing or corrupt authors file: #{e.message}")
+    $stderr.puts("git-duet: Missing or corrupt authors file: #{e.message}")
     raise Git::Duet::ScriptDieError.new(3)
   end
 end

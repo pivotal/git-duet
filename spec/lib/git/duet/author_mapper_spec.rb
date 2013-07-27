@@ -37,6 +37,10 @@ describe Git::Duet::AuthorMapper do
     subject.authors_file.should == File.join(ENV['HOME'], '.git-authors')
   end
 
+  it 'should let missing author errors bubble up' do
+    expect { subject.map('bzzzrt') }.to raise_error
+  end
+
   it 'should map initials to name -> email pairs' do
     subject.map('jd').fetch('jd').should == {
       :name => 'Jane Doe',
@@ -156,14 +160,14 @@ describe Git::Duet::AuthorMapper do
     end
 
     it 'should warn about missing authors file' do
-      STDERR.should_receive(:puts).with(
+      $stderr.should_receive(:puts).with(
         /Missing or corrupt authors file.*#{bad_path}/i
       )
       expect { subject.map('zzz') }.to raise_error
     end
 
     it 'should raise a ScriptDieError' do
-      STDERR.stub(:puts)
+      $stderr.stub(:puts)
       expect { subject.map('zzz') }.to raise_error(Git::Duet::ScriptDieError)
     end
   end

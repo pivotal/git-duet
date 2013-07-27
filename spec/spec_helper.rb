@@ -14,3 +14,9 @@ RSpec.configure do |c|
     end
   end
 end
+
+$stderr.puts <<EOWARNING
+----------------------------------------------------------------------------
+WARNING: These specs do a lot of process spawning, which is relatively slow.
+----------------------------------------------------------------------------
+EOWARNING

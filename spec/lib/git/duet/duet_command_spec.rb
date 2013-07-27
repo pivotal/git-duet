@@ -54,18 +54,29 @@ describe Git::Duet::DuetCommand do
     subject.execute!
   end
 
-  it 'should report env vars to STDOUT' do
+  it 'should report env vars to $stdout' do
     subject.unstub(:report_env_vars)
-    STDOUT.should_receive(:puts).with(/^GIT_AUTHOR_NAME='#{author_mapping[alpha][:name]}'/)
-    STDOUT.should_receive(:puts).with(/^GIT_AUTHOR_EMAIL='#{author_mapping[alpha][:email]}'/)
-    STDOUT.should_receive(:puts).with(/^GIT_COMMITTER_NAME='#{author_mapping[omega][:name]}'/)
-    STDOUT.should_receive(:puts).with(/^GIT_COMMITTER_EMAIL='#{author_mapping[omega][:email]}'/)
+    $stdout.should_receive(:puts).with(/^GIT_AUTHOR_NAME='#{author_mapping[alpha][:name]}'/)
+    $stdout.should_receive(:puts).with(/^GIT_AUTHOR_EMAIL='#{author_mapping[alpha][:email]}'/)
+    $stdout.should_receive(:puts).with(/^GIT_COMMITTER_NAME='#{author_mapping[omega][:name]}'/)
+    $stdout.should_receive(:puts).with(/^GIT_COMMITTER_EMAIL='#{author_mapping[omega][:email]}'/)
     subject.execute!
   end
 
   it 'should set the alpha as author and omega as committer in custom git config' do
     subject.should_receive(:write_env_vars)
     subject.execute!
+  end
+
+  %w(alpha omega).each do |author_type|
+    context "when the #{author_type} cannot be found" do
+      let(:"#{author_type}") { 'brzzzt' }
+
+      it 'aborts' do
+        subject.stub(:error => nil)
+        expect { subject.execute! }.to raise_error(Git::Duet::ScriptDieError)
+      end
+    end
   end
 
   context 'when configured to operate on the global config' do
