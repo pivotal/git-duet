@@ -42,7 +42,6 @@ class Git::Duet::SoloCommand
   def soloist_info
     @soloist_info ||= author_mapper.map(@soloist).fetch(@soloist)
   rescue KeyError, IndexError => e
-    # XXX re-packaging to reduce scary backtraces on bogus input
     error("git-solo: #{e}")
     raise Git::Duet::ScriptDieError.new(86)
   end
