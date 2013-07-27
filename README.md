@@ -1,9 +1,7 @@
 # Git Duet
 
-<a href="https://travis-ci.org/modcloth/git-duet">
-  <img src="https://api.travis-ci.org/modcloth/git-duet.png"
-    title="Build Status"
-/></a>
+[![Gem Version](https://badge.fury.io/rb/git-duet.png)](http://badge.fury.io/rb/git-duet)
+[![Build Status](https://travis-ci.org/modcloth/git-duet.png?branch=master)](https://travis-ci.org/modcloth/git-duet)
 
 Pair harmoniously!  Working in a pair doesn't mean you've both lost your
 identity.  Git Duet helps with blaming/praising by using stuff that's
