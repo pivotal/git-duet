@@ -1,14 +1,12 @@
 language: ruby
+env:
+  global:
+  - DEBUG=1
 rvm:
   - '1.9'
   - '2.0'
   - jruby-19mode
   - ree
-install:
-- bundle exec rake build --trace
-- bundle install --trace || true
-- gem install --verbose --backtrace
-    ./pkg/git-duet-`ruby -I./lib -rgit/duet/version -e 'puts Git::Duet::VERSION'`.gem
 script:
 - bundle exec rake spec --trace
 notifications:
