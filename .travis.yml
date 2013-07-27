@@ -6,9 +6,9 @@ rvm:
   - ree
 install:
 - bundle exec rake build --trace
+- bundle install --trace || true
 - gem install --verbose --backtrace
     ./pkg/git-duet-`ruby -I./lib -rgit/duet/version -e 'puts Git::Duet::VERSION'`.gem
-- bundle install --trace
 script:
 - bundle exec rake spec --trace
 notifications:
