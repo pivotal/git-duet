@@ -2,7 +2,10 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'rbconfig'
-require 'simplecov'
+
+unless RUBY_PLATFORM == 'java'
+  require 'simplecov'
+end
 
 RSpec.configure do |c|
   if !ENV['TRAVIS']
