@@ -86,15 +86,15 @@ module Git::Duet::CommandMethods
   end
 
   def info(msg)
-    STDOUT.puts(msg) unless quiet?
+    $stdout.puts(msg) unless quiet?
   end
 
   def error(msg)
-    STDERR.puts(msg) unless quiet?
+    $stderr.puts(msg) unless quiet?
   end
 
   def prompt
-    STDOUT.print '> '
+    $stdout.print '> '
   end
 
   def quiet?

@@ -1,7 +1,18 @@
 language: ruby
+env:
+  global:
+  - DEBUG=1
+matrix:
+  allow_failures:
+  - rvm: jruby-19mode
 rvm:
-  - 1.8.7
-  - 1.9.2
-  - 1.9.3
+  - '1.9'
+  - '2.0'
   - jruby-19mode
   - ree
+script:
+- bundle exec rake spec --trace
+notifications:
+  email:
+    recipients:
+    - github+git-duet@modcloth.com

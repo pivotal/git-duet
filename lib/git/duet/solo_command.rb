@@ -41,5 +41,8 @@ class Git::Duet::SoloCommand
 
   def soloist_info
     @soloist_info ||= author_mapper.map(@soloist).fetch(@soloist)
+  rescue KeyError, IndexError => e
+    error("git-solo: Failed to find author: #{e}")
+    raise Git::Duet::ScriptDieError.new(86)
   end
 end

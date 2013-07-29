@@ -2,7 +2,10 @@ require 'rubygems'
 require 'bundler/setup'
 
 require 'rbconfig'
-require 'simplecov'
+
+unless RUBY_PLATFORM == 'java'
+  require 'simplecov'
+end
 
 RSpec.configure do |c|
   if !ENV['TRAVIS']
@@ -14,3 +17,9 @@ RSpec.configure do |c|
     end
   end
 end
+
+$stderr.puts <<EOWARNING
+----------------------------------------------------------------------------
+WARNING: These specs do a lot of process spawning, which is relatively slow.
+----------------------------------------------------------------------------
+EOWARNING

@@ -36,11 +36,17 @@ class Git::Duet::DuetCommand
   end
 
   def alpha_info
-    alpha_omega_info[@alpha]
+    alpha_omega_info.fetch(@alpha)
+  rescue KeyError, IndexError => e
+    error("git-duet: Failed to find author: #{e}")
+    raise Git::Duet::ScriptDieError.new(86)
   end
 
   def omega_info
-    alpha_omega_info[@omega]
+    alpha_omega_info.fetch(@omega)
+  rescue KeyError, IndexError => e
+    error("git-duet: Failed to find committer: #{e}")
+    raise Git::Duet::ScriptDieError.new(86)
   end
 
   def alpha_omega_info

@@ -65,16 +65,25 @@ describe Git::Duet::SoloCommand do
     subject.execute!
   end
 
-  it 'should report env vars to STDOUT' do
+  it 'should report env vars to $stdout' do
     subject.unstub(:report_env_vars)
-    STDOUT.should_receive(:puts).with(/^GIT_AUTHOR_NAME='#{author_mapping[soloist][:name]}'/)
-    STDOUT.should_receive(:puts).with(/^GIT_AUTHOR_EMAIL='#{author_mapping[soloist][:email]}'/)
+    $stdout.should_receive(:puts).with(/^GIT_AUTHOR_NAME='#{author_mapping[soloist][:name]}'/)
+    $stdout.should_receive(:puts).with(/^GIT_AUTHOR_EMAIL='#{author_mapping[soloist][:email]}'/)
     subject.execute!
   end
 
   it 'should set the soloist as author in custom git config' do
     subject.should_receive(:write_env_vars)
     subject.execute!
+  end
+
+  context 'when soloist is missing' do
+    let(:soloist) { 'bzzzrt' }
+
+    it 'aborts' do
+      subject.stub(:error => nil)
+      expect { subject.execute! }.to raise_error(Git::Duet::ScriptDieError)
+    end
   end
 
   context 'when configured to operate on the global config' do

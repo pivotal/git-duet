@@ -18,7 +18,7 @@ describe Git::Duet::PreCommitCommand do
   end
 
   it 'should not require any params to initialize' do
-    expect { described_class.new }.to_not raise_error(ArgumentError)
+    expect { described_class.new }.to_not raise_error
   end
 
   it 'should do nothing if the env cache is not stale' do
