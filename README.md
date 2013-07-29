@@ -217,6 +217,7 @@ If you'd like to regularly remind yourself to set the solo or duet
 initials, use `git duet-pre-commit` in your pre-commit hook:
 
 *(in $REPO_ROOT/.git/hooks/pre-commit)*
+
 ~~~~~ bash
 #!/bin/bash
 exec git duet-pre-commit
