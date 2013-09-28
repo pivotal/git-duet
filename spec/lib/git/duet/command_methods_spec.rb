@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'git/duet/command_methods'
 
 describe Git::Duet::CommandMethods do

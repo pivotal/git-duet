@@ -29,9 +29,9 @@ Gem::Specification.new do |gem|
   gem.version = Git::Duet::VERSION
   gem.required_ruby_version = '>= 1.8.7'
 
-  gem.add_development_dependency 'nyan-cat-formatter'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'rubocop'
 
   unless RUBY_PLATFORM == 'java'
     gem.add_development_dependency 'pry'

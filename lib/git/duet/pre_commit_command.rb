@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'git/duet'
 require 'git/duet/command_methods'
 require 'git/duet/script_die_error'
@@ -19,8 +20,8 @@ class Git::Duet::PreCommitCommand
 
   private
   def explode!
-    error("Your git duet settings are stale, human!")
-    error("Update them with `git duet` or `git solo`.")
+    error('Your git duet settings are stale, human!')
+    error('Update them with `git duet` or `git solo`.')
     raise Git::Duet::ScriptDieError.new(1)
   end
 

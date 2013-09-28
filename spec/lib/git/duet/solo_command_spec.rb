@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'git/duet/solo_command'
 require 'support/author_mapper_helper'
 
@@ -13,8 +14,8 @@ describe Git::Duet::SoloCommand do
   end
 
   before :each do
-    subject.stub(:author_mapper => double('author mapper').tap do |am|
-      am.stub(:map => author_mapping)
+    subject.stub(author_mapper: double('author mapper').tap do |am|
+      am.stub(map: author_mapping)
     end)
     subject.stub(:` => '')
     subject.stub(:report_env_vars)
@@ -81,7 +82,7 @@ describe Git::Duet::SoloCommand do
     let(:soloist) { 'bzzzrt' }
 
     it 'aborts' do
-      subject.stub(:error => nil)
+      subject.stub(error: nil)
       expect { subject.execute! }.to raise_error(Git::Duet::ScriptDieError)
     end
   end

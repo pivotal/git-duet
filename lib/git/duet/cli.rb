@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'optparse'
 require 'git/duet'
 require 'git/duet/script_die_error'

@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module SpecSupport
   module AuthorMapperHelper
     def random_author
@@ -7,20 +9,20 @@ module SpecSupport
     def author_mapping
       {
         'jd' => {
-          :name => 'Jane Doe',
-          :email => 'jane@awesome.biz'
+          name: 'Jane Doe',
+          email: 'jane@awesome.biz'
         },
         'fb' => {
-          :name => 'Frances Bar',
-          :email => 'frances@awesometown.me'
+          name: 'Frances Bar',
+          email: 'frances@awesometown.me'
         },
         'qx' => {
-          :name => 'Quincy Xavier',
-          :email => 'qx@awesometown.me'
+          name: 'Quincy Xavier',
+          email: 'qx@awesometown.me'
         },
         'hb' => {
-          :name => 'Hampton Bones',
-          :email => 'h.bones@awesometown.me'
+          name: 'Hampton Bones',
+          email: 'h.bones@awesometown.me'
         }
       }
     end

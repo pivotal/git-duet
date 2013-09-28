@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'git/duet/pre_commit_command'
 
 describe Git::Duet::PreCommitCommand do

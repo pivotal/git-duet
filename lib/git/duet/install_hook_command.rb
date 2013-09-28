@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'git/duet'
 require 'fileutils'
 require 'git/duet/command_methods'
@@ -19,7 +20,7 @@ class Git::Duet::InstallHookCommand
       dest = File.join(Dir.pwd, '.git', 'hooks', 'pre-commit')
       if File.exist?(dest)
         error("git-duet-install-hook: A pre-commit hook already exists at #{dest}!")
-        error("git-duet-install-hook: Move it out of the way first, mkay?")
+        error('git-duet-install-hook: Move it out of the way first, mkay?')
         return 1
       end
       File.open(dest, 'w') do |f|

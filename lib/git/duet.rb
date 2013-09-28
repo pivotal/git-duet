@@ -1,8 +1,7 @@
+# encoding: utf-8
 module Git
   module Duet
+    autoload :VERSION, 'git/duet/version'
+    autoload :Cli, 'git/duet/cli'
   end
 end
-
-require 'git/duet/version'
-require 'git/duet/cli'
-require 'git/duet/key_error'
