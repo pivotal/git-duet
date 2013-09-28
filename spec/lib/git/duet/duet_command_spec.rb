@@ -96,4 +96,27 @@ describe Git::Duet::DuetCommand do
       subject.execute!
     end
   end
+
+  context 'when given no arguments' do
+    let(:alpha) { nil }
+    let(:omega) { nil }
+
+    it 'shows the current duet author settings' do
+      git_config_output = <<-eos
+duet.env.git-author-name Test Author
+duet.env.git-author-email author@test.com
+duet.env.git-committer-name Test Committer
+duet.env.git-committer-email committer@test.com
+duet.env.mtime 1380398044
+      eos
+
+      subject.stub(:`).with('git config --get-regexp duet.env') do
+        git_config_output
+      end
+      $stdout.should_receive(:puts).with(git_config_output)
+
+      subject.execute!
+    end
+  end
+
 end

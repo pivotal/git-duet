@@ -13,9 +13,13 @@ class Git::Duet::DuetCommand
   end
 
   def execute!
-    set_alpha_as_git_config_user
-    report_env_vars
-    write_env_vars
+    if !(alpha || omega)
+      show_current
+    else
+      set_alpha_as_git_config_user
+      report_env_vars
+      write_env_vars
+    end
   end
 
   private
@@ -52,4 +56,9 @@ class Git::Duet::DuetCommand
   def alpha_omega_info
     @alpha_omega_info ||= author_mapper.map(@alpha, @omega)
   end
+
+  def show_current
+    info(exec_check('git config --get-regexp duet.env'))
+  end
+
 end
