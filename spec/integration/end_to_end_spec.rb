@@ -22,7 +22,7 @@ describe 'git-duet end to end', integration: true do
 
   def make_an_edit
     Dir.chdir(@repo_dir)
-    File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100000)}" }
+    File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100_000)}" }
     `git add file.txt`
   end
 
@@ -261,12 +261,12 @@ describe 'git-duet end to end', integration: true do
 
         it 'raises an error if committed without the -q option' do
           `git duet-commit -q -m 'Testing commit with no author'`
-          $?.to_i.should_not == 0
+          $CHILD_STATUS.to_i.should_not == 0
         end
 
         it 'fails to add a commit' do
-          expect{ `git duet-commit -q -m 'testing commit with no author'` }
-            .to_not change{ `git log -1 --format=%H`.chomp }
+          expect { `git duet-commit -q -m 'testing commit with no author'` }
+            .to_not change { `git log -1 --format=%H`.chomp }
         end
       end
 

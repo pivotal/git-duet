@@ -7,14 +7,14 @@ module Git::Duet::CommandMethods
   private
 
   def report_env_vars
-    var_map.each do |key,value|
+    var_map.each do |key, value|
       info("#{key}='#{value}'")
     end
   end
 
   def write_env_vars
     in_repo_root do
-      var_map.each do |key,value|
+      var_map.each do |key, value|
         exec_check(
           "#{git_config} duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'"
         )
@@ -29,7 +29,7 @@ module Git::Duet::CommandMethods
 
   def author_env_vars_set?
     %x(#{get_author_name} && #{get_author_email})
-    $? == 0
+    $CHILD_STATUS == 0
   end
 
   def get_author_name
@@ -41,14 +41,14 @@ module Git::Duet::CommandMethods
   end
 
   def dump_env_vars
-    extract_env_vars_from_git_config.each do |k,v|
+    extract_env_vars_from_git_config.each do |k, v|
       puts "#{k}='#{v}'"
     end
   end
 
   def extract_env_vars_from_git_config
     dest = {}
-    env_vars.each do |env_var,config_key|
+    env_vars.each do |env_var, config_key|
       begin
         value = exec_check("git config duet.env.#{config_key}").chomp
         dest[env_var] = value unless value.empty?
@@ -75,8 +75,8 @@ module Git::Duet::CommandMethods
 
   def exec_check(command, okay_statuses = [0].freeze)
     output = `#{command}`
-    unless okay_statuses.include?($?.exitstatus)
-      error("Command #{command.inspect} exited with #{$?.to_i}")
+    unless okay_statuses.include?($CHILD_STATUS.exitstatus)
+      error("Command #{command.inspect} exited with #{$CHILD_STATUS.to_i}")
       raise Git::Duet::ScriptDieError.new(1)
     end
     output

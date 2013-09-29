@@ -1,24 +1,3 @@
 ---
 Documentation:
   Enabled: false
-
-MethodLength:
-  Enabled: false
-
-NumericLiterals:
-  Enabled: false
-
-RedundantReturn:
-  Enabled: false
-
-SignalException:
-  Enabled: false
-
-SpaceAfterComma:
-  Enabled: false
-
-SpaceAroundBlockBraces:
-  Enabled: false
-
-SpecialGlobalVars:
-  Enabled: false

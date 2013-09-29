@@ -33,19 +33,20 @@ class Git::Duet::AuthorMapper
   end
 
   def lookup_author_email(initials, author, username)
-    if @email_lookup
-      author_email =
-        `#{@email_lookup} '#{initials}' '#{author}' '#{username}'`.strip
-      return author_email unless author_email.empty?
-    end
-
+    author_email = email_from_lookup(initials, author, username)
+    return author_email unless author_email.empty?
     return email_addresses[initials] if email_addresses[initials]
     return email_from_template(initials, author, username) if email_template
     return "#{username}@#{email_domain}" if username
 
     author_name_parts = author.split
-    return "#{author_name_parts.first[0,1].downcase}." <<
-           "#{author_name_parts.last.downcase}@#{email_domain}"
+    "#{author_name_parts.first[0, 1].downcase}." <<
+      "#{author_name_parts.last.downcase}@#{email_domain}"
+  end
+
+  def email_from_lookup(initials, author, username)
+    return '' unless @email_lookup
+    `#{@email_lookup} '#{initials}' '#{author}' '#{username}'`.strip
   end
 
   def email_from_template(initials, author, username)

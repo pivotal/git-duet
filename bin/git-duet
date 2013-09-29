@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
 # vim:fileencoding=utf-8
 require 'git-duet'
-exit Git::Duet::Cli.run($0, ARGV)
+require 'English'
+exit Git::Duet::Cli.run($PROGRAM_NAME, ARGV)

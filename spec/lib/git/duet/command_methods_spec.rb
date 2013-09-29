@@ -33,7 +33,7 @@ describe Git::Duet::CommandMethods do
 
   it 'explodes if a subshell returns non-zero' do
     subject.stub(:`)
-    $?.should_receive(:exitstatus).and_return(1)
+    $CHILD_STATUS.should_receive(:exitstatus).and_return(1)
     expect { subject.send(:exec_check, 'ls hamsters') }
       .to raise_error(StandardError)
   end
