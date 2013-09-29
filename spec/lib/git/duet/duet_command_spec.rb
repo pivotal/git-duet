@@ -1,28 +1,20 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'git/duet/duet_command'
 require 'support/author_mapper_helper'
 
 describe Git::Duet::DuetCommand do
   include SpecSupport::AuthorMapperHelper
 
-  let :alpha do
-    random_author
-  end
-
-  let :omega do
-    random_author
-  end
-
-  subject do
-    described_class.new(alpha, omega)
-  end
+  let(:alpha) { random_author }
+  let(:omega) { random_author }
+  subject(:cmd) { described_class.new(alpha, omega) }
 
   before :each do
-    subject.stub(author_mapper: double('author mapper').tap do |am|
+    cmd.stub(author_mapper: double('author mapper').tap do |am|
       am.stub(map: author_mapping)
     end)
-    subject.stub(:` => '')
-    subject.stub(:report_env_vars)
+    cmd.stub(:` => '')
+    cmd.stub(:report_env_vars)
     Dir.stub(:chdir) do |&block|
       block.call
     end
@@ -31,42 +23,42 @@ describe Git::Duet::DuetCommand do
     end
   end
 
-  it 'should require alpha and omega sets of initials' do
+  it 'requires alpha and omega sets of initials' do
     expect { described_class.new }.to raise_error(ArgumentError)
   end
 
-  it 'should respond to `execute!`' do
-    subject.should respond_to(:execute!)
+  it 'responds to `execute!`' do
+    cmd.should respond_to(:execute!)
   end
 
-  it 'should (privately) respond to `write_env_vars`' do
-    subject.private_methods.map(&:to_sym).should include(:write_env_vars)
+  it '(privately) responds to `write_env_vars`' do
+    cmd.private_methods.map(&:to_sym).should include(:write_env_vars)
   end
 
-  it 'should set the alpha name as git config user.name' do
-    subject.stub(:`).with(/git config user\.email/)
-    subject.should_receive(:`).with("git config user.name '#{author_mapping[alpha][:name]}'")
-    subject.execute!
+  it 'sets the alpha name as git config user.name' do
+    cmd.stub(:`).with(/git config user\.email/)
+    cmd.should_receive(:`).with("git config user.name '#{author_mapping[alpha][:name]}'")
+    cmd.execute!
   end
 
-  it 'should set the alpha email as git config user.email' do
-    subject.stub(:`).with(/git config user\.name/)
-    subject.should_receive(:`).with("git config user.email '#{author_mapping[alpha][:email]}'")
-    subject.execute!
+  it 'sets the alpha email as git config user.email' do
+    cmd.stub(:`).with(/git config user\.name/)
+    cmd.should_receive(:`).with("git config user.email '#{author_mapping[alpha][:email]}'")
+    cmd.execute!
   end
 
-  it 'should report env vars to $stdout' do
-    subject.unstub(:report_env_vars)
+  it 'reports env vars to $stdout' do
+    cmd.unstub(:report_env_vars)
     $stdout.should_receive(:puts).with(/^GIT_AUTHOR_NAME='#{author_mapping[alpha][:name]}'/)
     $stdout.should_receive(:puts).with(/^GIT_AUTHOR_EMAIL='#{author_mapping[alpha][:email]}'/)
     $stdout.should_receive(:puts).with(/^GIT_COMMITTER_NAME='#{author_mapping[omega][:name]}'/)
     $stdout.should_receive(:puts).with(/^GIT_COMMITTER_EMAIL='#{author_mapping[omega][:email]}'/)
-    subject.execute!
+    cmd.execute!
   end
 
-  it 'should set the alpha as author and omega as committer in custom git config' do
-    subject.should_receive(:write_env_vars)
-    subject.execute!
+  it 'sets the alpha as author and omega as committer in custom git config' do
+    cmd.should_receive(:write_env_vars)
+    cmd.execute!
   end
 
   %w(alpha omega).each do |author_type|
@@ -74,27 +66,25 @@ describe Git::Duet::DuetCommand do
       let(:"#{author_type}") { 'brzzzt' }
 
       it 'aborts' do
-        subject.stub(error: nil)
-        expect { subject.execute! }.to raise_error(Git::Duet::ScriptDieError)
+        cmd.stub(error: nil)
+        expect { cmd.execute! }.to raise_error(Git::Duet::ScriptDieError)
       end
     end
   end
 
   context 'when configured to operate on the global config' do
-    subject do
-      described_class.new(alpha, omega, false, true)
+    subject(:cmd) { described_class.new(alpha, omega, false, true) }
+
+    it 'sets the alpha name as global git config user.name' do
+      cmd.stub(:`).with(/git config --global user\.email/)
+      cmd.should_receive(:`).with("git config --global user.name '#{author_mapping[alpha][:name]}'")
+      cmd.execute!
     end
 
-    it 'should set the alpha name as global git config user.name' do
-      subject.stub(:`).with(/git config --global user\.email/)
-      subject.should_receive(:`).with("git config --global user.name '#{author_mapping[alpha][:name]}'")
-      subject.execute!
-    end
-
-    it 'should set the alpha email as global git config user.email' do
-      subject.stub(:`).with(/git config --global user\.name/)
-      subject.should_receive(:`).with("git config --global user.email '#{author_mapping[alpha][:email]}'")
-      subject.execute!
+    it 'sets the alpha email as global git config user.email' do
+      cmd.stub(:`).with(/git config --global user\.name/)
+      cmd.should_receive(:`).with("git config --global user.email '#{author_mapping[alpha][:email]}'")
+      cmd.execute!
     end
   end
 
@@ -103,21 +93,20 @@ describe Git::Duet::DuetCommand do
     let(:omega) { nil }
 
     it 'shows the current duet author settings' do
-      git_config_output = <<-eos
-duet.env.git-author-name Test Author
-duet.env.git-author-email author@test.com
-duet.env.git-committer-name Test Committer
-duet.env.git-committer-email committer@test.com
-duet.env.mtime 1380398044
-      eos
+      git_config_output = <<-EOF.gsub(/^ {8}/, '')
+        duet.env.git-author-name Test Author
+        duet.env.git-author-email author@test.com
+        duet.env.git-committer-name Test Committer
+        duet.env.git-committer-email committer@test.com
+        duet.env.mtime 1380398044
+      EOF
 
-      subject.stub(:`).with('git config --get-regexp duet.env') do
+      cmd.stub(:`).with('git config --get-regexp duet.env') do
         git_config_output
       end
       $stdout.should_receive(:puts).with(git_config_output)
 
-      subject.execute!
+      cmd.execute!
     end
   end
-
 end

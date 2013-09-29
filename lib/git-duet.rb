@@ -1,2 +1,2 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'git/duet'

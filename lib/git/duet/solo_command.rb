@@ -1,4 +1,4 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'git/duet'
 require 'git/duet/author_mapper'
 require 'git/duet/command_methods'
@@ -21,6 +21,7 @@ class Git::Duet::SoloCommand
   end
 
   private
+
   attr_accessor :soloist, :author_mapper
 
   def set_soloist_as_git_config_user

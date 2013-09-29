@@ -1,4 +1,4 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 
 module SpecSupport
   module AuthorMapperHelper

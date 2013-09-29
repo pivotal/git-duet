@@ -1,4 +1,4 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'git/duet'
 require 'git/duet/author_mapper'
 require 'git/duet/command_methods'
@@ -24,6 +24,7 @@ class Git::Duet::DuetCommand
   end
 
   private
+
   attr_accessor :alpha, :omega, :author_mapper
 
   def set_alpha_as_git_config_user
@@ -61,5 +62,4 @@ class Git::Duet::DuetCommand
   def show_current
     info(exec_check('git config --get-regexp duet.env'))
   end
-
 end

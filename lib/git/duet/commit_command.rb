@@ -1,4 +1,4 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'git/duet'
 require 'git/duet/command_methods'
 
@@ -18,6 +18,7 @@ class Git::Duet::CommitCommand
   end
 
   private
+
   def add_env_vars_to_env
     extract_env_vars_from_git_config.each do |k,v|
       ENV[k] = v

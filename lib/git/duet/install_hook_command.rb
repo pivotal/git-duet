@@ -1,4 +1,4 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'git/duet'
 require 'fileutils'
 require 'git/duet/command_methods'
@@ -6,7 +6,7 @@ require 'git/duet/command_methods'
 class Git::Duet::InstallHookCommand
   include Git::Duet::CommandMethods
 
-  HOOK = <<-EOF.gsub(/^  /, '')
+  HOOK = <<-EOF.gsub(/^ {2}/, '')
   #!/bin/bash
   exec git duet-pre-commit "$@"
   EOF
@@ -29,6 +29,6 @@ class Git::Duet::InstallHookCommand
       FileUtils.chmod(0755, dest)
       info("git-duet-install-hook: Installed hook to #{dest}")
     end
-    return 0
+    0
   end
 end

@@ -1,11 +1,9 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 
 require 'rubygems'
 require 'bundler/setup'
 
-unless RUBY_PLATFORM == 'java'
-  require 'simplecov'
-end
+require 'simplecov' unless RUBY_PLATFORM == 'java'
 
 $stderr.puts <<EOWARNING
 ----------------------------------------------------------------------------

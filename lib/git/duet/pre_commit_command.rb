@@ -1,4 +1,4 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'git/duet'
 require 'git/duet/command_methods'
 require 'git/duet/script_die_error'
@@ -19,6 +19,7 @@ class Git::Duet::PreCommitCommand
   end
 
   private
+
   def explode!
     error('Your git duet settings are stale, human!')
     error('Update them with `git duet` or `git solo`.')

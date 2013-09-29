@@ -1,4 +1,4 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'yaml'
 require 'erb'
 require 'git/duet'
@@ -23,6 +23,7 @@ class Git::Duet::AuthorMapper
   end
 
   private
+
   def author_info(initials)
     author, username = author_map.fetch(initials).split(/;/).map(&:strip)
     {
@@ -70,7 +71,7 @@ class Git::Duet::AuthorMapper
   end
 
   def cfg
-    @cfg ||= YAML.load(IO.read(@authors_file))
+    @cfg ||= YAML.load(IO.read(authors_file))
   rescue StandardError => e
     $stderr.puts("git-duet: Missing or corrupt authors file: #{e.message}")
     raise Git::Duet::ScriptDieError.new(3)

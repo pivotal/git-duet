@@ -1,4 +1,4 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'optparse'
 require 'git/duet'
 require 'git/duet/script_die_error'
@@ -30,6 +30,7 @@ class Git::Duet::Cli
     end
 
     private
+
     def with_common_opts(argv, banner)
       options = {}
       leftover_argv = OptionParser.new do |opts|

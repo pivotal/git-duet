@@ -1,9 +1,11 @@
-# encoding: utf-8
+# vim:fileencoding=utf-8
 require 'git/duet'
 require 'git/duet/script_die_error'
 
 module Git::Duet::CommandMethods
+
   private
+
   def report_env_vars
     var_map.each do |key,value|
       info("#{key}='#{value}'")
