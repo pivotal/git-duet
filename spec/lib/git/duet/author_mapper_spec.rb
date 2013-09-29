@@ -24,8 +24,10 @@ describe Git::Duet::AuthorMapper do
   end
 
   it 'uses an authors file given at initialization' do
-    instance = described_class.new('/blarggie/blarggie/new/friend/.git-authors')
-    instance.authors_file.should == '/blarggie/blarggie/new/friend/.git-authors'
+    instance = described_class
+      .new('/blarggie/blarggie/new/friend/.git-authors')
+    instance.authors_file
+      .should == '/blarggie/blarggie/new/friend/.git-authors'
   end
 
   it 'uses the `GIT_DUET_AUTHORS_FILE` if provided' do
@@ -49,7 +51,7 @@ describe Git::Duet::AuthorMapper do
     }
   end
 
-  it 'constructs default email addresses from first initial and last name plus domain' do
+  it 'constructs default emails from first initial and last name + domain' do
     subject.map('hb').should == {
       'hb' => {
         name: 'Hampton Bones',
@@ -58,7 +60,7 @@ describe Git::Duet::AuthorMapper do
     }
   end
 
-  it 'constructs email addresses from optional username (if given) plus domain' do
+  it 'constructs emails from optional username (if given) + domain' do
     subject.map('fb').should == {
       'fb' => {
         name: 'Frances Bar',

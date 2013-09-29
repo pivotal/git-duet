@@ -12,9 +12,7 @@ class Git::Duet::PreCommitCommand
 
   def execute!
     in_repo_root do
-      if !env_cache_exists? || env_cache_stale?
-        explode!
-      end
+      explode! if !env_cache_exists? || env_cache_stale?
     end
   end
 
@@ -40,6 +38,8 @@ class Git::Duet::PreCommitCommand
   end
 
   def stale_cutoff
-    Integer(Time.now - Integer(ENV.fetch('GIT_DUET_SECONDS_AGO_STALE', '1200')))
+    Integer(
+      Time.now - Integer(ENV.fetch('GIT_DUET_SECONDS_AGO_STALE', '1200'))
+    )
   end
 end

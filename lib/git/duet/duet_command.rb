@@ -28,8 +28,12 @@ class Git::Duet::DuetCommand
   attr_accessor :alpha, :omega, :author_mapper
 
   def set_alpha_as_git_config_user
-    exec_check("git config #{@global ? '--global ' : ''}user.name '#{alpha_info[:name]}'")
-    exec_check("git config #{@global ? '--global ' : ''}user.email '#{alpha_info[:email]}'")
+    exec_check("#{git_config} user.name '#{alpha_info[:name]}'")
+    exec_check("#{git_config} user.email '#{alpha_info[:email]}'")
+  end
+
+  def git_config
+    "git config#{@global ? ' --global' : ''}"
   end
 
   def var_map

@@ -19,7 +19,8 @@ class Git::Duet::InstallHookCommand
     Dir.chdir(`git rev-parse --show-toplevel`.chomp) do
       dest = File.join(Dir.pwd, '.git', 'hooks', 'pre-commit')
       if File.exist?(dest)
-        error("git-duet-install-hook: A pre-commit hook already exists at #{dest}!")
+        error('git-duet-install-hook: ' <<
+              "A pre-commit hook already exists at #{dest}!")
         error('git-duet-install-hook: Move it out of the way first, mkay?')
         return 1
       end

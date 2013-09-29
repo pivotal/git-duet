@@ -15,15 +15,29 @@ module Git::Duet::CommandMethods
   def write_env_vars
     in_repo_root do
       var_map.each do |key,value|
-        exec_check("git config #{@global ? '--global ' : ''}duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'")
+        exec_check(
+          "#{git_config} duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'"
+        )
       end
-      exec_check("git config #{@global ? '--global ' : ''}duet.env.mtime #{Time.now.to_i}")
+      exec_check("#{git_config} duet.env.mtime #{Time.now.to_i}")
     end
   end
 
+  def git_config
+    "git config#{@global ? ' --global' : ''}"
+  end
+
   def author_env_vars_set?
-    `git config --get duet.env.git-author-name && git config --get duet.env.git-author-email`
+    %x(#{get_author_name} && #{get_author_email})
     $? == 0
+  end
+
+  def get_author_name
+    'git config --get duet.env.git-author-name'
+  end
+
+  def get_author_email
+    'git config --get duet.env.git-author-email'
   end
 
   def dump_env_vars
@@ -37,7 +51,7 @@ module Git::Duet::CommandMethods
     env_vars.each do |env_var,config_key|
       begin
         value = exec_check("git config duet.env.#{config_key}").chomp
-        dest[env_var] = value if !value.empty?
+        dest[env_var] = value unless value.empty?
       rescue StandardError => e
         error("#{e.message}")
       end
@@ -61,7 +75,7 @@ module Git::Duet::CommandMethods
 
   def exec_check(command, okay_statuses = [0].freeze)
     output = `#{command}`
-    if !okay_statuses.include?($?.exitstatus)
+    unless okay_statuses.include?($?.exitstatus)
       error("Command #{command.inspect} exited with #{$?.to_i}")
       raise Git::Duet::ScriptDieError.new(1)
     end

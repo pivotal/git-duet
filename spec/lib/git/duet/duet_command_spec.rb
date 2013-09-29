@@ -37,22 +37,28 @@ describe Git::Duet::DuetCommand do
 
   it 'sets the alpha name as git config user.name' do
     cmd.stub(:`).with(/git config user\.email/)
-    cmd.should_receive(:`).with("git config user.name '#{author_mapping[alpha][:name]}'")
+    cmd.should_receive(:`)
+      .with("git config user.name '#{author_mapping[alpha][:name]}'")
     cmd.execute!
   end
 
   it 'sets the alpha email as git config user.email' do
     cmd.stub(:`).with(/git config user\.name/)
-    cmd.should_receive(:`).with("git config user.email '#{author_mapping[alpha][:email]}'")
+    cmd.should_receive(:`)
+      .with("git config user.email '#{author_mapping[alpha][:email]}'")
     cmd.execute!
   end
 
   it 'reports env vars to $stdout' do
     cmd.unstub(:report_env_vars)
-    $stdout.should_receive(:puts).with(/^GIT_AUTHOR_NAME='#{author_mapping[alpha][:name]}'/)
-    $stdout.should_receive(:puts).with(/^GIT_AUTHOR_EMAIL='#{author_mapping[alpha][:email]}'/)
-    $stdout.should_receive(:puts).with(/^GIT_COMMITTER_NAME='#{author_mapping[omega][:name]}'/)
-    $stdout.should_receive(:puts).with(/^GIT_COMMITTER_EMAIL='#{author_mapping[omega][:email]}'/)
+    $stdout.should_receive(:puts)
+      .with(/^GIT_AUTHOR_NAME='#{author_mapping[alpha][:name]}'/)
+    $stdout.should_receive(:puts)
+      .with(/^GIT_AUTHOR_EMAIL='#{author_mapping[alpha][:email]}'/)
+    $stdout.should_receive(:puts)
+      .with(/^GIT_COMMITTER_NAME='#{author_mapping[omega][:name]}'/)
+    $stdout.should_receive(:puts)
+      .with(/^GIT_COMMITTER_EMAIL='#{author_mapping[omega][:email]}'/)
     cmd.execute!
   end
 
@@ -77,13 +83,17 @@ describe Git::Duet::DuetCommand do
 
     it 'sets the alpha name as global git config user.name' do
       cmd.stub(:`).with(/git config --global user\.email/)
-      cmd.should_receive(:`).with("git config --global user.name '#{author_mapping[alpha][:name]}'")
+      alpha_name = author_mapping[alpha][:name]
+      cmd.should_receive(:`)
+        .with("git config --global user.name '#{alpha_name}'")
       cmd.execute!
     end
 
     it 'sets the alpha email as global git config user.email' do
       cmd.stub(:`).with(/git config --global user\.name/)
-      cmd.should_receive(:`).with("git config --global user.email '#{author_mapping[alpha][:email]}'")
+      alpha_email = author_mapping[alpha][:email]
+      cmd.should_receive(:`)
+        .with("git config --global user.email '#{alpha_email}'")
       cmd.execute!
     end
   end

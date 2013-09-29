@@ -25,13 +25,21 @@ class Git::Duet::SoloCommand
   attr_accessor :soloist, :author_mapper
 
   def set_soloist_as_git_config_user
-    exec_check("git config #{@global ? '--global ' : ''}user.name '#{soloist_info[:name]}'")
-    exec_check("git config #{@global ? '--global ' : ''}user.email '#{soloist_info[:email]}'")
+    exec_check("#{git_config} user.name '#{soloist_info[:name]}'")
+    exec_check("#{git_config} user.email '#{soloist_info[:email]}'")
   end
 
   def unset_committer_vars
-    exec_check("git config #{@global ? '--global ' : ''}--unset-all duet.env.git-committer-name", [0, 5])
-    exec_check("git config #{@global ? '--global ' : ''}--unset-all duet.env.git-committer-email", [0, 5])
+    exec_check(
+      "#{git_config} --unset-all duet.env.git-committer-name", [0, 5]
+    )
+    exec_check(
+      "#{git_config} --unset-all duet.env.git-committer-email", [0, 5]
+    )
+  end
+
+  def git_config
+    "git config#{@global ? ' --global' : ''}"
   end
 
   def var_map

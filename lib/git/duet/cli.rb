@@ -38,9 +38,7 @@ class Git::Duet::Cli
         opts.on('-q', 'Silence output') do |q|
           options[:quiet] = true
         end
-        if block_given?
-          yield opts, options
-        end
+        yield opts, options if block_given?
       end.parse!(argv)
       return leftover_argv, options
     end
