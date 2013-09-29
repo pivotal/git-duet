@@ -89,6 +89,25 @@ describe Git::Duet::SoloCommand do
     end
   end
 
+  context 'when given no arguments' do
+    let(:soloist) { nil }
+
+    it 'shows the current duet author settings' do
+      git_config_output = <<-EOF.gsub(/^ {8}/, '')
+        duet.env.git-author-name Test Author
+        duet.env.git-author-email author@test.com
+        duet.env.mtime 138039#{rand(1000..9999)}
+      EOF
+
+      cmd.stub(:`).with('git config --get-regexp duet.env') do
+        git_config_output
+      end
+      $stdout.should_receive(:puts).with(git_config_output)
+
+      cmd.execute!
+    end
+  end
+
   context 'when configured to operate on the global config' do
     subject(:cmd) { described_class.new(soloist, false, true) }
 

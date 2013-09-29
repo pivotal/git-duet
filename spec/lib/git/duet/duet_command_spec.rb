@@ -108,7 +108,7 @@ describe Git::Duet::DuetCommand do
         duet.env.git-author-email author@test.com
         duet.env.git-committer-name Test Committer
         duet.env.git-committer-email committer@test.com
-        duet.env.mtime 1380398044
+        duet.env.mtime 138039#{rand(1000..9999)}
       EOF
 
       cmd.stub(:`).with('git config --get-regexp duet.env') do

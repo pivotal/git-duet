@@ -14,10 +14,14 @@ class Git::Duet::SoloCommand
   end
 
   def execute!
-    set_soloist_as_git_config_user
     unset_committer_vars
-    report_env_vars
-    write_env_vars
+    if soloist
+      set_soloist_as_git_config_user
+      report_env_vars
+      write_env_vars
+    else
+      show_current_config
+    end
   end
 
   private
@@ -36,10 +40,6 @@ class Git::Duet::SoloCommand
     exec_check(
       "#{git_config} --unset-all duet.env.git-committer-email", [0, 5]
     )
-  end
-
-  def git_config
-    "git config#{@global ? ' --global' : ''}"
   end
 
   def var_map

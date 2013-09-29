@@ -40,6 +40,14 @@ module Git::Duet::CommandMethods
     'git config --get duet.env.git-author-email'
   end
 
+  def get_current_config
+    'git config --get-regexp duet.env'
+  end
+
+  def show_current_config
+    info(exec_check(get_current_config))
+  end
+
   def dump_env_vars
     extract_env_vars_from_git_config.each do |k, v|
       puts "#{k}='#{v}'"
