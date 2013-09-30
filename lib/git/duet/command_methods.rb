@@ -1,4 +1,5 @@
 # vim:fileencoding=utf-8
+require 'English'
 require 'git/duet'
 require 'git/duet/script_die_error'
 
