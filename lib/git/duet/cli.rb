@@ -1,3 +1,4 @@
+# vim:fileencoding=utf-8
 require 'optparse'
 require 'git/duet'
 require 'git/duet/script_die_error'
@@ -5,30 +6,27 @@ require 'git/duet/script_die_error'
 class Git::Duet::Cli
   class << self
     def run(prog, argv)
-      case prog
-      when /solo$/
-        solo(parse_solo_options(argv.clone))
-        return 0
-      when /duet$/
-        duet(parse_duet_options(argv.clone))
-        return 0
-      when /pre-commit$/
-        pre_commit(parse_generic_options(argv.clone))
-        return 0
-      when /install-hook$/
-        install_hook(parse_generic_options(argv.clone))
-        return 0
-      when /commit$/
-        commit(parse_commit_options(argv.clone))
-        return 0
-      else
-        raise ScriptError.new('How did you get here???')
-      end
+      method_name = File.basename(prog)
+        .sub(/^git-duet-/, '').sub(/^git-/, '').tr('-', '_')
+      send(method_name, parse_options(method_name, argv.clone))
+      0
+    rescue NoMethodError
+      raise ScriptError.new('How did you get here???')
     rescue Git::Duet::ScriptDieError => e
-      return e.exit_code
+      e.exit_code
     end
 
     private
+
+    def parse_options(method_name, argv)
+      case method_name
+      when 'pre_commit', 'install_hook'
+        parse_generic_options(argv)
+      else
+        send("parse_#{method_name}_options", argv)
+      end
+    end
+
     def with_common_opts(argv, banner)
       options = {}
       leftover_argv = OptionParser.new do |opts|
@@ -36,17 +34,15 @@ class Git::Duet::Cli
         opts.on('-q', 'Silence output') do |q|
           options[:quiet] = true
         end
-        if block_given?
-          yield opts, options
-        end
+        yield opts, options if block_given?
       end.parse!(argv)
-      return leftover_argv, options
+      [leftover_argv, options]
     end
 
     def parse_solo_options(argv)
       leftover_argv, options = with_common_opts(
         argv, 'Usage: __PROG__ [options] <soloist-initials>'
-      ) do |opts,options_hash|
+      ) do |opts, options_hash|
         opts.on('-g', '--global', 'Change global git config') do |g|
           options_hash[:global] = true
         end
@@ -58,7 +54,7 @@ class Git::Duet::Cli
     def parse_duet_options(argv)
       leftover_argv, options = with_common_opts(
         argv, 'Usage: __PROG__ [options] <alpha-initials> <omega-initials>'
-      ) do |opts,options_hash|
+      ) do |opts, options_hash|
         opts.on('-g', '--global', 'Change global git config') do |g|
           options_hash[:global] = true
         end

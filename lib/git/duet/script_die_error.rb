@@ -1,3 +1,5 @@
+# vim:fileencoding=utf-8
+
 module Git
   module Duet
     class ScriptDieError < StandardError

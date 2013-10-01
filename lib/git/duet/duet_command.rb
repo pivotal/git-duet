@@ -1,3 +1,4 @@
+# vim:fileencoding=utf-8
 require 'git/duet'
 require 'git/duet/author_mapper'
 require 'git/duet/command_methods'
@@ -13,21 +14,22 @@ class Git::Duet::DuetCommand
   end
 
   def execute!
-    if !(alpha || omega)
-      show_current
-    else
+    if alpha && omega
       set_alpha_as_git_config_user
       report_env_vars
       write_env_vars
+    else
+      show_current_config
     end
   end
 
   private
+
   attr_accessor :alpha, :omega, :author_mapper
 
   def set_alpha_as_git_config_user
-    exec_check("git config #{@global ? '--global ' : ''}user.name '#{alpha_info[:name]}'")
-    exec_check("git config #{@global ? '--global ' : ''}user.email '#{alpha_info[:email]}'")
+    exec_check("#{git_config} user.name '#{alpha_info[:name]}'")
+    exec_check("#{git_config} user.email '#{alpha_info[:email]}'")
   end
 
   def var_map
@@ -56,9 +58,4 @@ class Git::Duet::DuetCommand
   def alpha_omega_info
     @alpha_omega_info ||= author_mapper.map(@alpha, @omega)
   end
-
-  def show_current
-    info(exec_check('git config --get-regexp duet.env'))
-  end
-
 end

@@ -1,40 +1,66 @@
+# vim:fileencoding=utf-8
+require 'English'
 require 'git/duet'
 require 'git/duet/script_die_error'
 
 module Git::Duet::CommandMethods
+
   private
+
   def report_env_vars
-    var_map.each do |key,value|
+    var_map.each do |key, value|
       info("#{key}='#{value}'")
     end
   end
 
   def write_env_vars
     in_repo_root do
-      var_map.each do |key,value|
-        exec_check("git config #{@global ? '--global ' : ''}duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'")
+      var_map.each do |key, value|
+        exec_check(
+          "#{git_config} duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'"
+        )
       end
-      exec_check("git config #{@global ? '--global ' : ''}duet.env.mtime #{Time.now.to_i}")
+      exec_check("#{git_config} duet.env.mtime #{Time.now.to_i}")
     end
   end
 
+  def git_config
+    "git config#{@global ? ' --global' : ''}"
+  end
+
   def author_env_vars_set?
-    `git config --get duet.env.git-author-name && git config --get duet.env.git-author-email`
-    $? == 0
+    %x(#{get_author_name} && #{get_author_email})
+    $CHILD_STATUS == 0
+  end
+
+  def get_author_name
+    'git config --get duet.env.git-author-name'
+  end
+
+  def get_author_email
+    'git config --get duet.env.git-author-email'
+  end
+
+  def get_current_config
+    'git config --get-regexp duet.env'
+  end
+
+  def show_current_config
+    info(exec_check(get_current_config))
   end
 
   def dump_env_vars
-    extract_env_vars_from_git_config.each do |k,v|
+    extract_env_vars_from_git_config.each do |k, v|
       puts "#{k}='#{v}'"
     end
   end
 
   def extract_env_vars_from_git_config
     dest = {}
-    env_vars.each do |env_var,config_key|
+    env_vars.each do |env_var, config_key|
       begin
         value = exec_check("git config duet.env.#{config_key}").chomp
-        dest[env_var] = value if !value.empty?
+        dest[env_var] = value unless value.empty?
       rescue StandardError => e
         error("#{e.message}")
       end
@@ -58,8 +84,8 @@ module Git::Duet::CommandMethods
 
   def exec_check(command, okay_statuses = [0].freeze)
     output = `#{command}`
-    if !okay_statuses.include?($?.exitstatus)
-      error("Command #{command.inspect} exited with #{$?.to_i}")
+    unless okay_statuses.include?($CHILD_STATUS.exitstatus)
+      error("Command #{command.inspect} exited with #{$CHILD_STATUS.to_i}")
       raise Git::Duet::ScriptDieError.new(1)
     end
     output

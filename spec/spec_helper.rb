@@ -1,22 +1,9 @@
+# vim:fileencoding=utf-8
+
 require 'rubygems'
 require 'bundler/setup'
 
-require 'rbconfig'
-
-unless RUBY_PLATFORM == 'java'
-  require 'simplecov'
-end
-
-RSpec.configure do |c|
-  if !ENV['TRAVIS']
-    if RbConfig::CONFIG['host_os'] =~ /darwin/i
-      c.formatter = 'NyanCatMusicFormatter'
-    else
-      # No music allowed for neckbeards or polo shirts.
-      c.formatter = 'NyanCatFormatter'
-    end
-  end
-end
+require 'simplecov' unless RUBY_PLATFORM == 'java'
 
 $stderr.puts <<EOWARNING
 ----------------------------------------------------------------------------

@@ -1,3 +1,4 @@
+# vim:fileencoding=utf-8
 require 'git/duet'
 require 'git/duet/command_methods'
 
@@ -17,8 +18,9 @@ class Git::Duet::CommitCommand
   end
 
   private
+
   def add_env_vars_to_env
-    extract_env_vars_from_git_config.each do |k,v|
+    extract_env_vars_from_git_config.each do |k, v|
       ENV[k] = v
     end
   end
@@ -43,20 +45,21 @@ class Git::Duet::CommitCommand
     soloing? ? '' : '--signoff '
   end
 
+  SOLO_ENV_VARS = %w(
+    GIT_AUTHOR_NAME
+    GIT_AUTHOR_EMAIL
+  )
+
+  DUET_ENV_VARS = %w(
+    GIT_AUTHOR_NAME
+    GIT_AUTHOR_EMAIL
+    GIT_COMMITTER_NAME
+    GIT_COMMITTER_EMAIL
+  )
+
   def env_var_names
-    if soloing?
-      %w(
-        GIT_AUTHOR_NAME
-        GIT_AUTHOR_EMAIL
-      )
-    else
-      %w(
-        GIT_AUTHOR_NAME
-        GIT_AUTHOR_EMAIL
-        GIT_COMMITTER_NAME
-        GIT_COMMITTER_EMAIL
-      )
-    end
+    return SOLO_ENV_VARS if soloing?
+    DUET_ENV_VARS
   end
 
   def soloing?

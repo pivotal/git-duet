@@ -1,3 +1,4 @@
+# vim:fileencoding=utf-8
 require 'yaml'
 require 'erb'
 require 'git/duet'
@@ -22,27 +23,30 @@ class Git::Duet::AuthorMapper
   end
 
   private
+
   def author_info(initials)
     author, username = author_map.fetch(initials).split(/;/).map(&:strip)
     {
-      :name => author,
-      :email => lookup_author_email(initials, author, username)
+      name: author,
+      email: lookup_author_email(initials, author, username)
     }
   end
 
   def lookup_author_email(initials, author, username)
-    if @email_lookup
-      author_email = `#{@email_lookup} '#{initials}' '#{author}' '#{username}'`.strip
-      return author_email if !author_email.empty?
-    end
-
+    author_email = email_from_lookup(initials, author, username)
+    return author_email unless author_email.empty?
     return email_addresses[initials] if email_addresses[initials]
     return email_from_template(initials, author, username) if email_template
     return "#{username}@#{email_domain}" if username
 
     author_name_parts = author.split
-    return "#{author_name_parts.first[0,1].downcase}." <<
-           "#{author_name_parts.last.downcase}@#{email_domain}"
+    "#{author_name_parts.first[0, 1].downcase}." <<
+      "#{author_name_parts.last.downcase}@#{email_domain}"
+  end
+
+  def email_from_lookup(initials, author, username)
+    return '' unless @email_lookup
+    `#{@email_lookup} '#{initials}' '#{author}' '#{username}'`.strip
   end
 
   def email_from_template(initials, author, username)
@@ -69,7 +73,7 @@ class Git::Duet::AuthorMapper
   end
 
   def cfg
-    @cfg ||= YAML.load(IO.read(@authors_file))
+    @cfg ||= YAML.load(IO.read(authors_file))
   rescue StandardError => e
     $stderr.puts("git-duet: Missing or corrupt authors file: #{e.message}")
     raise Git::Duet::ScriptDieError.new(3)
