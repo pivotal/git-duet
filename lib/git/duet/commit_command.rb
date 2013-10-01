@@ -65,7 +65,7 @@ class Git::Duet::CommitCommand
   def soloing?
     @soloing ||= begin
       with_output_quieted do
-        exec_check("git config #{Git::Duet::CONFIG_NAMESPACE}.git-committer-name").chomp
+        exec_check("git config #{Git::Duet::Config.namespace}.git-committer-name").chomp
       end
       false
     rescue StandardError

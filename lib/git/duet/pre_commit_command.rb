@@ -26,7 +26,7 @@ class Git::Duet::PreCommitCommand
 
   def env_cache_exists?
     with_output_quieted do
-      exec_check("git config #{Git::Duet::CONFIG_NAMESPACE}.mtime")
+      exec_check("git config #{Git::Duet::Config.namespace}.mtime")
     end
     true
   rescue
@@ -34,7 +34,7 @@ class Git::Duet::PreCommitCommand
   end
 
   def env_cache_stale?
-    Integer(exec_check("git config #{Git::Duet::CONFIG_NAMESPACE}.mtime")) < stale_cutoff
+    Integer(exec_check("git config #{Git::Duet::Config.namespace}.mtime")) < stale_cutoff
   end
 
   def stale_cutoff
