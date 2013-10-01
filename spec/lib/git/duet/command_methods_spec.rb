@@ -25,9 +25,12 @@ describe Git::Duet::CommandMethods do
   end
 
   it 'writes env vars to a custom git config tree' do
-    subject.should_receive(:`).with("git config duet.env.fizzle-baz 'awesome'")
-    subject.should_receive(:`).with("git config duet.env.oh-snarf 'mumra'")
-    subject.should_receive(:`).with(/^git config duet\.env\.mtime \d+/)
+    subject.should_receive(:`)
+      .with("git config #{Git::Duet::Config.namespace}.fizzle-baz 'awesome'")
+    subject.should_receive(:`)
+      .with("git config #{Git::Duet::Config.namespace}.oh-snarf 'mumra'")
+    subject.should_receive(:`)
+      .with(/^git config #{Git::Duet::Config.namespace}.mtime \d+/)
     subject.send(:write_env_vars)
   end
 
@@ -45,11 +48,13 @@ describe Git::Duet::CommandMethods do
 
     it 'writes env vars to a custom global git config tree' do
       subject.should_receive(:`)
-        .with("git config --global duet.env.fizzle-baz 'awesome'")
+        .with("git config --global #{Git::Duet::Config.namespace}" <<
+              ".fizzle-baz 'awesome'")
       subject.should_receive(:`)
-        .with("git config --global duet.env.oh-snarf 'mumra'")
+        .with("git config --global #{Git::Duet::Config.namespace}" <<
+              ".oh-snarf 'mumra'")
       subject.should_receive(:`)
-        .with(/^git config --global duet\.env\.mtime \d+/)
+        .with(/^git config --global #{Git::Duet::Config.namespace}.mtime \d+/)
       subject.send(:write_env_vars)
     end
   end

@@ -27,6 +27,7 @@ describe 'git-duet end to end', integration: true do
   end
 
   before :all do
+    ENV['GIT_DUET_CONFIG_NAMESPACE'] = 'foo.bar'
     @startdir = Dir.pwd
     @tmpdir = Dir.mktmpdir('git-duet-specs')
     @git_authors = File.join(@tmpdir, '.git-authors')
@@ -95,11 +96,12 @@ describe 'git-duet end to end', integration: true do
     end
 
     it 'caches the git user name as author name' do
-      `git config duet.env.git-author-name`.chomp.should == 'Jane Doe'
+      `git config #{Git::Duet::Config.namespace}.git-author-name`.chomp
+        .should == 'Jane Doe'
     end
 
     it 'caches the git user email as author email' do
-      `git config duet.env.git-author-email`.chomp
+      `git config #{Git::Duet::Config.namespace}.git-author-email`.chomp
         .should == 'jane@hamsters.biz.local'
     end
   end
@@ -121,7 +123,7 @@ describe 'git-duet end to end', integration: true do
       end
 
       it 'sets the author email given by the external email lookup' do
-        `git config duet.env.git-author-email`.chomp
+        `git config #{Git::Duet::Config.namespace}.git-author-email`.chomp
           .should == 'jane_doe@lookie.me.local'
       end
     end
@@ -133,12 +135,12 @@ describe 'git-duet end to end', integration: true do
       end
 
       it 'sets the author email given by the external email lookup' do
-        `git config duet.env.git-author-email`.chomp
+        `git config #{Git::Duet::Config.namespace}.git-author-email`.chomp
           .should == 'jane_doe@lookie.me.local'
       end
 
       it 'sets the committer email given by the external email lookup' do
-        `git config duet.env.git-committer-email`.chomp
+        `git config #{Git::Duet::Config.namespace}.git-committer-email`.chomp
           .should == 'fb9000@dalek.info.local'
       end
     end
@@ -221,11 +223,12 @@ describe 'git-duet end to end', integration: true do
     end
 
     it 'caches the git committer name' do
-      `git config duet.env.git-committer-name`.chomp.should == 'Frances Bar'
+      `git config #{Git::Duet::Config.namespace}.git-committer-name`.chomp
+        .should == 'Frances Bar'
     end
 
     it 'caches the git committer email' do
-      `git config duet.env.git-committer-email`.chomp
+      `git config #{Git::Duet::Config.namespace}.git-committer-email`.chomp
         .should == 'f.bar@hamster.info.local'
     end
   end
@@ -254,7 +257,7 @@ describe 'git-duet end to end', integration: true do
         before do
           Dir.chdir(@repo_dir)
           %w(git-author-email git-author-name).each do |config|
-            `git config --unset duet.env.#{config}`
+            `git config --unset #{Git::Duet::Config.namespace}.#{config}`
           end
           make_an_edit
         end
@@ -276,7 +279,7 @@ describe 'git-duet end to end', integration: true do
           @latest_sha1 = `git log -1 --format=%H`.chomp
           make_an_edit
           install_hook
-          `git config --unset-all duet.env.mtime`
+          `git config --unset-all #{Git::Duet::Config.namespace}.mtime`
           ENV['GIT_DUET_QUIET'] = '1'
         end
 
@@ -322,7 +325,7 @@ describe 'git-duet end to end', integration: true do
           @latest_sha1 = `git log -1 --format=%H`.chomp
           make_an_edit
           install_hook
-          `git config --unset-all duet.env.mtime`
+          `git config --unset-all #{Git::Duet::Config.namespace}.mtime`
           ENV['GIT_DUET_QUIET'] = '1'
         end
 

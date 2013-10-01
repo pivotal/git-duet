@@ -17,10 +17,12 @@ module Git::Duet::CommandMethods
     in_repo_root do
       var_map.each do |key, value|
         exec_check(
-          "#{git_config} duet.env.#{key.downcase.gsub(/_/, '-')} '#{value}'"
+          "#{git_config} #{Git::Duet::Config.namespace}." <<
+            "#{key.downcase.gsub(/_/, '-')} '#{value}'"
         )
       end
-      exec_check("#{git_config} duet.env.mtime #{Time.now.to_i}")
+      exec_check("#{git_config} #{Git::Duet::Config
+                                  .namespace}.mtime #{Time.now.to_i}")
     end
   end
 
@@ -34,15 +36,15 @@ module Git::Duet::CommandMethods
   end
 
   def get_author_name
-    'git config --get duet.env.git-author-name'
+    "git config --get #{Git::Duet::Config.namespace}.git-author-name"
   end
 
   def get_author_email
-    'git config --get duet.env.git-author-email'
+    "git config --get #{Git::Duet::Config.namespace}.git-author-email"
   end
 
   def get_current_config
-    'git config --get-regexp duet.env'
+    "git config --get-regexp #{Git::Duet::Config.namespace}"
   end
 
   def show_current_config
@@ -59,13 +61,17 @@ module Git::Duet::CommandMethods
     dest = {}
     env_vars.each do |env_var, config_key|
       begin
-        value = exec_check("git config duet.env.#{config_key}").chomp
+        value = check_env_var_config_key(config_key)
         dest[env_var] = value unless value.empty?
       rescue StandardError => e
         error("#{e.message}")
       end
     end
     dest
+  end
+
+  def check_env_var_config_key(config_key)
+    exec_check("git config #{Git::Duet::Config.namespace}.#{config_key}").chomp
   end
 
   def exec_git_commit
