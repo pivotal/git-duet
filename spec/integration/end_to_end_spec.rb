@@ -261,15 +261,11 @@ describe 'git-duet end to end', integration: true do
         end
 
         it 'raises an error if committed without the -q option' do
-          #require 'pry'
-          #binding.pry
           `git duet-commit -q -m 'Testing commit with no author'`
           $CHILD_STATUS.to_i.should_not == 0
         end
 
         it 'fails to add a commit' do
-          #require 'pry'
-          #binding.pry
           expect { `git duet-commit -q -m 'testing commit with no author'` }
             .to_not change { `git log -1 --format=%H`.chomp }
         end
