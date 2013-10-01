@@ -27,6 +27,7 @@ describe 'git-duet end to end', integration: true do
   end
 
   before :all do
+    ENV['GIT_DUET_CONFIG_NAMESPACE'] = 'foo.bar'
     @startdir = Dir.pwd
     @tmpdir = Dir.mktmpdir('git-duet-specs')
     @git_authors = File.join(@tmpdir, '.git-authors')
