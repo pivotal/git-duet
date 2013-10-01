@@ -21,16 +21,20 @@ describe Git::Duet::PreCommitCommand do
   end
 
   it 'does nothing if the env cache is not stale' do
-    cmd.stub(:exec_check).with(/git config #{Git::Duet::Config.namespace}.git/)
-    cmd.stub(:exec_check).with("git config #{Git::Duet::Config.namespace}.mtime")
+    cmd.stub(:exec_check)
+      .with(/git config #{Git::Duet::Config.namespace}.git/)
+    cmd.stub(:exec_check)
+      .with("git config #{Git::Duet::Config.namespace}.mtime")
       .and_return(Time.now.to_i)
     cmd.should_not_receive(:explode!)
     cmd.execute!
   end
 
   it 'explodes if the env cache does not exist' do
-    cmd.stub(:exec_check).with(/git config #{Git::Duet::Config.namespace}.git/)
-    cmd.stub(:exec_check).with("git config #{Git::Duet::Config.namespace}.mtime")
+    cmd.stub(:exec_check)
+      .with(/git config #{Git::Duet::Config.namespace}.git/)
+    cmd.stub(:exec_check)
+      .with("git config #{Git::Duet::Config.namespace}.mtime")
       .and_raise(StandardError)
     expect { cmd.execute! }.to raise_error(Git::Duet::ScriptDieError)
   end

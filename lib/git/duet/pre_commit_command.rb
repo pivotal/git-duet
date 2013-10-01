@@ -34,7 +34,8 @@ class Git::Duet::PreCommitCommand
   end
 
   def env_cache_stale?
-    Integer(exec_check("git config #{Git::Duet::Config.namespace}.mtime")) < stale_cutoff
+    Integer(exec_check("git config #{Git::Duet::Config.namespace}.mtime")) <
+      stale_cutoff
   end
 
   def stale_cutoff

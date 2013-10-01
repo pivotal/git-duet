@@ -96,7 +96,8 @@ describe 'git-duet end to end', integration: true do
     end
 
     it 'caches the git user name as author name' do
-      `git config #{Git::Duet::Config.namespace}.git-author-name`.chomp.should == 'Jane Doe'
+      `git config #{Git::Duet::Config.namespace}.git-author-name`.chomp
+        .should == 'Jane Doe'
     end
 
     it 'caches the git user email as author email' do
@@ -222,7 +223,8 @@ describe 'git-duet end to end', integration: true do
     end
 
     it 'caches the git committer name' do
-      `git config #{Git::Duet::Config.namespace}.git-committer-name`.chomp.should == 'Frances Bar'
+      `git config #{Git::Duet::Config.namespace}.git-committer-name`.chomp
+        .should == 'Frances Bar'
     end
 
     it 'caches the git committer email' do

@@ -51,18 +51,24 @@ describe Git::Duet::SoloCommand do
   it 'unsets the committer name' do
     cmd.stub(:`).with(/git config user\.name/)
     cmd.stub(:`).with(/git config user\.email/)
-    cmd.stub(:`).with(/git config --unset-all #{Git::Duet::Config.namespace}.git-committer-email/)
+    cmd.stub(:`)
+      .with(/git config --unset-all #{Git::Duet::Config
+                                      .namespace}.git-committer-email/)
     cmd.should_receive(:`)
-      .with("git config --unset-all #{Git::Duet::Config.namespace}.git-committer-name")
+      .with("git config --unset-all #{Git::Duet::Config
+                                      .namespace}.git-committer-name")
     cmd.execute!
   end
 
   it 'unsets the committer email' do
     cmd.stub(:`).with(/git config user\.name/)
     cmd.stub(:`).with(/git config user\.email/)
-    cmd.stub(:`).with(/git config --unset-all #{Git::Duet::Config.namespace}.git-committer-name/)
+    cmd.stub(:`)
+      .with(/git config --unset-all #{Git::Duet::Config
+                                      .namespace}.git-committer-name/)
     cmd.should_receive(:`)
-      .with("git config --unset-all #{Git::Duet::Config.namespace}.git-committer-email")
+      .with("git config --unset-all #{Git::Duet::Config
+                                      .namespace}.git-committer-email")
     cmd.execute!
   end
 
@@ -99,7 +105,8 @@ describe Git::Duet::SoloCommand do
         #{Git::Duet::Config.namespace}.mtime 138039#{rand(1000..9999)}
       EOF
 
-      cmd.stub(:`).with("git config --get-regexp #{Git::Duet::Config.namespace}") do
+      cmd.stub(:`)
+        .with("git config --get-regexp #{Git::Duet::Config.namespace}") do
         git_config_output
       end
       $stdout.should_receive(:puts).with(git_config_output)
@@ -113,7 +120,8 @@ describe Git::Duet::SoloCommand do
 
     it 'sets the soloist name as global git config user.name' do
       cmd.stub(:`).with(/git config --global user\.email/)
-      cmd.stub(:`).with(/git config --global --unset-all #{Git::Duet::Config.namespace}/)
+      cmd.stub(:`)
+        .with(/git config --global --unset-all #{Git::Duet::Config.namespace}/)
       soloist_name = author_mapping[soloist][:name]
       cmd.should_receive(:`)
         .with("git config --global user.name '#{soloist_name}'")
@@ -122,7 +130,8 @@ describe Git::Duet::SoloCommand do
 
     it 'sets the soloist email as global git config user.email' do
       cmd.stub(:`).with(/git config --global user\.name/)
-      cmd.stub(:`).with(/git config --global --unset-all #{Git::Duet::Config.namespace}/)
+      cmd.stub(:`)
+        .with(/git config --global --unset-all #{Git::Duet::Config.namespace}/)
       soloist_email = author_mapping[soloist][:email]
       cmd.should_receive(:`)
         .with("git config --global user.email '#{soloist_email}'")
@@ -133,9 +142,13 @@ describe Git::Duet::SoloCommand do
       cmd.stub(:`).with(/git config --global user\.name/)
       cmd.stub(:`).with(/git config --global user\.email/)
       cmd.stub(:`)
-        .with(/git config --global --unset-all #{Git::Duet::Config.namespace}.git-committer-email/)
+        .with(
+          /git config --global --unset-all #{Git::Duet::Config
+                                             .namespace}.git-committer-email/
+        )
       cmd.should_receive(:`)
-        .with("git config --global --unset-all #{Git::Duet::Config.namespace}.git-committer-name")
+        .with('git config --global --unset-all ' <<
+              "#{Git::Duet::Config.namespace}.git-committer-name")
       cmd.execute!
     end
 
@@ -143,9 +156,13 @@ describe Git::Duet::SoloCommand do
       cmd.stub(:`).with(/git config --global user\.name/)
       cmd.stub(:`).with(/git config --global user\.email/)
       cmd.stub(:`)
-        .with(/git config --global --unset-all #{Git::Duet::Config.namespace}.git-committer-name/)
+        .with(
+          /git config --global --unset-all #{Git::Duet::Config
+                                             .namespace}.git-committer-name/
+        )
       cmd.should_receive(:`)
-        .with("git config --global --unset-all #{Git::Duet::Config.namespace}.git-committer-email")
+        .with('git config --global --unset-all ' <<
+              "#{Git::Duet::Config.namespace}.git-committer-email")
       cmd.execute!
     end
   end

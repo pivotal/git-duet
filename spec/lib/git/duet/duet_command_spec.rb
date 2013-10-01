@@ -111,7 +111,8 @@ describe Git::Duet::DuetCommand do
         #{Git::Duet::Config.namespace}.mtime 138039#{rand(1000..9999)}
       EOF
 
-      cmd.stub(:`).with("git config --get-regexp #{Git::Duet::Config.namespace}") do
+      cmd.stub(:`)
+        .with("git config --get-regexp #{Git::Duet::Config.namespace}") do
         git_config_output
       end
       $stdout.should_receive(:puts).with(git_config_output)
