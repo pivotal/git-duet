@@ -104,14 +104,14 @@ describe Git::Duet::DuetCommand do
 
     it 'shows the current duet author settings' do
       git_config_output = <<-EOF.gsub(/^ {8}/, '')
-        duet.env.git-author-name Test Author
-        duet.env.git-author-email author@test.com
-        duet.env.git-committer-name Test Committer
-        duet.env.git-committer-email committer@test.com
-        duet.env.mtime 138039#{rand(1000..9999)}
+        #{Git::Duet::CONFIG_NAMESPACE}.git-author-name Test Author
+        #{Git::Duet::CONFIG_NAMESPACE}.git-author-email author@test.com
+        #{Git::Duet::CONFIG_NAMESPACE}.git-committer-name Test Committer
+        #{Git::Duet::CONFIG_NAMESPACE}.git-committer-email committer@test.com
+        #{Git::Duet::CONFIG_NAMESPACE}.mtime 138039#{rand(1000..9999)}
       EOF
 
-      cmd.stub(:`).with('git config --get-regexp duet.env') do
+      cmd.stub(:`).with("git config --get-regexp #{Git::Duet::CONFIG_NAMESPACE}") do
         git_config_output
       end
       $stdout.should_receive(:puts).with(git_config_output)
