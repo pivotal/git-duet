@@ -12,19 +12,22 @@ describe 'git-duet end to end', integration: true do
   EOF
 
   def install_hook
-    Dir.chdir(@repo_dir)
-    `git duet-install-hook -q`
+    Dir.chdir(@repo_dir) do
+      `git duet-install-hook -q`
+    end
   end
 
   def uninstall_hook
-    Dir.chdir(@repo_dir)
-    FileUtils.rm_f('.git/hooks/pre-commit')
+    Dir.chdir(@repo_dir) do
+      FileUtils.rm_f('.git/hooks/pre-commit')
+    end
   end
 
   def make_an_edit
-    Dir.chdir(@repo_dir)
-    File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100_000)}" }
-    `git add file.txt`
+    Dir.chdir(@repo_dir) do
+      File.open('file.txt', 'w') { |f| f.puts "foo-#{rand(100_000)}" }
+      `git add file.txt`
+    end
   end
 
   before :all do
@@ -61,8 +64,9 @@ describe 'git-duet end to end', integration: true do
     FileUtils.chmod(0755, @email_lookup_path)
 
     @repo_dir = File.join(@tmpdir, 'foo')
-    Dir.chdir(@tmpdir)
-    `git init #{@repo_dir}`
+    Dir.chdir(@tmpdir) do
+      `git init #{@repo_dir}`
+    end
   end
 
   after :all do
@@ -77,7 +81,11 @@ describe 'git-duet end to end', integration: true do
   end
 
   context 'when installing the pre-commit hook' do
-    before(:each) { install_hook }
+    before(:each) do
+      Dir.chdir(@repo_dir)
+      install_hook
+    end
+
     after(:each) { uninstall_hook }
 
     it 'writes the hook to the `pre-commit` hook file' do
