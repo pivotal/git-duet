@@ -1,7 +1,7 @@
 language: ruby
 env:
   global:
-  - DEBUG=1
+  - COVERAGE=1
 matrix:
   allow_failures:
   - rvm: jruby-19mode

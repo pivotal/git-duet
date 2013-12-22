@@ -31,9 +31,7 @@ describe 'git-duet end to end', integration: true do
   end
 
   before :all do
-    ENV['COVERAGE'] = '1'
     ENV['GIT_DUET_CONFIG_NAMESPACE'] = 'foo.bar'
-    ENV['GIT_DUET_SIMPLECOV_RUNTIME'] = '1'
 
     @startdir = Dir.pwd
     @tmpdir = Dir.mktmpdir('git-duet-specs')

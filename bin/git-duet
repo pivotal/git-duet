@@ -1,7 +1,3 @@
 #!/usr/bin/env ruby
-# vim:fileencoding=utf-8
-if ENV['GIT_DUET_SIMPLECOV_RUNTIME'] && RUBY_PLATFORM != 'java'
-  require 'simplecov'
-end
 require 'git-duet'
 exit Git::Duet::Cli.run($PROGRAM_NAME, ARGV)
