@@ -4,7 +4,6 @@ require 'git/duet'
 require 'git/duet/script_die_error'
 
 module Git::Duet::CommandMethods
-
   private
 
   def report_env_vars
@@ -78,7 +77,7 @@ module Git::Duet::CommandMethods
     if author_env_vars_set?
       exec 'git commit ' << signoff_arg << quoted_passthrough_args
     else
-      raise Git::Duet::ScriptDieError.new(17)
+      fail Git::Duet::ScriptDieError, 17
     end
   end
 
@@ -92,7 +91,7 @@ module Git::Duet::CommandMethods
     output = `#{command}`
     unless okay_statuses.include?($CHILD_STATUS.exitstatus)
       error("Command #{command.inspect} exited with #{$CHILD_STATUS.to_i}")
-      raise Git::Duet::ScriptDieError.new(1)
+      fail Git::Duet::ScriptDieError, 1
     end
     output
   end

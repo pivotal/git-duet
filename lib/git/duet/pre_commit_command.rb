@@ -21,7 +21,7 @@ class Git::Duet::PreCommitCommand
   def explode!
     error('Your git duet settings are stale, human!')
     error('Update them with `git duet` or `git solo`.')
-    raise Git::Duet::ScriptDieError.new(1)
+    fail Git::Duet::ScriptDieError, 1
   end
 
   def env_cache_exists?

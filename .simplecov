@@ -1,6 +1,2 @@
-# vim:fileencoding=utf-8
-if ENV['COVERAGE']
-  SimpleCov.start do
-    add_filter '/spec/'
-  end
-end
+# vim:filetype=ruby:fileencoding=utf-8
+SimpleCov.start { add_filter '/spec/' } if ENV['COVERAGE']

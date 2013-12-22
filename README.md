@@ -2,6 +2,9 @@
 
 [![Gem Version](https://badge.fury.io/rb/git-duet.png)](http://badge.fury.io/rb/git-duet)
 [![Build Status](https://travis-ci.org/modcloth/git-duet.png?branch=master)](https://travis-ci.org/modcloth/git-duet)
+[![Code Climate](https://codeclimate.com/repos/52b6ea7089af7e2ddc0b1f3c/badges/cc96e2278280922e2a3f/gpa.png)](https://codeclimate.com/repos/52b6ea7089af7e2ddc0b1f3c/feed)
+[![Dependency
+Status](https://gemnasium.com/modcloth/git-duet.png)](https://gemnasium.com/modcloth/git-duet)
 
 Pair harmoniously!  Working in a pair doesn't mean you've both lost your
 identity.  Git Duet helps with blaming/praising by using stuff that's

@@ -28,8 +28,11 @@ class Git::Duet::DuetCommand
   attr_accessor :alpha, :omega, :author_mapper
 
   def set_alpha_as_git_config_user
-    exec_check("#{git_config} user.name '#{alpha_info[:name]}'")
-    exec_check("#{git_config} user.email '#{alpha_info[:email]}'")
+    %w(name email).each do |setting|
+      exec_check(
+        "#{git_config} user.#{setting} '#{alpha_info[setting.to_sym]}'"
+      )
+    end
   end
 
   def var_map
@@ -42,20 +45,21 @@ class Git::Duet::DuetCommand
   end
 
   def alpha_info
-    alpha_omega_info.fetch(@alpha)
-  rescue KeyError, IndexError => e
-    error("git-duet: Failed to find author: #{e}")
-    raise Git::Duet::ScriptDieError.new(86)
+    fetch_info(alpha, 'author')
   end
 
   def omega_info
-    alpha_omega_info.fetch(@omega)
+    fetch_info(omega, 'committer')
+  end
+
+  def fetch_info(which, desc)
+    alpha_omega_info.fetch(which)
   rescue KeyError, IndexError => e
-    error("git-duet: Failed to find committer: #{e}")
-    raise Git::Duet::ScriptDieError.new(86)
+    error("git-duet: Failed to find #{desc}: #{e}")
+    raise Git::Duet::ScriptDieError, 86
   end
 
   def alpha_omega_info
-    @alpha_omega_info ||= author_mapper.map(@alpha, @omega)
+    @alpha_omega_info ||= author_mapper.map(alpha, omega)
   end
 end
