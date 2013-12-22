@@ -1,4 +1,3 @@
----
 language: ruby
 env:
   global:
@@ -11,6 +10,16 @@ rvm:
 - 2.0.0
 - jruby-19mode
 notifications:
-  email:
-    recipients:
-    - github+git-duet@modcloth.com
+  email: github+git-duet@modcloth.com
+deploy:
+  provider: rubygems
+  api_key:
+    secure: aW7HYNkTGp3N8awbuJtDfko1CXBDTzElggAOQsA4p//V06Q/qH7ZTNZxPTf5/bPlmjDRgttMVv+zm3YGgb4pFdHzSWI+McLf+eI6g2I8s/Sp/GZQ2+dxH1wBqPtMhSI/Rv7R+J6GznALjKhM/PnNpPl6gsWePFbMebhKgKUvcHo=
+  gem: git-duet
+  on:
+    tags: true
+    repo: modcloth/git-duet
+addons:
+  code_climate:
+    repo_token:
+      secure: X4bw7rtQxk3461dIOxtLZEzCnEa/UZZpOSIOsGf6kWJFgps0gG9HGgOiwTfMnC9gJNo+FZ2JzTWMRRzljUh/QapL6yXSCrvwfN+bomFb35cG0kfQap+WWWhepY2d5jFytyW/hzzsItLtM7xOnNXEBlpKgS8C2OOns2sZq5goTkc=

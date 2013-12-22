@@ -3,7 +3,8 @@ require 'git/duet/author_mapper'
 
 describe Git::Duet::AuthorMapper do
   before :each do
-    subject.instance_variable_set(:@cfg, {
+    subject.instance_variable_set(
+      :@cfg,
       'authors' => {
         'jd' => 'Jane Doe; jdoe',
         'fb' => 'Frances Bar; frances',
@@ -16,7 +17,7 @@ describe Git::Duet::AuthorMapper do
       'email_addresses' => {
         'jd' => 'jane@awesome.biz'
       }
-    })
+    )
   end
 
   after :each do

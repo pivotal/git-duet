@@ -17,6 +17,7 @@ describe 'git-duet end to end', integration: true do
   end
 
   def uninstall_hook
+    Dir.chdir(@repo_dir)
     FileUtils.rm_f('.git/hooks/pre-commit')
   end
 
@@ -27,11 +28,15 @@ describe 'git-duet end to end', integration: true do
   end
 
   before :all do
+    ENV['COVERAGE'] = '1'
     ENV['GIT_DUET_CONFIG_NAMESPACE'] = 'foo.bar'
+    ENV['GIT_DUET_SIMPLECOV_RUNTIME'] = '1'
+
     @startdir = Dir.pwd
     @tmpdir = Dir.mktmpdir('git-duet-specs')
     @git_authors = File.join(@tmpdir, '.git-authors')
     @email_lookup_path = File.join(@tmpdir, 'email-lookup')
+
     File.open(@git_authors, 'w') do |f|
       f.puts YAML.dump(
         'pairs' => {
@@ -48,10 +53,13 @@ describe 'git-duet end to end', integration: true do
       )
     end
     ENV['GIT_DUET_AUTHORS_FILE'] = @git_authors
+
     top_bin = File.expand_path('../../../bin', __FILE__)
     ENV['PATH'] = "#{top_bin}:#{ENV['PATH']}"
+
     File.open(@email_lookup_path, 'w') { |f| f.puts EMAIL_LOOKUP_SCRIPT }
     FileUtils.chmod(0755, @email_lookup_path)
+
     @repo_dir = File.join(@tmpdir, 'foo')
     Dir.chdir(@tmpdir)
     `git init #{@repo_dir}`

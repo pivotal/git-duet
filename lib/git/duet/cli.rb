@@ -11,7 +11,7 @@ class Git::Duet::Cli
       send(method_name, parse_options(method_name, argv.clone))
       0
     rescue NoMethodError
-      raise ScriptError.new('How did you get here???')
+      raise ScriptError, 'How did you get here???'
     rescue Git::Duet::ScriptDieError => e
       e.exit_code
     end
