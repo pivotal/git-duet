@@ -40,26 +40,28 @@ class Git::Duet::Cli
     end
 
     def parse_solo_options(argv)
-      leftover_argv, options = with_common_opts(
-        argv, 'Usage: __PROG__ [options] <soloist-initials>'
-      ) do |opts, options_hash|
-        opts.on('-g', '--global', 'Change global git config') do |g|
-          options_hash[:global] = true
-        end
+      parse_options_with_positional_args(
+        argv, '<soloist-initials>') do |leftover_argv, options|
+        options[:soloist] = leftover_argv.first
       end
-      options[:soloist] = leftover_argv.first
-      options
     end
 
     def parse_duet_options(argv)
+      parse_options_with_positional_args(
+        argv, '<alpha-initials> <omega-initials>') do |leftover_argv, options|
+        options[:alpha], options[:omega] = leftover_argv[0..1]
+      end
+    end
+
+    def parse_options_with_positional_args(argv, usage)
       leftover_argv, options = with_common_opts(
-        argv, 'Usage: __PROG__ [options] <alpha-initials> <omega-initials>'
+        argv, 'Usage: __PROG__ [options] ' << usage
       ) do |opts, options_hash|
         opts.on('-g', '--global', 'Change global git config') do |g|
           options_hash[:global] = true
         end
       end
-      options[:alpha], options[:omega] = leftover_argv[0..1]
+      yield leftover_argv, options
       options
     end
 
