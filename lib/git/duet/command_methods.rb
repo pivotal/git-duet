@@ -30,24 +30,24 @@ module Git::Duet::CommandMethods
   end
 
   def author_env_vars_set?
-    %x(#{get_author_name} && #{get_author_email})
+    %x(#{author_name_command} && #{author_email_command})
     $CHILD_STATUS == 0
   end
 
-  def get_author_name
+  def author_name_command
     "git config --get #{Git::Duet::Config.namespace}.git-author-name"
   end
 
-  def get_author_email
+  def author_email_command
     "git config --get #{Git::Duet::Config.namespace}.git-author-email"
   end
 
-  def get_current_config
+  def current_config_command
     "git config --get-regexp #{Git::Duet::Config.namespace}"
   end
 
   def show_current_config
-    info(exec_check(get_current_config))
+    info(exec_check(current_config_command))
   end
 
   def dump_env_vars
