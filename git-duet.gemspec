@@ -33,6 +33,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'rubocop'
 
+  gem.add_development_dependency 'posix-spawn' unless RUBY_PLATFORM == 'java'
   gem.add_development_dependency 'pry' unless RUBY_PLATFORM == 'java'
   gem.add_development_dependency 'simplecov' unless RUBY_PLATFORM == 'java'
 end
