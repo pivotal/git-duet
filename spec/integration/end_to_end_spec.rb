@@ -14,7 +14,7 @@ describe 'git-duet end to end', integration: true do
 
   @capture_status = nil
 
-  def sh(cmd, options = {}, &block)
+  def sh(cmd)
     return `#{cmd}` if RUBY_PLATFORM == 'java'
 
     pid, input, output, _ = POSIX::Spawn.popen4(cmd, err: '/dev/null')
