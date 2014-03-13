@@ -3,11 +3,9 @@
 require 'bundler/gem_tasks'
 
 require 'rspec/core/rake_task'
+require 'rubocop/rake_task'
 
-desc 'Run rubocop'
-task :rubocop do
-  sh('rubocop --format simple') { |r, _| r || abort }
-end
+Rubocop::RakeTask.new
 
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.rspec_opts = '--format documentation'

@@ -1,3 +1,8 @@
 ---
+AllCops:
+  Includes:
+    - git-duet.gemspec
+    - Rakefile
+    - Gemfile
 Documentation:
   Enabled: false

@@ -6,7 +6,7 @@ Gem::Specification.new do |gem|
     'Dan Buch',
     'Jesse Szwedko',
     'Rafe Colton',
-    'Sheena McCoy',
+    'Sheena McCoy'
   ]
   gem.email = %w(
     d.buch@modcloth.com
@@ -17,13 +17,15 @@ Gem::Specification.new do |gem|
   gem.description = %q{Pair programming git identity thingy}
   gem.summary = "Pair harmoniously!  Decide who's driving.  " <<
                 "Commit along the way.  Don't make a mess of " <<
-                "the repository history."
+                'the repository history.'
   gem.homepage = 'https://github.com/modcloth/git-duet'
   gem.license = 'MIT'
 
-  gem.files = `git ls-files`.split($\)
-  gem.executables = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
-  gem.test_files = gem.files.grep(%r{^spec/})
+  gem.files = `git ls-files -z`.split("\x00")
+  gem.executables = gem.files.grep(/^bin\//)
+                             .map { |f| File.basename(f) }
+                             .reject { |n| n =~ /rubymine-git-wrapper/ }
+  gem.test_files = gem.files.grep(/^spec\//)
   gem.name = 'git-duet'
   gem.require_paths = %w(lib)
   gem.version = Git::Duet::VERSION
