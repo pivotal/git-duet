@@ -64,11 +64,12 @@ Set the author and committer via `git duet`:
 git duet jd fb
 ~~~~~
 
-When you're ready to commit, use `git duet-commit` (or add an alias like
-a normal person.  Something like `dci = duet-commit` should work.)
+When you're ready to commit, use `git duet-commit` or `git dci`
 
 ~~~~~ bash
 git duet-commit -v [any other git options]
+# or...
+git dci -v [any other git options]
 ~~~~~
 
 When you're done pairing, set the author back to yourself with `git solo`:
