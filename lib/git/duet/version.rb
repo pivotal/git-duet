@@ -3,7 +3,7 @@
 unless defined?(Git::Duet::VERSION)
   module Git
     module Duet
-      VERSION = '1.0.0'
+      VERSION = '0.3.1'
     end
   end
 end
