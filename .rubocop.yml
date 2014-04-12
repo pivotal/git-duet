@@ -4,3 +4,6 @@ Documentation:
 
 FileName:
   Enabled: false
+
+DoubleNegation:
+  Enabled: false

@@ -10,8 +10,8 @@ module Git
 
       def initialize(soloist, quiet = false, global = false)
         @soloist = soloist
-        @quiet = quiet
-        @global = global
+        @quiet = !!quiet
+        @global = !!global
         @author_mapper = Git::Duet::AuthorMapper.new
       end
 

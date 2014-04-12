@@ -9,7 +9,7 @@ module Git
       include Git::Duet::CommandMethods
 
       def initialize(quiet = false)
-        @quiet = quiet
+        @quiet = !!quiet
       end
 
       def execute!
