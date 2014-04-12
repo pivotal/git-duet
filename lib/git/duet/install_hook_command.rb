@@ -31,7 +31,7 @@ module Git
       private
 
       def error_hook_exists(dest)
-        error('git-duet-install-hook: ' <<
+        error('git-duet-install-hook: ' \
               "A pre-commit hook already exists at #{dest}!")
         error('git-duet-install-hook: Move it out of the way first, mkay?')
         1

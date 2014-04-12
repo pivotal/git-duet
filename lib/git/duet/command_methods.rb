@@ -18,7 +18,7 @@ module Git
         in_repo_root do
           var_map.each do |key, value|
             exec_check(
-              "#{git_config} #{Git::Duet::Config.namespace}." <<
+              "#{git_config} #{Git::Duet::Config.namespace}." \
               "#{key.downcase.gsub(/_/, '-')} '#{value}'"
             )
           end

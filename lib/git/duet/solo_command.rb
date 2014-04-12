@@ -37,12 +37,12 @@ module Git
 
       def unset_committer_vars
         exec_check(
-          "#{git_config} --unset-all #{Git::Duet::Config.namespace}." <<
+          "#{git_config} --unset-all #{Git::Duet::Config.namespace}." \
           'git-committer-name',
           [0, 5]
         )
         exec_check(
-          "#{git_config} --unset-all #{Git::Duet::Config.namespace}." <<
+          "#{git_config} --unset-all #{Git::Duet::Config.namespace}." \
           'git-committer-email',
           [0, 5]
         )

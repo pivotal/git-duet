@@ -44,7 +44,7 @@ module Git
         return "#{username}@#{email_domain}" if username
 
         author_name_parts = author.split
-        "#{author_name_parts.first[0, 1].downcase}." <<
+        "#{author_name_parts.first[0, 1].downcase}." \
         "#{author_name_parts.last.downcase}@#{email_domain}"
       end
 
