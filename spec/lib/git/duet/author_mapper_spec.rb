@@ -102,20 +102,22 @@ describe Git::Duet::AuthorMapper do
 
   context 'when using a `~/.pairs` config' do
     before :each do
-      subject.stub(cfg: {
-        'pairs' => {
-          'jd' => 'Jane Doe; jdoe',
-          'fb' => 'Frances Bar; frances',
-          'qx' => 'Quincy Xavier; qx',
-          'hb' => 'Hampton Bones'
-        },
-        'email' => {
-          'domain' => 'awesometown.me'
-        },
-        'email_addresses' => {
-          'jd' => 'jane@awesome.biz'
+      subject.stub(
+        cfg: {
+          'pairs' => {
+            'jd' => 'Jane Doe; jdoe',
+            'fb' => 'Frances Bar; frances',
+            'qx' => 'Quincy Xavier; qx',
+            'hb' => 'Hampton Bones'
+          },
+          'email' => {
+            'domain' => 'awesometown.me'
+          },
+          'email_addresses' => {
+            'jd' => 'jane@awesome.biz'
+          }
         }
-      })
+      )
     end
 
     it 'maps initials to name -> email pairs' do

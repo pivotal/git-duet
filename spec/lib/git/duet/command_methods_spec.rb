@@ -48,10 +48,10 @@ describe Git::Duet::CommandMethods do
 
     it 'writes env vars to a custom global git config tree' do
       subject.should_receive(:`)
-        .with("git config --global #{Git::Duet::Config.namespace}" <<
+        .with("git config --global #{Git::Duet::Config.namespace}" \
               ".fizzle-baz 'awesome'")
       subject.should_receive(:`)
-        .with("git config --global #{Git::Duet::Config.namespace}" <<
+        .with("git config --global #{Git::Duet::Config.namespace}" \
               ".oh-snarf 'mumra'")
       subject.should_receive(:`)
         .with(/^git config --global #{Git::Duet::Config.namespace}.mtime \d+/)
