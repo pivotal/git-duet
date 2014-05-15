@@ -180,9 +180,9 @@ describe 'git-duet end to end', integration: true do
       authors_cfg = YAML.load_file(@git_authors)
       @name_suffix = rand(9999)
       authors_cfg['email_template'] =
-        %Q^<%= '' << author.split.first.downcase << ^ <<
-          %Q^author.split.last[0].chr.downcase << ^ <<
-          %Q^'#{@name_suffix}@mompopshop.local' %>^
+        "<%= '' << author.split.first.downcase << " \
+        "author.split.last[0].chr.downcase << " \
+        "'#{@name_suffix}@mompopshop.local' %>"
       File.open(@git_authors, 'w') do |f|
         f.puts YAML.dump(authors_cfg)
       end
@@ -210,7 +210,7 @@ describe 'git-duet end to end', integration: true do
       end
 
       it 'uses the email template to construct the committer email' do
-        sh('git duet-commit -q ' <<
+        sh('git duet-commit -q ' \
            "-m 'Testing custom email template for committer'")
         sh("git log -1 --format='%cn <%ce>'").chomp
           .should == "Zubaz Pants <zubazp#{@name_suffix}@mompopshop.local>"
@@ -231,7 +231,7 @@ describe 'git-duet end to end', integration: true do
       end
 
       it 'uses the email template to construct the committer email' do
-        sh('git duet-commit -q ' <<
+        sh('git duet-commit -q ' \
            "-m 'Testing custom email template for committer'")
         sh("git log -1 --format='%cn <%ce>'").chomp
           .should == "Frances Bar <francesb#{@name_suffix}@mompopshop.local>"

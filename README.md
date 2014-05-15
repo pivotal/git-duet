@@ -64,11 +64,14 @@ Set the author and committer via `git duet`:
 git duet jd fb
 ```
 
-When you're ready to commit, use `git duet-commit` (or add an alias like
-a normal person.  Something like `dci = duet-commit` should work.)
+When you're ready to commit, use `git duet-commit` or `git dci`
 
 ``` bash
 git duet-commit -v [any other git options]
+```
+# or...
+``` bash
+git dci -v [any other git options]
 ```
 
 When you're done pairing, set the author back to yourself with `git solo`:
@@ -284,6 +287,6 @@ github](https://github.com/modcloth/git-duet/issues/new).
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
+3. Commit your changes (`git dci -am 'Added some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request

@@ -6,3 +6,9 @@ AllCops:
     - Gemfile
 Documentation:
   Enabled: false
+
+FileName:
+  Enabled: false
+
+DoubleNegation:
+  Enabled: false

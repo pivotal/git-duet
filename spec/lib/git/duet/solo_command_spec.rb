@@ -147,7 +147,7 @@ describe Git::Duet::SoloCommand do
                                              .namespace}.git-committer-email/
         )
       cmd.should_receive(:`)
-        .with('git config --global --unset-all ' <<
+        .with('git config --global --unset-all ' \
               "#{Git::Duet::Config.namespace}.git-committer-name")
       cmd.execute!
     end
@@ -161,7 +161,7 @@ describe Git::Duet::SoloCommand do
                                              .namespace}.git-committer-name/
         )
       cmd.should_receive(:`)
-        .with('git config --global --unset-all ' <<
+        .with('git config --global --unset-all ' \
               "#{Git::Duet::Config.namespace}.git-committer-email")
       cmd.execute!
     end
