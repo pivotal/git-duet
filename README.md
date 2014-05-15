@@ -68,9 +68,7 @@ When you're ready to commit, use `git duet-commit` or `git dci`
 
 ``` bash
 git duet-commit -v [any other git options]
-```
 # or...
-``` bash
 git dci -v [any other git options]
 ```
 
