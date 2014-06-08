@@ -101,11 +101,11 @@ describe 'git-duet end to end', integration: true do
     after(:each) { uninstall_hook }
 
     it 'writes the hook to the `pre-commit` hook file' do
-      File.exist?('.git/hooks/pre-commit').should be_true
+      expect(File.exist?('.git/hooks/pre-commit')).to be true
     end
 
     it 'makes the `pre-commit` hook file executable' do
-      File.executable?('.git/hooks/pre-commit').should be_true
+      expect(File.executable?('.git/hooks/pre-commit')).to be true
     end
   end
 
