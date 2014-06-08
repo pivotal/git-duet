@@ -180,8 +180,8 @@ describe 'git-duet end to end', integration: true do
       authors_cfg = YAML.load_file(@git_authors)
       @name_suffix = rand(9999)
       authors_cfg['email_template'] =
-        "<%= '' << author.split.first.downcase << " \
-        "author.split.last[0].chr.downcase << " \
+        '<%= '' << author.split.first.downcase << ' \
+        'author.split.last[0].chr.downcase << ' \
         "'#{@name_suffix}@mompopshop.local' %>"
       File.open(@git_authors, 'w') do |f|
         f.puts YAML.dump(authors_cfg)

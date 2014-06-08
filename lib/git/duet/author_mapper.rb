@@ -38,9 +38,7 @@ module Git
         author_email = email_from_lookup(initials, author, username)
         return author_email unless author_email.empty?
         return email_addresses[initials] if email_addresses[initials]
-        if email_template
-          return email_from_template(initials, author, username)
-        end
+        return email_from_template(initials, author, username) if email_template
         return "#{username}@#{email_domain}" if username
 
         author_name_parts = author.split
@@ -53,6 +51,8 @@ module Git
         `#{@email_lookup} '#{initials}' '#{author}' '#{username}'`.strip
       end
 
+      # rubocop:disable Lint/UnusedMethodArgument
+      # arguments are used via binding
       def email_from_template(initials, author, username)
         return ERB.new(email_template).result(binding)
       rescue StandardError => e
