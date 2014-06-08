@@ -32,7 +32,7 @@ module Git
       end
 
       def author_env_vars_set?
-        %x(#{author_name_command} && #{author_email_command})
+        `#{author_name_command} && #{author_email_command}`
         $CHILD_STATUS == 0
       end
 

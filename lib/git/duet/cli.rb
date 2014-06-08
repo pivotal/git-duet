@@ -33,7 +33,7 @@ module Git
           options = {}
           leftover_argv = OptionParser.new do |opts|
             opts.banner = banner.gsub(/__PROG__/, opts.program_name)
-            opts.on('-q', 'Silence output') do |q|
+            opts.on('-q', 'Silence output') do |_|
               options[:quiet] = true
             end
             yield opts, options if block_given?
@@ -61,7 +61,7 @@ module Git
           leftover_argv, options = with_common_opts(
             argv, 'Usage: __PROG__ [options] ' << usage
           ) do |opts, options_hash|
-            opts.on('-g', '--global', 'Change global git config') do |g|
+            opts.on('-g', '--global', 'Change global git config') do |_|
               options_hash[:global] = true
             end
           end

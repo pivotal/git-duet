@@ -101,11 +101,11 @@ describe 'git-duet end to end', integration: true do
     after(:each) { uninstall_hook }
 
     it 'writes the hook to the `pre-commit` hook file' do
-      File.exist?('.git/hooks/pre-commit').should be_true
+      expect(File.exist?('.git/hooks/pre-commit')).to be true
     end
 
     it 'makes the `pre-commit` hook file executable' do
-      File.executable?('.git/hooks/pre-commit').should be_true
+      expect(File.executable?('.git/hooks/pre-commit')).to be true
     end
   end
 
@@ -181,7 +181,7 @@ describe 'git-duet end to end', integration: true do
       @name_suffix = rand(9999)
       authors_cfg['email_template'] =
         "<%= '' << author.split.first.downcase << " \
-        "author.split.last[0].chr.downcase << " \
+        'author.split.last[0].chr.downcase << ' \
         "'#{@name_suffix}@mompopshop.local' %>"
       File.open(@git_authors, 'w') do |f|
         f.puts YAML.dump(authors_cfg)
