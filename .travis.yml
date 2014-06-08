@@ -10,6 +10,9 @@ rvm:
 - 2.0.0
 - 2.1.0
 - jruby-19mode
+script:
+- bundle exec rake
+- bats test
 notifications:
   email: github+git-duet@modcloth.com
 deploy:
