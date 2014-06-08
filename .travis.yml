@@ -10,6 +10,9 @@ rvm:
 - 2.0.0
 - 2.1.0
 - jruby-19mode
+before_script:
+- git clone https://github.com/sstephenson/bats.git
+- cd bats && ./install.sh /usr/local
 script:
 - bundle exec rake
 - bats test
