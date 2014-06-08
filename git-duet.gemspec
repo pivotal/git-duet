@@ -14,9 +14,9 @@ Gem::Specification.new do |gem|
     r.colton@modcloth.com
     sp.mccoy@modcloth.com
   )
-  gem.description = %q{Pair programming git identity thingy}
-  gem.summary = "Pair harmoniously!  Decide who's driving.  " <<
-                "Commit along the way.  Don't make a mess of " <<
+  gem.description = %q(Pair programming git identity thingy)
+  gem.summary = "Pair harmoniously!  Decide who's driving.  " \
+                "Commit along the way.  Don't make a mess of " \
                 'the repository history.'
   gem.homepage = 'https://github.com/modcloth/git-duet'
   gem.license = 'MIT'
