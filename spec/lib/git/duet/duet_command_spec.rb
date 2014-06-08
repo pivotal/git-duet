@@ -18,7 +18,7 @@ describe Git::Duet::DuetCommand do
     Dir.stub(:chdir) do |&block|
       block.call
     end
-    File.stub(:open) do |filename, mode, &block|
+    File.stub(:open) do |_, _, &block|
       block.call(double('outfile').as_null_object)
     end
   end
