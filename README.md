@@ -64,7 +64,8 @@ Set the author and committer via `git duet`:
 git duet jd fb
 ```
 
-When you're ready to commit, use `git duet-commit` or `git dci`
+When you're ready to commit, use `git duet-commit` (or add an alias like
+a normal person.  Something like `dci = duet-commit` should work.)
 
 ``` bash
 git duet-commit -v [any other git options]
