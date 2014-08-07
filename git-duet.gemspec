@@ -14,15 +14,17 @@ Gem::Specification.new do |gem|
     r.colton@modcloth.com
     sp.mccoy@modcloth.com
   )
-  gem.description = %q(Pair programming git identity thingy)
+  gem.description = 'Pair programming git identity thingy'
   gem.summary = "Pair harmoniously!  Decide who's driving.  " \
                 "Commit along the way.  Don't make a mess of " \
                 'the repository history.'
   gem.homepage = 'https://github.com/modcloth/git-duet'
   gem.license = 'MIT'
 
-  gem.files = `git ls-files`.split($OUTPUT_RECORD_SEPARATOR)
-  gem.executables = gem.files.grep(/^bin\//).map { |f| File.basename(f) }
+  gem.files = `git ls-files -z`.split("\x00")
+  gem.executables = gem.files.grep(/^bin\//)
+                             .map { |f| File.basename(f) }
+                             .reject { |n| n =~ /rubymine-git-wrapper/ }
   gem.test_files = gem.files.grep(/^spec\//)
   gem.name = 'git-duet'
   gem.require_paths = %w(lib)
