@@ -1,10 +1,10 @@
 # Git Duet
 
 [![Gem Version](https://badge.fury.io/rb/git-duet.png)](http://badge.fury.io/rb/git-duet)
-[![Build Status](https://travis-ci.org/modcloth/git-duet.png?branch=master)](https://travis-ci.org/modcloth/git-duet)
+[![Build Status](https://travis-ci.org/meatballhat/git-duet.png?branch=master)](https://travis-ci.org/meatballhat/git-duet)
 [![Code Climate](https://codeclimate.com/repos/52b6ea7089af7e2ddc0b1f3c/badges/cc96e2278280922e2a3f/gpa.png)](https://codeclimate.com/repos/52b6ea7089af7e2ddc0b1f3c/feed)
 [![Dependency
-Status](https://gemnasium.com/modcloth/git-duet.png)](https://gemnasium.com/modcloth/git-duet)
+Status](https://gemnasium.com/meatballhat/git-duet.png)](https://gemnasium.com/meatballhat/git-duet)
 
 Pair harmoniously!  Working in a pair doesn't mean you've both lost your
 identity.  Git Duet helps with blaming/praising by using stuff that's
@@ -259,7 +259,7 @@ executions of `git commit`.  Such an executable is available in the Git
 Duet repository, and may be installed somewhere in your `$PATH` like so:
 
 ``` bash
-\curl -Ls -o ~/bin/rubymine-git-wrapper https://raw.github.com/modcloth/git-duet/master/bin/rubymine-git-wrapper
+\curl -Ls -o ~/bin/rubymine-git-wrapper https://raw.github.com/meatballhat/git-duet/master/bin/rubymine-git-wrapper
 chmod +x ~/bin/rubymine-git-wrapper
 ```
 
@@ -279,8 +279,8 @@ While JRuby works it is not recommended as the VM startup time is
 usually longer than it takes most Git Duet commands to execute.
 
 If you experience badness, please [let us know via
-email](mailto:github@modcloth.com) or pretty please [create an issue on
-github](https://github.com/modcloth/git-duet/issues/new).
+email](mailto:dan@meatballhat.com) or pretty please [create an issue on
+github](https://github.com/meatballhat/git-duet/issues/new).
 
 ## Contributing
 
