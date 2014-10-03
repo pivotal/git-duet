@@ -9,16 +9,16 @@ Gem::Specification.new do |gem|
     'Sheena McCoy'
   ]
   gem.email = %w(
-    d.buch@modcloth.com
-    j.szwedko@modcloth.com
-    r.colton@modcloth.com
-    sp.mccoy@modcloth.com
+    dan@meatballhat.com
+    jesse.szwedko@gmail.com
+    rafael.colton@gmail.com
+    sheenamccoy@gmail.com
   )
   gem.description = 'Pair programming git identity thingy'
   gem.summary = "Pair harmoniously!  Decide who's driving.  " \
                 "Commit along the way.  Don't make a mess of " \
                 'the repository history.'
-  gem.homepage = 'https://github.com/modcloth/git-duet'
+  gem.homepage = 'https://github.com/meatballhat/git-duet'
   gem.license = 'MIT'
 
   gem.files = `git ls-files -z`.split("\x00")

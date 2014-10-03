@@ -1,3 +1,4 @@
+---
 language: ruby
 env:
   global:
@@ -17,16 +18,8 @@ script:
 - bundle exec rake
 - bats test
 notifications:
-  email: github+git-duet@modcloth.com
-deploy:
-  provider: rubygems
-  api_key:
-    secure: aW7HYNkTGp3N8awbuJtDfko1CXBDTzElggAOQsA4p//V06Q/qH7ZTNZxPTf5/bPlmjDRgttMVv+zm3YGgb4pFdHzSWI+McLf+eI6g2I8s/Sp/GZQ2+dxH1wBqPtMhSI/Rv7R+J6GznALjKhM/PnNpPl6gsWePFbMebhKgKUvcHo=
-  gem: git-duet
-  on:
-    tags: true
-    repo: modcloth/git-duet
-addons:
-  code_climate:
-    repo_token:
-      secure: A/K+dw6//V8WkB4PapKa1BqEGbwxWbhvHSCFKe+CnHSJ19vDbij2C1x8uzh3NpYTI+B9a5/p9r0B8AmVFI2hKU5CIdGiqMd+sEMM/OzSBeMTIO8d0NKJRfJEGH9yRSlka3cpwLMKmbdPorYnI0iKdVvWLabPhzneK8qYCgHMSWw=
+  email:
+    recipients:
+    - dan@meatballhat.com
+    - rafael.colton@gmail.com
+    - jesse.szwedko@gmail.com
