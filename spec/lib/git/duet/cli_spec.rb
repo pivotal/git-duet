@@ -8,7 +8,7 @@ describe Git::Duet::Cli do
   subject(:cli) { described_class }
 
   it 'responds to `.main`' do
-    cli.should respond_to(:run)
+    expect(cli).to respond_to(:run)
   end
 
   it 'requires the prog name and argv array' do
@@ -20,28 +20,28 @@ describe Git::Duet::Cli do
   end
 
   it 'returns the exit status from any script error deaths' do
-    cli.stub(:solo).and_raise(Git::Duet::ScriptDieError.new(99))
-    cli.run('git-solo', %w(ty -q)).should == 99
+    allow(cli).to receive(:solo).and_raise(Git::Duet::ScriptDieError.new(99))
+    expect(cli.run('git-solo', %w(ty -q))).to eq(99)
   end
 
   it 'runs `solo` when the progname matches /solo$/' do
-    Git::Duet::SoloCommand.stub(new: double('solo').tap do |solo|
-      solo.should_receive(:execute!)
-    end)
+    allow(Git::Duet::SoloCommand).to receive(:new).and_return(
+      double('solo').tap { |solo| expect(solo).to receive(:execute!) }
+    )
     cli.run('git-solo', %w(jd -q))
   end
 
   it 'runs `duet` when progname matches /duet$/' do
-    Git::Duet::DuetCommand.stub(new: double('duet').tap do |duet|
-      duet.should_receive(:execute!)
-    end)
+    allow(Git::Duet::DuetCommand).to receive(:new).and_return(
+      double('duet').tap { |duet| expect(duet).to receive(:execute!) }
+    )
     cli.run('git-duet', %w(jd fb -q))
   end
 
   it 'runs `pre_commit` when progname matches /pre-commit$/' do
-    Git::Duet::PreCommitCommand.stub(new: double('pre-commit').tap do |pc|
-      pc.should_receive(:execute!)
-    end)
+    allow(Git::Duet::PreCommitCommand).to receive(:new).and_return(
+      double('pre-commit').tap { |pc| expect(pc).to receive(:execute!) }
+    )
     cli.run('git-duet-pre-commit', %w(-q))
   end
 end

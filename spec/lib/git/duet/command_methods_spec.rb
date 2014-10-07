@@ -17,26 +17,26 @@ describe Git::Duet::CommandMethods do
 
   before :each do
     [:info, :error].each do |m|
-      subject.stub(m)
+      allow(subject).to receive(m)
     end
-    subject.stub(:in_repo_root) do |&block|
+    allow(subject).to receive(:in_repo_root) do |&block|
       block.call
     end
   end
 
   it 'writes env vars to a custom git config tree' do
-    subject.should_receive(:`)
+    expect(subject).to receive(:`)
       .with("git config #{Git::Duet::Config.namespace}.fizzle-baz 'awesome'")
-    subject.should_receive(:`)
+    expect(subject).to receive(:`)
       .with("git config #{Git::Duet::Config.namespace}.oh-snarf 'mumra'")
-    subject.should_receive(:`)
+    expect(subject).to receive(:`)
       .with(/^git config #{Git::Duet::Config.namespace}.mtime \d+/)
     subject.send(:write_env_vars)
   end
 
   it 'explodes if a subshell returns non-zero' do
-    subject.stub(:`)
-    $CHILD_STATUS.should_receive(:exitstatus).and_return(1)
+    allow(subject).to receive(:`)
+    expect($CHILD_STATUS).to receive(:exitstatus).and_return(1)
     expect { subject.send(:exec_check, 'ls hamsters') }
       .to raise_error(StandardError)
   end
@@ -47,13 +47,13 @@ describe Git::Duet::CommandMethods do
     end
 
     it 'writes env vars to a custom global git config tree' do
-      subject.should_receive(:`)
+      expect(subject).to receive(:`)
         .with("git config --global #{Git::Duet::Config.namespace}" \
               ".fizzle-baz 'awesome'")
-      subject.should_receive(:`)
+      expect(subject).to receive(:`)
         .with("git config --global #{Git::Duet::Config.namespace}" \
               ".oh-snarf 'mumra'")
-      subject.should_receive(:`)
+      expect(subject).to receive(:`)
         .with(/^git config --global #{Git::Duet::Config.namespace}.mtime \d+/)
       subject.send(:write_env_vars)
     end

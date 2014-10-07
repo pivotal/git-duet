@@ -10,12 +10,14 @@ describe Git::Duet::SoloCommand do
   subject(:cmd) { described_class.new(soloist) }
 
   before :each do
-    cmd.stub(author_mapper: double('author mapper').tap do |am|
-      am.stub(map: author_mapping)
-    end)
-    cmd.stub(:` => '')
-    cmd.stub(:report_env_vars)
-    cmd.stub(:in_repo_root) do |&block|
+    allow(cmd).to receive(:author_mapper).and_return(
+      double('author mapper').tap do |am|
+        allow(am).to receive(:map).and_return(author_mapping)
+      end
+    )
+    allow(cmd).to receive(:`).and_return('')
+    allow(cmd).to receive(:report_env_vars)
+    allow(cmd).to receive(:in_repo_root) do |&block|
       block.call
     end
   end
@@ -25,64 +27,68 @@ describe Git::Duet::SoloCommand do
   end
 
   it 'responds to `execute!`' do
-    cmd.should respond_to(:execute!)
+    expect(cmd).to respond_to(:execute!)
   end
 
   it '(privately) responds to `write_env_vars`' do
-    cmd.private_methods.map(&:to_sym).should include(:write_env_vars)
+    expect(cmd.private_methods.map(&:to_sym)).to include(:write_env_vars)
   end
 
   it 'sets the soloist name as git config user.name' do
-    cmd.stub(:`).with(/git config user\.email/)
-    cmd.stub(:`).with(/git config --unset-all #{Git::Duet::Config.namespace}/)
-    cmd.should_receive(:`)
+    allow(cmd).to receive(:`).with(/git config user\.email/)
+    allow(cmd).to receive(:`).with(
+      /git config --unset-all #{Git::Duet::Config.namespace}/
+    )
+    expect(cmd).to receive(:`)
       .with("git config user.name '#{author_mapping[soloist][:name]}'")
     cmd.execute!
   end
 
   it 'sets the soloist email as git config user.email' do
-    cmd.stub(:`).with(/git config user\.name/)
-    cmd.stub(:`).with(/git config --unset-all #{Git::Duet::Config.namespace}/)
-    cmd.should_receive(:`)
+    allow(cmd).to receive(:`).with(/git config user\.name/)
+    allow(cmd).to receive(:`).with(
+      /git config --unset-all #{Git::Duet::Config.namespace}/
+    )
+    expect(cmd).to receive(:`)
       .with("git config user.email '#{author_mapping[soloist][:email]}'")
     cmd.execute!
   end
 
   it 'unsets the committer name' do
-    cmd.stub(:`).with(/git config user\.name/)
-    cmd.stub(:`).with(/git config user\.email/)
-    cmd.stub(:`)
+    allow(cmd).to receive(:`).with(/git config user\.name/)
+    allow(cmd).to receive(:`).with(/git config user\.email/)
+    allow(cmd).to receive(:`)
       .with(/git config --unset-all #{Git::Duet::Config
                                       .namespace}.git-committer-email/)
-    cmd.should_receive(:`)
+    expect(cmd).to receive(:`)
       .with("git config --unset-all #{Git::Duet::Config
                                       .namespace}.git-committer-name")
     cmd.execute!
   end
 
   it 'unsets the committer email' do
-    cmd.stub(:`).with(/git config user\.name/)
-    cmd.stub(:`).with(/git config user\.email/)
-    cmd.stub(:`)
+    allow(cmd).to receive(:`).with(/git config user\.name/)
+    allow(cmd).to receive(:`).with(/git config user\.email/)
+    allow(cmd).to receive(:`)
       .with(/git config --unset-all #{Git::Duet::Config
                                       .namespace}.git-committer-name/)
-    cmd.should_receive(:`)
+    expect(cmd).to receive(:`)
       .with("git config --unset-all #{Git::Duet::Config
                                       .namespace}.git-committer-email")
     cmd.execute!
   end
 
   it 'reports env vars to $stdout' do
-    cmd.unstub(:report_env_vars)
-    $stdout.should_receive(:puts)
+    allow(cmd).to receive(:report_env_vars).and_call_original
+    expect($stdout).to receive(:puts)
       .with(/^GIT_AUTHOR_NAME='#{author_mapping[soloist][:name]}'/)
-    $stdout.should_receive(:puts)
+    expect($stdout).to receive(:puts)
       .with(/^GIT_AUTHOR_EMAIL='#{author_mapping[soloist][:email]}'/)
     cmd.execute!
   end
 
   it 'sets the soloist as author in custom git config' do
-    cmd.should_receive(:write_env_vars)
+    expect(cmd).to receive(:write_env_vars)
     cmd.execute!
   end
 
@@ -90,7 +96,7 @@ describe Git::Duet::SoloCommand do
     let(:soloist) { 'bzzzrt' }
 
     it 'aborts' do
-      cmd.stub(error: nil)
+      allow(cmd).to receive(:error).and_return(nil)
       expect { cmd.execute! }.to raise_error(Git::Duet::ScriptDieError)
     end
   end
@@ -105,11 +111,11 @@ describe Git::Duet::SoloCommand do
         #{Git::Duet::Config.namespace}.mtime 138039#{rand(1000..9999)}
       EOF
 
-      cmd.stub(:`)
+      allow(cmd).to receive(:`)
         .with("git config --get-regexp #{Git::Duet::Config.namespace}") do
         git_config_output
       end
-      $stdout.should_receive(:puts).with(git_config_output)
+      expect($stdout).to receive(:puts).with(git_config_output)
 
       cmd.execute!
     end
@@ -119,48 +125,48 @@ describe Git::Duet::SoloCommand do
     subject(:cmd) { described_class.new(soloist, false, true) }
 
     it 'sets the soloist name as global git config user.name' do
-      cmd.stub(:`).with(/git config --global user\.email/)
-      cmd.stub(:`)
+      allow(cmd).to receive(:`).with(/git config --global user\.email/)
+      allow(cmd).to receive(:`)
         .with(/git config --global --unset-all #{Git::Duet::Config.namespace}/)
       soloist_name = author_mapping[soloist][:name]
-      cmd.should_receive(:`)
+      expect(cmd).to receive(:`)
         .with("git config --global user.name '#{soloist_name}'")
       cmd.execute!
     end
 
     it 'sets the soloist email as global git config user.email' do
-      cmd.stub(:`).with(/git config --global user\.name/)
-      cmd.stub(:`)
+      allow(cmd).to receive(:`).with(/git config --global user\.name/)
+      allow(cmd).to receive(:`)
         .with(/git config --global --unset-all #{Git::Duet::Config.namespace}/)
       soloist_email = author_mapping[soloist][:email]
-      cmd.should_receive(:`)
+      expect(cmd).to receive(:`)
         .with("git config --global user.email '#{soloist_email}'")
       cmd.execute!
     end
 
     it 'unsets the global committer name' do
-      cmd.stub(:`).with(/git config --global user\.name/)
-      cmd.stub(:`).with(/git config --global user\.email/)
-      cmd.stub(:`)
+      allow(cmd).to receive(:`).with(/git config --global user\.name/)
+      allow(cmd).to receive(:`).with(/git config --global user\.email/)
+      allow(cmd).to receive(:`)
         .with(
           /git config --global --unset-all #{Git::Duet::Config
                                              .namespace}.git-committer-email/
         )
-      cmd.should_receive(:`)
+      expect(cmd).to receive(:`)
         .with('git config --global --unset-all ' \
               "#{Git::Duet::Config.namespace}.git-committer-name")
       cmd.execute!
     end
 
     it 'unsets the global committer email' do
-      cmd.stub(:`).with(/git config --global user\.name/)
-      cmd.stub(:`).with(/git config --global user\.email/)
-      cmd.stub(:`)
+      allow(cmd).to receive(:`).with(/git config --global user\.name/)
+      allow(cmd).to receive(:`).with(/git config --global user\.email/)
+      allow(cmd).to receive(:`)
         .with(
           /git config --global --unset-all #{Git::Duet::Config
                                              .namespace}.git-committer-name/
         )
-      cmd.should_receive(:`)
+      expect(cmd).to receive(:`)
         .with('git config --global --unset-all ' \
               "#{Git::Duet::Config.namespace}.git-committer-email")
       cmd.execute!
