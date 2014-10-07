@@ -5,7 +5,7 @@ describe Git::Duet::PreCommitCommand do
   subject(:cmd) { described_class.new(true) }
 
   before :each do
-    cmd.stub(:in_repo_root) do |&block|
+    allow(cmd).to receive(:in_repo_root) do |&block|
       block.call
     end
     @old_seconds_ago_stale = ENV.delete('GIT_DUET_SECONDS_AGO_STALE')
@@ -21,19 +21,19 @@ describe Git::Duet::PreCommitCommand do
   end
 
   it 'does nothing if the env cache is not stale' do
-    cmd.stub(:exec_check)
+    allow(cmd).to receive(:exec_check)
       .with(/git config #{Git::Duet::Config.namespace}.git/)
-    cmd.stub(:exec_check)
+    allow(cmd).to receive(:exec_check)
       .with("git config #{Git::Duet::Config.namespace}.mtime")
       .and_return(Time.now.to_i)
-    cmd.should_not_receive(:explode!)
+    expect(cmd).to_not receive(:explode!)
     cmd.execute!
   end
 
   it 'explodes if the env cache does not exist' do
-    cmd.stub(:exec_check)
+    allow(cmd).to receive(:exec_check)
       .with(/git config #{Git::Duet::Config.namespace}.git/)
-    cmd.stub(:exec_check)
+    allow(cmd).to receive(:exec_check)
       .with("git config #{Git::Duet::Config.namespace}.mtime")
       .and_raise(StandardError)
     expect { cmd.execute! }.to raise_error(Git::Duet::ScriptDieError)

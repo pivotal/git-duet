@@ -8,18 +8,19 @@ matrix:
   - rvm: jruby-19mode
 rvm:
 - 1.9.3
-- 2.0.0
-- 2.1.0
+- 2.0
+- 2.1
 - jruby-19mode
 before_script:
-- git clone https://github.com/sstephenson/bats.git
-- cd bats && sudo ./install.sh /usr/local
+- "git clone https://github.com/sstephenson/bats.git"
+- "cd bats && sudo ./install.sh /usr/local"
 script:
 - bundle exec rake
-- bats test
+- bundle exec bats test
 notifications:
   email:
     recipients:
     - dan@meatballhat.com
-    - rafael.colton@gmail.com
     - jesse.szwedko@gmail.com
+    - rafael.colton@gmail.com
+    - sheenathejunglegirl@gmail.com

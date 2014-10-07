@@ -12,7 +12,7 @@ Gem::Specification.new do |gem|
     dan@meatballhat.com
     jesse.szwedko@gmail.com
     rafael.colton@gmail.com
-    sheenamccoy@gmail.com
+    sheenathejunglegirl@gmail.com
   )
   gem.description = 'Pair programming git identity thingy'
   gem.summary = "Pair harmoniously!  Decide who's driving.  " \
@@ -29,7 +29,7 @@ Gem::Specification.new do |gem|
   gem.name = 'git-duet'
   gem.require_paths = %w(lib)
   gem.version = Git::Duet::VERSION
-  gem.required_ruby_version = '>= 1.9.3'
+  gem.required_ruby_version = '>= 1.9'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'

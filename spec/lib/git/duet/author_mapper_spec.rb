@@ -27,18 +27,18 @@ describe Git::Duet::AuthorMapper do
   it 'uses an authors file given at initialization' do
     instance = described_class
       .new('/blarggie/blarggie/new/friend/.git-authors')
-    instance.authors_file
-      .should == '/blarggie/blarggie/new/friend/.git-authors'
+    expect(instance.authors_file)
+      .to eq('/blarggie/blarggie/new/friend/.git-authors')
   end
 
   it 'uses the `GIT_DUET_AUTHORS_FILE` if provided' do
     ENV['GIT_DUET_AUTHORS_FILE'] = '/fizzle/bizzle/.git-authors'
     instance = described_class.new
-    instance.authors_file.should == '/fizzle/bizzle/.git-authors'
+    expect(instance.authors_file).to eq('/fizzle/bizzle/.git-authors')
   end
 
   it 'falls back to using `~/.git-authors` for the author map' do
-    subject.authors_file.should == File.join(ENV['HOME'], '.git-authors')
+    expect(subject.authors_file).to eq(File.join(ENV['HOME'], '.git-authors'))
   end
 
   it 'lets missing author errors bubble up' do
@@ -46,41 +46,33 @@ describe Git::Duet::AuthorMapper do
   end
 
   it 'maps initials to name -> email pairs' do
-    subject.map('jd').fetch('jd').should == {
-      name: 'Jane Doe',
-      email: 'jane@awesome.biz'
-    }
+    expect(subject.map('jd').fetch('jd'))
+      .to eq(name: 'Jane Doe', email: 'jane@awesome.biz')
   end
 
   it 'constructs default emails from first initial and last name + domain' do
-    subject.map('hb').should == {
-      'hb' => {
-        name: 'Hampton Bones',
-        email: 'h.bones@awesometown.me'
-      }
-    }
+    expect(subject.map('hb')).to eq('hb' => {
+                                      name: 'Hampton Bones',
+                                      email: 'h.bones@awesometown.me'
+                                    })
   end
 
   it 'constructs emails from optional username (if given) + domain' do
-    subject.map('fb').should == {
-      'fb' => {
-        name: 'Frances Bar',
-        email: 'frances@awesometown.me'
-      }
-    }
+    expect(subject.map('fb')).to eq('fb' => {
+                                      name: 'Frances Bar',
+                                      email: 'frances@awesometown.me'
+                                    })
   end
 
   it 'uses an explicitly-configured email address if given' do
-    subject.map('jd').should == {
-      'jd' => {
-        name: 'Jane Doe',
-        email: 'jane@awesome.biz'
-      }
-    }
+    expect(subject.map('jd')).to eq('jd' => {
+                                      name: 'Jane Doe',
+                                      email: 'jane@awesome.biz'
+                                    })
   end
 
   it 'maps any number of initials to name -> email pairs' do
-    subject.map('jd', 'fb', 'qx', 'hb').should == {
+    expect(subject.map('jd', 'fb', 'qx', 'hb')).to eq(
       'jd' => {
         name: 'Jane Doe',
         email: 'jane@awesome.biz'
@@ -97,38 +89,34 @@ describe Git::Duet::AuthorMapper do
         name: 'Hampton Bones',
         email: 'h.bones@awesometown.me'
       }
-    }
+    )
   end
 
   context 'when using a `~/.pairs` config' do
     before :each do
-      subject.stub(
-        cfg: {
-          'pairs' => {
-            'jd' => 'Jane Doe; jdoe',
-            'fb' => 'Frances Bar; frances',
-            'qx' => 'Quincy Xavier; qx',
-            'hb' => 'Hampton Bones'
-          },
-          'email' => {
-            'domain' => 'awesometown.me'
-          },
-          'email_addresses' => {
-            'jd' => 'jane@awesome.biz'
-          }
+      allow(subject).to receive(:cfg).and_return(
+        'pairs' => {
+          'jd' => 'Jane Doe; jdoe',
+          'fb' => 'Frances Bar; frances',
+          'qx' => 'Quincy Xavier; qx',
+          'hb' => 'Hampton Bones'
+        },
+        'email' => {
+          'domain' => 'awesometown.me'
+        },
+        'email_addresses' => {
+          'jd' => 'jane@awesome.biz'
         }
       )
     end
 
     it 'maps initials to name -> email pairs' do
-      subject.map('jd').fetch('jd').should == {
-        name: 'Jane Doe',
-        email: 'jane@awesome.biz'
-      }
+      expect(subject.map('jd').fetch('jd'))
+        .to eq(name: 'Jane Doe', email: 'jane@awesome.biz')
     end
 
     it 'maps any number of initials to name -> email pairs' do
-      subject.map('jd', 'fb', 'qx', 'hb').should == {
+      expect(subject.map('jd', 'fb', 'qx', 'hb')).to eq(
         'jd' => {
           name: 'Jane Doe',
           email: 'jane@awesome.biz'
@@ -145,7 +133,7 @@ describe Git::Duet::AuthorMapper do
           name: 'Hampton Bones',
           email: 'h.bones@awesometown.me'
         }
-      }
+      )
     end
   end
 
@@ -160,20 +148,20 @@ describe Git::Duet::AuthorMapper do
 
     before :each do
       subject.instance_variable_set(:@cfg, nil)
-      IO.stub(:read).with(bad_path).and_raise(
+      allow(IO).to receive(:read).with(bad_path).and_raise(
         Errno::ENOENT.new("No such file or directory - #{bad_path}")
       )
     end
 
     it 'warns about missing authors file' do
-      $stderr.should_receive(:puts).with(
+      expect($stderr).to receive(:puts).with(
         /Missing or corrupt authors file.*#{bad_path}/i
       )
       expect { subject.map('zzz') }.to raise_error
     end
 
     it 'raises a ScriptDieError' do
-      $stderr.stub(:puts)
+      allow($stderr).to receive(:puts)
       expect { subject.map('zzz') }.to raise_error(Git::Duet::ScriptDieError)
     end
   end
