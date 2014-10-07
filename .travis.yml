@@ -8,8 +8,8 @@ matrix:
   - rvm: jruby-19mode
 rvm:
 - 1.9.3
-- 2.0
-- 2.1
+- 2.0.0
+- 2.1.3
 - jruby-19mode
 before_script:
 - "git clone https://github.com/sstephenson/bats.git"
