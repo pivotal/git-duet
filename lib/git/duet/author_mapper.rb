@@ -10,10 +10,10 @@ module Git
 
       def initialize(authors_file = nil, email_lookup = nil)
         @authors_file = authors_file ||
-          ENV['GIT_DUET_AUTHORS_FILE'] ||
-          File.join(ENV['HOME'], '.git-authors')
+                        ENV['GIT_DUET_AUTHORS_FILE'] ||
+                        File.join(ENV['HOME'], '.git-authors')
         @email_lookup = email_lookup ||
-          ENV['GIT_DUET_EMAIL_LOOKUP_COMMAND']
+                        ENV['GIT_DUET_EMAIL_LOOKUP_COMMAND']
       end
 
       def map(*initials_list)

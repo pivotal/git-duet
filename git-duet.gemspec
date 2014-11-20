@@ -23,8 +23,8 @@ Gem::Specification.new do |gem|
 
   gem.files = `git ls-files -z`.split("\x00")
   gem.executables = gem.files.grep(/^bin\//)
-                             .map { |f| File.basename(f) }
-                             .reject { |n| n =~ /rubymine-git-wrapper/ }
+    .map { |f| File.basename(f) }
+    .reject { |n| n =~ /rubymine-git-wrapper/ }
   gem.test_files = gem.files.grep(/^spec\//)
   gem.name = 'git-duet'
   gem.require_paths = %w(lib)
