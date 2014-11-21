@@ -26,7 +26,7 @@ describe Git::Duet::AuthorMapper do
 
   it 'uses an authors file given at initialization' do
     instance = described_class
-      .new('/blarggie/blarggie/new/friend/.git-authors')
+               .new('/blarggie/blarggie/new/friend/.git-authors')
     expect(instance.authors_file)
       .to eq('/blarggie/blarggie/new/friend/.git-authors')
   end

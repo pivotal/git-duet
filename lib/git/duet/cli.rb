@@ -9,7 +9,7 @@ module Git
       class << self
         def run(prog, argv)
           method_name = File.basename(prog)
-          .sub(/^git-duet-/, '').sub(/^git-/, '').tr('-', '_')
+                        .sub(/^git-duet-/, '').sub(/^git-/, '').tr('-', '_')
           send(method_name, parse_options(method_name, argv.clone))
           0
         rescue NoMethodError
