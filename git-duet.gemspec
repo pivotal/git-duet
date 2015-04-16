@@ -22,10 +22,10 @@ Gem::Specification.new do |gem|
   gem.license = 'MIT'
 
   gem.files = `git ls-files -z`.split("\x00")
-  gem.executables = gem.files.grep(/^bin\//)
+  gem.executables = gem.files.grep(%r{^bin/})
     .map { |f| File.basename(f) }
     .reject { |n| n =~ /rubymine-git-wrapper/ }
-  gem.test_files = gem.files.grep(/^spec\//)
+  gem.test_files = gem.files.grep(%r{^spec/})
   gem.name = 'git-duet'
   gem.require_paths = %w(lib)
   gem.version = Git::Duet::VERSION
