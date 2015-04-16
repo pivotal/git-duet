@@ -134,7 +134,7 @@ key, and `username` which is the part following `;` in the author value.
 pairs:
   jd: Jane Doe
   fb: Frances Bar
-email_template: '<%= "#{author.gsub(/ /, "-").downcase}@hamster.local" =%>'
+email_template: '<%= "#{author.gsub(/ /, "-").downcase}@hamster.local" %>'
 ```
 
 After invoking:
