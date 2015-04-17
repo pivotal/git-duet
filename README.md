@@ -290,7 +290,7 @@ github](https://github.com/meatballhat/git-duet/issues/new).
 4. Run the tests
     1. RSpec `bundle exec rake spec`
     2. Rubocop `bundle exec rake rubocop`
-    3. [Bats](https://github.com/sstephenson/bats) `bundle exec rake install && bundle exec bats test`
+    3. [Bats](https://github.com/sstephenson/bats) `bundle exec rake install && bundle exec bats test` (if you have added new files, `git add` them before installing)
 5. Commit your changes (`git dci -am 'Added some feature'`)
 6. Push to the branch (`git push origin my-new-feature`)
 7. Create new Pull Request
