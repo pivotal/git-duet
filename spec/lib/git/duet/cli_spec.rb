@@ -44,4 +44,32 @@ describe Git::Duet::Cli do
     )
     cli.run('git-duet-pre-commit', %w(-q))
   end
+
+  it 'defaults to loud and local when running `solo`' do
+    allow(Git::Duet::SoloCommand).to receive(:new).with('jd', be_falsey, be_falsey).and_return(
+      double('solo').as_null_object
+    )
+    cli.run('git-solo', %w(jd))
+  end
+
+  it 'parses options for quietness and globality when running `solo`' do
+    allow(Git::Duet::SoloCommand).to receive(:new).with('jd', be_truthy, be_truthy).and_return(
+      double('solo').as_null_object
+    )
+    cli.run('git-solo', %w(jd -q -g))
+  end
+
+  it 'defaults to loud and local when running `duet`' do
+    allow(Git::Duet::DuetCommand).to receive(:new).with('jd', 'fb', be_falsey, be_falsey).and_return(
+      double('duet').as_null_object
+    )
+    cli.run('git-duet', %w(jd fb))
+  end
+
+  it 'parses options for quietness and globality when running `duet`' do
+    allow(Git::Duet::DuetCommand).to receive(:new).with('jd', 'fb', be_truthy, be_truthy).and_return(
+      double('duet').as_null_object
+    )
+    cli.run('git-duet', %w(jd fb -q -g))
+  end
 end
