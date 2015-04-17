@@ -93,6 +93,21 @@ git solo -g jd
 git duet --global jd fb
 ```
 
+If you do this habitually, you can set the `GIT_DUET_GLOBAL` environment
+variable to `true` to always operate on the global git config:
+
+``` bash
+export GIT_DUET_GLOBAL=true
+git solo jd
+```
+
+``` bash
+GIT_DUET_GLOBAL=true git duet jd fb
+```
+
+You can also set it to `false` to always operate on the local config, even if
+the global flag is used.
+
 ### Email Configuration
 
 By default, email addresses are constructed from the first initial and
