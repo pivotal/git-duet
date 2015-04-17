@@ -1,6 +1,7 @@
 # vim:fileencoding=utf-8
 require 'optparse'
 require 'git/duet'
+require 'git/duet/cli_options'
 require 'git/duet/script_die_error'
 
 module Git
@@ -8,13 +9,7 @@ module Git
     class Cli
       class << self
         def run(prog, argv)
-          method_name = File.basename(prog)
-                        .sub(/^git-duet-/, '').sub(/^git-/, '').tr('-', '_')
-          options = parse_options(method_name, argv.clone)
-          if ENV['GIT_DUET_GLOBAL']
-            options[:global] = parse_boolean(ENV['GIT_DUET_GLOBAL'])
-          end
-          send(method_name, options)
+          invoke(File.basename(prog), argv.clone, ENV)
           0
         rescue NoMethodError
           raise ScriptError, 'How did you get here???'
@@ -24,65 +19,16 @@ module Git
 
         private
 
-        def parse_options(method_name, argv)
-          case method_name
-          when 'pre_commit', 'install_hook'
-            parse_generic_options(argv)
-          else
-            send("parse_#{method_name}_options", argv)
+        def invoke(prog_name, args, environment)
+          method_name = prog_name
+                        .sub(/^git-duet-/, '')
+                        .sub(/^git-/, '')
+                        .tr('-', '_')
+          options = CliOptions.parse_options(method_name, args)
+          if environment['GIT_DUET_GLOBAL']
+            options[:global] = parse_boolean(environment['GIT_DUET_GLOBAL'])
           end
-        end
-
-        def with_common_opts(argv, banner)
-          options = {}
-          leftover_argv = OptionParser.new do |opts|
-            opts.banner = banner.gsub(/__PROG__/, opts.program_name)
-            opts.on('-q', 'Silence output') do |_|
-              options[:quiet] = true
-            end
-            yield opts, options if block_given?
-          end.parse!(argv)
-          [leftover_argv, options]
-        end
-
-        def parse_solo_options(argv)
-          parse_options_with_positional_args(
-            argv, '<soloist-initials>') do |leftover_argv, options|
-              options[:soloist] = leftover_argv.first
-            end
-        end
-
-        def parse_duet_options(argv)
-          parse_options_with_positional_args(
-            argv,
-            '<alpha-initials> <omega-initials>'
-          ) do |leftover_argv, options|
-            options[:alpha], options[:omega] = leftover_argv[0..1]
-          end
-        end
-
-        def parse_options_with_positional_args(argv, usage)
-          leftover_argv, options = with_common_opts(
-            argv, 'Usage: __PROG__ [options] ' << usage
-          ) do |opts, options_hash|
-            opts.on('-g', '--global', 'Change global git config') do |_|
-              options_hash[:global] = true
-            end
-          end
-          yield leftover_argv, options
-          options
-        end
-
-        def parse_generic_options(argv)
-          with_common_opts(argv, 'Usage: __PROG__').last
-        end
-
-        def parse_commit_options(argv)
-          opts_argv = []
-          opts_argv << '-q' if argv.delete('-q')
-          options = with_common_opts(opts_argv, 'Usage: __PROG__').last
-          options[:passthrough_args] = argv
-          options
+          send(method_name, options)
         end
 
         def parse_boolean(s)
