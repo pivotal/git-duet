@@ -10,7 +10,11 @@ module Git
         def run(prog, argv)
           method_name = File.basename(prog)
                         .sub(/^git-duet-/, '').sub(/^git-/, '').tr('-', '_')
-          send(method_name, parse_options(method_name, argv.clone))
+          options = parse_options(method_name, argv.clone)
+          if ENV['GIT_DUET_GLOBAL']
+            options[:global] = parse_boolean(ENV['GIT_DUET_GLOBAL'])
+          end
+          send(method_name, options)
           0
         rescue NoMethodError
           raise ScriptError, 'How did you get here???'
@@ -79,6 +83,14 @@ module Git
           options = with_common_opts(opts_argv, 'Usage: __PROG__').last
           options[:passthrough_args] = argv
           options
+        end
+
+        def parse_boolean(s)
+          case s
+          when 'true' then true
+          when 'false' then false
+          else fail ArgumentError, "must be 'true' or 'false': #{s}"
+          end
         end
 
         def solo(options)

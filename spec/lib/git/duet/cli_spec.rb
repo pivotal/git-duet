@@ -72,4 +72,20 @@ describe Git::Duet::Cli do
     )
     cli.run('git-duet', %w(jd fb -q -g))
   end
+
+  it 'respects the environment about global issues when running `solo`' do
+    stub_const('ENV', 'GIT_DUET_GLOBAL' => 'true')
+    allow(Git::Duet::SoloCommand).to receive(:new).with('cp', anything, be_truthy).and_return(
+      double('solo').as_null_object
+    )
+    cli.run('git-solo', %w(cp))
+  end
+
+  it 'respects the environment about global issues when running `duet`' do
+    stub_const('ENV', 'GIT_DUET_GLOBAL' => 'true')
+    allow(Git::Duet::DuetCommand).to receive(:new).with('cp', 'g', anything, be_truthy).and_return(
+      double('duet').as_null_object
+    )
+    cli.run('git-duet', %w(cp g))
+  end
 end
